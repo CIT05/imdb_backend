@@ -1,16 +1,15 @@
 ﻿using DataLayer.Roles;
-using WebApi.Models.Roles;
 using Microsoft.AspNetCore.Mvc;
 using Mapster;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using WebApi.Models.Roles;
+
 
 namespace WebApi.Controllers.Roles;
 
 [ApiController]
 [Route("api/role")]
 
-public class RoleController(IRoleDataService dataService, LinkGenerator linkGenerator) : BaseController(linkGenerator)
+public class RolesController(IRoleDataService dataService, LinkGenerator linkGenerator) : BaseController(linkGenerator)
 {
     private readonly IRoleDataService _dataService = dataService;
 

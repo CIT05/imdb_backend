@@ -4,6 +4,10 @@ using Mapster;
 using DBConnection.Roles;
 using DataLayer.Roles;
 
+// Rating imports
+using DBConnection.Ratings;
+using DataLayer.Ratings;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("config.json");
@@ -14,8 +18,13 @@ var connectionString = builder.Configuration.GetSection("ConnectionString").Valu
 builder.Services.AddSingleton<IRoleRepository>(
     serviceProvider => new RoleRepository(connectionString));
 
+builder.Services.AddSingleton<IRatingRepository>(
+    serviceProvider => new RatingRepository(connectionString));
+
 // scoped means that the service is created once per request
 builder.Services.AddScoped<IRoleDataService, RoleDataService>();
+builder.Services.AddScoped<IRatingDataService, RatingDataService>();
+
 
 
 builder.Services.AddMapster();
