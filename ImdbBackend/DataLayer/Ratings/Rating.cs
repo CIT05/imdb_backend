@@ -1,4 +1,5 @@
 ﻿
+using DataLayer.Titles;
 using System.ComponentModel.DataAnnotations;
 
 namespace DataLayer.Ratings;
@@ -11,5 +12,7 @@ namespace DataLayer.Ratings;
     public double AverageRating { get; set; }
 
     public int NumberOfVotes { get; set; }
+
+    public Title Title { get; set; }
 
 }

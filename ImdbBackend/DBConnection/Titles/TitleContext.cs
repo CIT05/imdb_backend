@@ -1,4 +1,6 @@
 ﻿using DataLayer.Titles;
+using DataLayer.Ratings;
+
 using Microsoft.EntityFrameworkCore;
 
 
@@ -27,15 +29,16 @@ namespace DBConnection.Titles
         {
             modelBuilder.Entity<Title>().ToTable("title_basics_new");
             modelBuilder.Entity<Title>().Property(title => title.TConst).HasColumnName("tconst");
-            modelBuilder.Entity<Title>().Property(title => title.titleType).HasColumnName("titletype");
-            modelBuilder.Entity<Title>().Property(title => title.primaryTitle).HasColumnName("primarytitle");
-            modelBuilder.Entity<Title>().Property(title => title.originalTitle).HasColumnName("originaltitle");
-            modelBuilder.Entity<Title>().Property(title => title.isAdult).HasColumnName("isadult");
-            modelBuilder.Entity<Title>().Property(title => title.startYear).HasColumnName("startyear");
-            modelBuilder.Entity<Title>().Property(title => title.endYear).HasColumnName("endyear");
-            modelBuilder.Entity<Title>().Property(title => title.runtimeMinutes).HasColumnName("runtimeminutes");
-            modelBuilder.Entity<Title>().Property(title => title.plot).HasColumnName("plot");
-            modelBuilder.Entity<Title>().Property(title => title.poster).HasColumnName("poster");
+            modelBuilder.Entity<Title>().Property(title => title.TitleType).HasColumnName("titletype");
+            modelBuilder.Entity<Title>().Property(title => title.PrimaryTitle).HasColumnName("primarytitle");
+            modelBuilder.Entity<Title>().Property(title => title.OriginalTitle).HasColumnName("originaltitle");
+            modelBuilder.Entity<Title>().Property(title => title.IsAdult).HasColumnName("isadult");
+            modelBuilder.Entity<Title>().Property(title => title.StartYear).HasColumnName("startyear");
+            modelBuilder.Entity<Title>().Property(title => title.EndYear).HasColumnName("endyear");
+            modelBuilder.Entity<Title>().Property(title => title.RuntimeMinutes).HasColumnName("runtimeminutes");
+            modelBuilder.Entity<Title>().Property(title => title.Plot).HasColumnName("plot");
+            modelBuilder.Entity<Title>().Property(title => title.Poster).HasColumnName("poster");
+
 
         }
     }

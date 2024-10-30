@@ -1,4 +1,5 @@
 ﻿using DataLayer.Titles;
+using Microsoft.EntityFrameworkCore;
 
 namespace DBConnection.Titles
 {
@@ -15,7 +16,7 @@ namespace DBConnection.Titles
         public Title? GetTitleById(string tconst)
         {
            var db = new TitleContext(_connectionString);
-            return db.Titles.Find(tconst);
+            return db.Titles.FirstOrDefault(title => title.TConst == tconst);
         }
 
         public int NumberOfTitles()
