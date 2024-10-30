@@ -1,6 +1,8 @@
 using Mapster;
-using DBConnection;
-using DataLayer;
+
+// Role imports
+using DBConnection.Roles;
+using DataLayer.Roles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,8 +11,12 @@ builder.Configuration.AddJsonFile("config.json");
 var connectionString = builder.Configuration.GetSection("ConnectionString").Value ?? "";
 
 // Add services to the container.
-builder.Services.AddSingleton<IDataService>(
-    serviceProvider => new DataService(connectionString));
+builder.Services.AddSingleton<IRoleRepository>(
+    serviceProvider => new RoleRepository(connectionString));
+
+// scoped means that the service is created once per request
+builder.Services.AddScoped<IRoleDataService, RoleDataService>();
+
 
 builder.Services.AddMapster();
 
@@ -30,7 +36,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+//app.UseAuthorization();
 
 app.MapControllers();
 
