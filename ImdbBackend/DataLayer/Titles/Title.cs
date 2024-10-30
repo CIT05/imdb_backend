@@ -15,9 +15,9 @@ public class Title
 
     public bool isAdult { get; set; }
 
-    public string? startYear { get; set; } = string.Empty;
+    public string? startYear { get; set; }
 
-    public int? endYear { get; set; }
+    public string? endYear { get; set; }
 
     public int? runtimeMinutes { get; set; }
 
