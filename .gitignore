@@ -4,8 +4,8 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 ## Bin and Obj Ignore
-**/obj
-**/bin
+**/obj/
+**/bin/
 
 # Ignore .NET-specific build directories across all projects (e.g., net6.0, net7.0, net8.0)
 **/net*/
