@@ -30,6 +30,7 @@ internal class RatingContext: DbContext
         modelBuilder.Entity<Rating>().Property(rating => rating.TConst).HasColumnName("tconst");
         modelBuilder.Entity<Rating>().Property(rating => rating.AverageRating).HasColumnName("averagerating");
         modelBuilder.Entity<Rating>().Property(rating => rating.NumberOfVotes).HasColumnName("numvotes");
+        modelBuilder.Entity<Rating>().HasOne(rating => rating.Title).WithOne(titlte => titlte.Rating).HasForeignKey<Rating>(rating => rating.TConst);
 
     }
 

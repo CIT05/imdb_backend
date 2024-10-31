@@ -7,6 +7,7 @@ namespace DBConnection.Titles
     {
         private readonly string _connectionString = connectionString;
 
+
         public List<Title> GetTitles(int pageSize, int pageNumber)
         {
             var db = new TitleContext(_connectionString);
