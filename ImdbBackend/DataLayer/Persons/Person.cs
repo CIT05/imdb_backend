@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using DataLayer.TitlePrincipals;
+using System.ComponentModel.DataAnnotations;
 
 namespace DataLayer.Persons;
 
@@ -13,6 +14,7 @@ public class Person
 
     public string? deathYear { get; set; }
 
- 
+    public List<TitlePrincipal> TitlePrincipals { get; set; }
+
 
 }

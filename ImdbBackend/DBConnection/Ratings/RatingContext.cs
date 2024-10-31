@@ -1,4 +1,5 @@
 ﻿using DataLayer.Ratings;
+using DataLayer.Titles;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -27,10 +28,15 @@ internal class RatingContext: DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Rating>().ToTable("title_ratings_new");
-        modelBuilder.Entity<Rating>().Property(rating => rating.TConst).HasColumnName("tconst");
+        modelBuilder.Entity<Rating>().Property(rating => rating.TConst).HasColumnName("tconst").IsRequired();
         modelBuilder.Entity<Rating>().Property(rating => rating.AverageRating).HasColumnName("averagerating");
         modelBuilder.Entity<Rating>().Property(rating => rating.NumberOfVotes).HasColumnName("numvotes");
 
+        // Configuring the one-to-one relationship with Title
+        modelBuilder.Entity<Rating>()
+            .HasOne<Title>()
+            .WithOne(title => title.Rating)
+            .HasForeignKey<Rating>(rating => rating.TConst); // TConst in Rating is the FK
     }
 
 }

@@ -28,7 +28,7 @@ namespace DBConnection.Titles
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Title>().ToTable("title_basics_new");
-            modelBuilder.Entity<Title>().Property(title => title.TConst).HasColumnName("tconst");
+            modelBuilder.Entity<Title>().Property(title => title.TConst).HasColumnName("tconst").IsRequired(); ;
             modelBuilder.Entity<Title>().Property(title => title.TitleType).HasColumnName("titletype");
             modelBuilder.Entity<Title>().Property(title => title.PrimaryTitle).HasColumnName("primarytitle");
             modelBuilder.Entity<Title>().Property(title => title.OriginalTitle).HasColumnName("originaltitle");
@@ -39,7 +39,11 @@ namespace DBConnection.Titles
             modelBuilder.Entity<Title>().Property(title => title.Plot).HasColumnName("plot");
             modelBuilder.Entity<Title>().Property(title => title.Poster).HasColumnName("poster");
 
-
+            modelBuilder.Entity<Rating>()
+                .HasMany(r => r.Titles)
+                .WithOne(t => t.Rating)
+                .HasForeignKey(t => t.TConst) // Assuming TConst will act as the foreign key reference
+                .OnDelete(DeleteBehavior.Cascade); // Optional: set delete behavior
         }
     }
 }
