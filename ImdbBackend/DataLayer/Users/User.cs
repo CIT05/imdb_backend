@@ -15,3 +15,8 @@ public class User
     public string Language { get; set; } = string.Empty;
 
 }
+
+public class CreatedUserId
+{
+    public int UserId { get; set; }
+}

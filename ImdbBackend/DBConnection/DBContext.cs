@@ -23,10 +23,12 @@ namespace DBConnection;
 
         public DbSet<User> Users { get; set; }
 
-    public DbSet<Title> Titles { get; set; }
+        public DbSet<CreatedUserId> CreatedUserIds { get; set; }
+
+        public DbSet<Title> Titles { get; set; }
 
 
-    private readonly string _connectionString;
+        private readonly string _connectionString;
 
         public ImdbContext(string connectionString)
         {
@@ -146,6 +148,9 @@ namespace DBConnection;
         modelBuilder.Entity<User>().Property(user => user.Password).HasColumnName("password");
         modelBuilder.Entity<User>().Property(user => user.Username).HasColumnName("username");
         modelBuilder.Entity<User>().Property(user => user.Language).HasColumnName("language");
+
+        modelBuilder.Entity<CreatedUserId>().HasNoKey();
+        modelBuilder.Entity<CreatedUserId>().Property(e => e.UserId).HasColumnName("created_user_id");
     }
 
 

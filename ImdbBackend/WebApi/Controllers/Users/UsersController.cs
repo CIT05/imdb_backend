@@ -26,6 +26,18 @@ public class UsersController(IUserDataService dataService, LinkGenerator linkGen
         return Ok(userModel);
     }
 
+    [HttpPost]
+    public IActionResult CreateUser(CreateUserModel createUserModel)
+    {
+        var createdUser = _dataService.CreateUser(createUserModel.Username, createUserModel.Password, createUserModel.Language);
+        if(createdUser == null)
+        {
+            return BadRequest();
+        }
+        UserModel createdUserModel = AdaptUserToUserModel(createdUser);
+        return Ok(createdUserModel);
+    }
+
     private UserModel AdaptUserToUserModel(User user)
     {
 
