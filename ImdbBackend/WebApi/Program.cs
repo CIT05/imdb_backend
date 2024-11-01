@@ -27,32 +27,24 @@ builder.Configuration.AddJsonFile("config.json");
 var connectionString = builder.Configuration.GetSection("ConnectionString").Value ?? "";
 
 // Add services to the container.
-builder.Services.AddSingleton<IRoleRepository>(
-    serviceProvider => new RoleRepository(connectionString));
+builder.Services.AddSingleton<IRoleDataService>(
+    serviceProvider => new RoleDataService(connectionString));
 
-builder.Services.AddSingleton<IRatingRepository>(
-    serviceProvider => new RatingRepository(connectionString));
+builder.Services.AddSingleton<IRatingDataService>(
+    serviceProvider => new RatingDataService(connectionString));
 
-builder.Services.AddSingleton<ITitleRepository>(
-    serviceProvider => new TitleRepository(connectionString));
+builder.Services.AddSingleton<ITitleDataService>(
+    serviceProvider => new TitleDataService(connectionString));
 
-builder.Services.AddSingleton<IPersonRepository>(
-    serviceProvider => new PersonRepository(connectionString));
+builder.Services.AddSingleton<IPersonDataService>(
+    serviceProvider => new PersonDataService(connectionString));
 
-builder.Services.AddSingleton<ITitlePrincipalRepository>(
-    serviceProvider => new TitlePrincipalRepository(connectionString));
+builder.Services.AddSingleton<ITitlePrincipalDataService>(
+    serviceProvider => new TitlePrincipalDataService(connectionString));
 
-builder.Services.AddSingleton<ITitleAlternativeRepository>(
-    serviceProvider => new TitleAlternativeRepository(connectionString));
+builder.Services.AddSingleton<ITitleAlternativeDataService>(
+    serviceProvider => new TitleAlternativeDataService(connectionString));
 
-
-// scoped means that the service is created once per request
-builder.Services.AddScoped<IRoleDataService, RoleDataService>();
-builder.Services.AddScoped<IRatingDataService, RatingDataService>();
-builder.Services.AddScoped<ITitleDataService, TitleDataService>();
-builder.Services.AddScoped<IPersonDataService, PersonDataService>();
-builder.Services.AddScoped<ITitlePrincipalDataService, TitlePrincipalDataService>();
-builder.Services.AddScoped<ITitleAlternativeDataService, TitleAlternativeDataService>();
 
 
 

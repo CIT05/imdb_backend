@@ -2,22 +2,26 @@
 
 namespace DBConnection.Ratings;
 
-public class RatingDataService(IRatingRepository ratingRepository) : IRatingDataService
+public class RatingDataService(string connectionString) : IRatingDataService
 {
-    private readonly IRatingRepository _ratingRepository = ratingRepository;
+    private readonly string _connectionString = connectionString;
 
     public Rating? GetRatingById(string tconst)
     {
-        return _ratingRepository.GetRatingById(tconst);
+        var db = new ImdbContext(_connectionString);
+        return db.Ratings.Find(tconst);
+
     }
 
     public List<Rating> GetRatings(int pageSize, int pageNumber)
     {
-        return _ratingRepository.GetRatings(pageSize, pageNumber);
+       var db = new ImdbContext(_connectionString);
+        return db.Ratings.Skip(pageNumber * pageSize).Take(pageSize).ToList();
     }
 
     public int NumberOfRatings()
     {
-        return _ratingRepository.NumberOfRatings();
+        var db = new ImdbContext(_connectionString);
+        return db.Ratings.Count();
     }
 }

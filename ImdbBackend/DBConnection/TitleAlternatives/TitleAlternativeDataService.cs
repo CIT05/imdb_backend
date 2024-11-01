@@ -4,26 +4,33 @@ namespace DBConnection.TitleAlternatives
 {
     public class TitleAlternativeDataService : ITitleAlternativeDataService
     {
-        private readonly ITitleAlternativeRepository _titleAlternativeRepository;
+        private readonly string _connectionString;
 
-        public TitleAlternativeDataService(ITitleAlternativeRepository titleAlternativeRepository)
+        public TitleAlternativeDataService(string connectionString)
         {
-            _titleAlternativeRepository = titleAlternativeRepository;
+            _connectionString = connectionString;
         }
 
         public List<TitleAlternative> GetTitleAlternatives(int pageSize, int pageNumber)
         {
-            return _titleAlternativeRepository.GetTitleAlternatives(pageSize, pageNumber);
+            var db = new ImdbContext(_connectionString);
+            return db.TitleAlternatives.Skip(pageNumber * pageSize).Take(pageSize).ToList();
         }
 
-        public TitleAlternative? GetTitleAlternative(int akasId, int ordering)  
+        public TitleAlternative GetTitleAlternative(int akasId, int ordering)
         {
-            return _titleAlternativeRepository.GetTitleAlternative(akasId, ordering);
+            var db = new ImdbContext(_connectionString);
+            return db.TitleAlternatives.FirstOrDefault(akas =>
+            akas.AkasId == akasId &&
+            akas.Ordering == ordering
+       ) ?? new TitleAlternative();
         }
 
-        public int NumberOfTitleAlternatives()  
+        public int NumberOfTitleAlternatives()
         {
-            return _titleAlternativeRepository.NumberOfTitleAlternatives();
+            var db = new ImdbContext(_connectionString);
+            return db.TitleAlternatives.Count();
         }
-        }
+    }
+    
 }

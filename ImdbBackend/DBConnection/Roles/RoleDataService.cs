@@ -1,28 +1,31 @@
 ﻿using DataLayer.Roles;
 
-
-
-
 namespace DBConnection.Roles;
 
-public class RoleDataService(IRoleRepository roleRepository) : IRoleDataService
+public class RoleDataService(string connectionString) : IRoleDataService
 {
-    private readonly IRoleRepository _roleRepository = roleRepository;
+    private readonly string _connectionString = connectionString;
 
     public List<Role> GetRoles(int pageSize, int pageNumber)
     {
-       return this._roleRepository.GetRoles(pageSize, pageNumber);
+        var db = new ImdbContext(_connectionString);
+        
+
+        return db.Roles.Skip(pageNumber * pageSize).Take(pageSize).ToList();
     }
 
     public Role? GetRoleById(int roleId)
     {
-        return this._roleRepository.GetRoleById(roleId);        
+        var db = new ImdbContext(_connectionString);
+        return db.Roles.Find(roleId);
     }
 
     public int NumberOfRoles()
     {
-        return this._roleRepository.NumberOfRoles();
+        var db = new ImdbContext(_connectionString);
+        return db.Roles.Count();
     }
+
 
 
 }

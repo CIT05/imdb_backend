@@ -1,27 +1,28 @@
-﻿
-
-using DataLayer.Persons;
+﻿using DataLayer.Persons;
 
 namespace DBConnection.Persons
 {
-    public class PersonDataService(IPersonRepository PersonRepository): IPersonDataService
+    public class PersonDataService(string connectionString) : IPersonDataService
     {
-
-        private readonly IPersonRepository _PersonRepository = PersonRepository;
+        private readonly string _connectionString = connectionString;
 
         public List<Person> GetPersons(int pageSize, int pageNumber)
         {
-           return _PersonRepository.GetPersons(pageSize, pageNumber);
+            var db = new ImdbContext(_connectionString);
+            return db.Persons.Skip(pageNumber * pageSize).Take(pageSize).ToList();
         }
 
         public Person? GetPersonById(string tconst)
         {
-            return _PersonRepository.GetPersonById(tconst);
+           var db = new ImdbContext(_connectionString);
+            return db.Persons.Find(tconst);
         }
 
         public int NumberOfPersons()
         {
-            return _PersonRepository.NumberOfPersons();
+            var db = new ImdbContext(_connectionString);
+            return db.Persons.Count();
         }
     }
+
 }

@@ -1,37 +1,38 @@
 ﻿using DataLayer.TitlePrincipals;
-using DataLayer.Titles;
 
 namespace DBConnection.TitlePrincipals
 {
-    public class TitlePrincipalDataService : ITitlePrincipalDataService
+    public class TitlePrincipalDataService(string connectionString) : ITitlePrincipalDataService
     {
-        private readonly ITitlePrincipalRepository _titlePrincipalRepository;
-
-
-        public TitlePrincipalDataService(ITitlePrincipalRepository titlePrincipalRepository)
+        private readonly string _connectionString = connectionString;
+        public TitlePrincipal? GetRoleInTitle(string tconst, string nconst, int ordering, int roleId)
         {
-            _titlePrincipalRepository = titlePrincipalRepository;
-
+            var db = new ImdbContext(_connectionString);
+        return db.TitlePrincipals.FirstOrDefault(title =>
+        title.TConst == tconst &&
+        title.NConst == nconst &&
+        title.Ordering == ordering &&
+        title.RoleId == roleId);
         }
 
         public List<TitlePrincipal> GetTitlePrincipals(int pageSize, int pageNumber)
         {
-           return _titlePrincipalRepository.GetTitlePrincipals(pageSize, pageNumber);
+            var db = new ImdbContext(_connectionString);
+            return db.TitlePrincipals.Skip(pageNumber * pageSize).Take(pageSize).ToList();
         }
 
-        public TitlePrincipal? GetRoleInTitle(string tconst, string nconst, int ordering, int roleId)  
+        public int NumberOfTitlePrincipals()
         {
-            return _titlePrincipalRepository.GetRoleInTitle(tconst, nconst, ordering, roleId);
-        }
-
-        public int NumberOfTitlePrincipals()  
-        {
-            return _titlePrincipalRepository.NumberOfTitlePrincipals();
+            var db = new ImdbContext(_connectionString);
+            return db.TitlePrincipals.Count();
         }
 
         public List<TitlePrincipal> GetPrincipalsByTitleId(string tConst)
         {
-            return _titlePrincipalRepository.GetPrincipalsByTitleId(tConst);
+            var db = new ImdbContext(_connectionString);
+            return db.TitlePrincipals
+                .Where(principal => principal.TConst == tConst)
+                .ToList();
         }
     }
 }

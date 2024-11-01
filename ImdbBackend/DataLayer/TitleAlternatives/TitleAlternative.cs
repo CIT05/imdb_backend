@@ -10,7 +10,7 @@ namespace DataLayer.TitleAlternatives
         public int Ordering { get; set; }
         public string? AltTitle { get; set; }
         public string? Region {  get; set; }
-        public string? Language {  get; set; }
+        public string? Language {  get; set; } = string.Empty;
         public string? Attributes { get; set; }
         public bool? IsOriginalTitle { get; set; }
 
