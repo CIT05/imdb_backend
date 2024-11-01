@@ -128,7 +128,7 @@ namespace DBConnection;
         modelBuilder.Entity<Title>().Property(title => title.RuntimeMinutes).HasColumnName("runtimeminutes");
         modelBuilder.Entity<Title>().Property(title => title.Plot).HasColumnName("plot");
         modelBuilder.Entity<Title>().Property(title => title.Poster).HasColumnName("poster");
-        modelBuilder.Entity<Title>().HasOne(title => title.Rating).WithOne(rating => rating.Title).HasForeignKey<Rating>(rating => rating.TConst);
+        modelBuilder.Entity<Title>().HasOne(title => title.Rating).WithOne().HasForeignKey<Rating>(rating => rating.TConst);
         modelBuilder.Entity<Title>()
             .HasMany(title => title.Principals)
             .WithOne(principal => principal.Title)

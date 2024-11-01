@@ -13,7 +13,7 @@ namespace WebApi.Controllers
 
         protected object CreatePaging<T>(int pageNumber, int pageSize, int total, string linkName, IEnumerable<T?> items)
         {
-            const int maxPageSize = 10;
+            const int maxPageSize = 100;
 
             pageSize = pageSize < maxPageSize ? maxPageSize : pageSize;
 
@@ -45,6 +45,11 @@ namespace WebApi.Controllers
                               pageNumber,
                               pageSize
                           });
+        }
+
+        protected string? GetUrl(string linkname, object routeValues)
+        {
+            return _linkGenerator.GetUriByName(HttpContext, linkname, routeValues);
         }
     }
 }

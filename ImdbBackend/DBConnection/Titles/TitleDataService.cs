@@ -11,7 +11,7 @@ namespace DBConnection.Titles
         public List<Title> GetTitles(int pageSize, int pageNumber)
         {
             var db = new ImdbContext(_connectionString);
-            return db.Titles.Skip(pageNumber * pageSize).Take(pageSize).ToList();
+            return db.Titles.OrderBy(t => t.TConst).Skip(pageNumber * pageSize).Take(pageSize).Include(title => title.Rating).ToList();
         }
 
         public Title? GetTitleById(string tconst)

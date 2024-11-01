@@ -1,6 +1,7 @@
 using DataLayer.Titles;
 using WebApi.Models.Titles;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Controllers.Ratings;
 using Mapster;
 
 namespace WebApi.Controllers.Titles;
@@ -24,7 +25,9 @@ public class TitlesController(ITitleDataService dataService, LinkGenerator linkG
 
         string linkName = nameof(GetTitles);
 
-        object result = CreatePaging(pageNumber, pageSize, numberOfItmes, linkName, titles);
+        List<TitleModel> titlesModel = titles.Select(title => AdaptTitleToTitleModel(title)).ToList();
+
+        object result = CreatePaging(pageNumber, pageSize, numberOfItmes, linkName, titlesModel);
 
         return Ok(result);
     }
@@ -38,7 +41,8 @@ public class TitlesController(ITitleDataService dataService, LinkGenerator linkG
             return NotFound();
         }
 
-        var titleModel = AdaptTitleToTitleModel(title);
+        TitleModel titleModel = AdaptTitleToTitleModel(title);
+
         return Ok(titleModel);
     }
 
@@ -46,14 +50,13 @@ public class TitlesController(ITitleDataService dataService, LinkGenerator linkG
     {
 
         var titleModel = title.Adapt<TitleModel>();
-        titleModel.Url = GetUrl(title.TConst);
+        titleModel.Url = GetUrl(nameof(RatingsController.GetRatingById), new {tconst = title.TConst});
+        if(titleModel.Rating != null)
+        {
+            titleModel.Rating.Url = GetUrl(nameof(RatingsController.GetRatingById), new { tconst = title.TConst });
+        }
         return titleModel;
 
     }
 
-
-    private string? GetUrl(string tconst)
-    {
-        return _linkGenerator.GetUriByName(HttpContext, nameof(GetTitleById), new { tconst });
-    }
 }

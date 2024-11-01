@@ -1,5 +1,5 @@
 ﻿using WebApi.Models.Ratings;
-
+using DataLayer.Ratings;
 
 namespace WebApi.Models.Titles
 {
