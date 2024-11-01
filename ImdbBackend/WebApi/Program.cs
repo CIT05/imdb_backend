@@ -17,6 +17,9 @@ using DataLayer.Persons;
 using DBConnection.TitlePrincipals;
 using DataLayer.TitlePrincipals;
 
+using DBConnection.TitleAlternatives;
+using DataLayer.TitleAlternatives;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("config.json");
@@ -39,12 +42,17 @@ builder.Services.AddSingleton<IPersonRepository>(
 builder.Services.AddSingleton<ITitlePrincipalRepository>(
     serviceProvider => new TitlePrincipalRepository(connectionString));
 
+builder.Services.AddSingleton<ITitleAlternativeRepository>(
+    serviceProvider => new TitleAlternativeRepository(connectionString));
+
+
 // scoped means that the service is created once per request
 builder.Services.AddScoped<IRoleDataService, RoleDataService>();
 builder.Services.AddScoped<IRatingDataService, RatingDataService>();
 builder.Services.AddScoped<ITitleDataService, TitleDataService>();
 builder.Services.AddScoped<IPersonDataService, PersonDataService>();
 builder.Services.AddScoped<ITitlePrincipalDataService, TitlePrincipalDataService>();
+builder.Services.AddScoped<ITitleAlternativeDataService, TitleAlternativeDataService>();
 
 
 
