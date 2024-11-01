@@ -4,6 +4,7 @@ using DataLayer.Roles;
 using DataLayer.TitleAlternatives;
 using DataLayer.TitlePrincipals;
 using DataLayer.Titles;
+using DataLayer.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace DBConnection;
@@ -19,6 +20,8 @@ namespace DBConnection;
         public DbSet<TitleAlternative> TitleAlternatives { get; set; }
 
         public DbSet<TitlePrincipal> TitlePrincipals { get; set; }
+
+        public DbSet<User> Users { get; set; }
 
     public DbSet<Title> Titles { get; set; }
 
@@ -46,6 +49,7 @@ namespace DBConnection;
           BuildTitleAlternatives(modelBuilder);
           BuildTitlePrincipals(modelBuilder);
           BuildTitle(modelBuilder);
+          BuildUser(modelBuilder);
 
     }
 
@@ -134,5 +138,16 @@ namespace DBConnection;
             .WithOne(principal => principal.Title)
             .HasForeignKey(principal => principal.TConst);
     }
+
+    private static void BuildUser(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<User>().ToTable("users");
+        modelBuilder.Entity<User>().Property(user => user.UserId).HasColumnName("userid");
+        modelBuilder.Entity<User>().Property(user => user.Password).HasColumnName("password");
+        modelBuilder.Entity<User>().Property(user => user.Username).HasColumnName("username");
+        modelBuilder.Entity<User>().Property(user => user.Language).HasColumnName("language");
     }
+
+
+}
 

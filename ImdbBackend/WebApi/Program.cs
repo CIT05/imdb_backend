@@ -20,6 +20,9 @@ using DataLayer.TitlePrincipals;
 using DBConnection.TitleAlternatives;
 using DataLayer.TitleAlternatives;
 
+using DBConnection.Users;
+using DataLayer.Users;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("config.json");
@@ -44,6 +47,9 @@ builder.Services.AddSingleton<ITitlePrincipalDataService>(
 
 builder.Services.AddSingleton<ITitleAlternativeDataService>(
     serviceProvider => new TitleAlternativeDataService(connectionString));
+
+builder.Services.AddSingleton<IUserDataService>(
+    serviceProvider => new UserDataService(connectionString));
 
 
 
