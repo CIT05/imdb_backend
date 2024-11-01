@@ -50,12 +50,36 @@ namespace WebApi.Controllers.TitlePrincipals
             return Ok(titlePrincipalModel);
         }
 
+        [HttpGet("{tconst}", Name = nameof(GetTitlePrincipalsForATitle))]
+        public IActionResult GetTitlePrincipalsForATitle(string tconst)
+        {
+            var titlePrincipals = _dataService.GetPrincipalsByTitleId(tconst);
+            if (titlePrincipals == null)
+            {
+                return NotFound();
+            }
+
+            var titlePrincipalModel = AdaptTitlePrincipalListToModelList(titlePrincipals);
+            return Ok(titlePrincipalModel);
+        }
+
         private TitlePrincipalModel AdaptTitlePrincipalToTitlePrincipalModel(TitlePrincipal titlePrincipal)
         {
             var titlePrincipalModel = titlePrincipal.Adapt<TitlePrincipalModel>();
             titlePrincipalModel.Url = GetUrl(titlePrincipal.TConst, titlePrincipal.NConst, titlePrincipal.Ordering, titlePrincipal.RoleId);
 
             return titlePrincipalModel;
+        }
+
+        private List<TitlePrincipalModel> AdaptTitlePrincipalListToModelList(IEnumerable<TitlePrincipal> titlePrincipals)
+        {
+            return titlePrincipals
+                .Select(tp => {
+                    var titlePrincipalModel = tp.Adapt<TitlePrincipalModel>();
+                    titlePrincipalModel.Url = GetUrl(tp.TConst, tp.NConst, tp.Ordering, tp.RoleId); 
+                    return titlePrincipalModel;
+                })
+                .ToList();
         }
 
         private string? GetUrl(string tconst, string nconst, int ordering, int roleId)
