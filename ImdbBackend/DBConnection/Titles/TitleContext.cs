@@ -38,12 +38,12 @@ namespace DBConnection.Titles
             modelBuilder.Entity<Title>().Property(title => title.RuntimeMinutes).HasColumnName("runtimeminutes");
             modelBuilder.Entity<Title>().Property(title => title.Plot).HasColumnName("plot");
             modelBuilder.Entity<Title>().Property(title => title.Poster).HasColumnName("poster");
+            modelBuilder.Entity<Title>().HasOne(title => title.Rating).WithOne(rating=> rating.Title).HasForeignKey<Rating>(rating => rating.TConst);
+            modelBuilder.Entity<Title>()
+                .HasMany(title => title.Principals)         
+                .WithOne(principal => principal.Title)       
+                .HasForeignKey(principal => principal.TConst);  
 
-            modelBuilder.Entity<Rating>()
-                .HasMany(r => r.Titles)
-                .WithOne(t => t.Rating)
-                .HasForeignKey(t => t.TConst) // Assuming TConst will act as the foreign key reference
-                .OnDelete(DeleteBehavior.Cascade); // Optional: set delete behavior
         }
     }
 }

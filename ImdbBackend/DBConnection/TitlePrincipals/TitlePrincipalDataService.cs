@@ -1,4 +1,5 @@
 ﻿using DataLayer.TitlePrincipals;
+using DataLayer.Titles;
 
 namespace DBConnection.TitlePrincipals
 {
@@ -6,14 +7,16 @@ namespace DBConnection.TitlePrincipals
     {
         private readonly ITitlePrincipalRepository _titlePrincipalRepository;
 
+
         public TitlePrincipalDataService(ITitlePrincipalRepository titlePrincipalRepository)
         {
             _titlePrincipalRepository = titlePrincipalRepository;
+
         }
 
         public List<TitlePrincipal> GetTitlePrincipals(int pageSize, int pageNumber)
         {
-            return _titlePrincipalRepository.GetTitlePrincipals(pageSize, pageNumber);
+           return _titlePrincipalRepository.GetTitlePrincipals(pageSize, pageNumber);
         }
 
         public TitlePrincipal? GetRoleInTitle(string tconst, string nconst, int ordering, int roleId)  
@@ -24,6 +27,11 @@ namespace DBConnection.TitlePrincipals
         public int NumberOfTitlePrincipals()  
         {
             return _titlePrincipalRepository.NumberOfTitlePrincipals();
+        }
+
+        public List<TitlePrincipal> GetPrincipalsByTitleId(string tConst)
+        {
+            return _titlePrincipalRepository.GetPrincipalsByTitleId(tConst);
         }
     }
 }

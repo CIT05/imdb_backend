@@ -1,5 +1,6 @@
 ﻿using DataLayer.TitlePrincipals;
-using DBConnection.TitlePrincipalPrincipals;
+using DBConnection.TitlePrincipals;
+using Microsoft.EntityFrameworkCore;
 
 namespace DBConnection.TitlePrincipals
 {
@@ -26,6 +27,14 @@ namespace DBConnection.TitlePrincipals
         {
             var db = new TitlePrincipalContext(_connectionString);
             return db.TitlePrincipals.Count();
+        }
+
+        public List<TitlePrincipal> GetPrincipalsByTitleId(string tConst)
+        {
+            var db = new TitlePrincipalContext(_connectionString);
+            return db.TitlePrincipals
+                .Where(principal => principal.TConst == tConst)
+                .ToList();
         }
     }
 }
