@@ -19,13 +19,15 @@ public class RolesController(IRoleDataService dataService, LinkGenerator linkGen
     [HttpGet(Name = nameof(GetRoles))]
     public IActionResult GetRoles(int pageSize = 2, int pageNumber = 0)
     {
-        var roles = _dataService.GetRoles(pageSize, pageNumber);
+        List<Role> roles = _dataService.GetRoles(pageSize, pageNumber);
 
-        var numberOfItmes = _dataService.NumberOfRoles();
+        List<RoleModel> rolesModel = roles.Select(role => AdaptRoleToRoleModel(role)).ToList();
+
+        int numberOfItmes = _dataService.NumberOfRoles();
 
         string linkName = nameof(GetRoles);
 
-        object result = CreatePaging(pageNumber, pageSize, numberOfItmes, linkName, roles);
+        object result = CreatePaging(pageNumber, pageSize, numberOfItmes, linkName, rolesModel);
 
         return Ok(result);
     }
@@ -47,14 +49,11 @@ public class RolesController(IRoleDataService dataService, LinkGenerator linkGen
     {
 
         var roleModel = role.Adapt<RoleModel>();
-        roleModel.Url = GetUrl(role.RoleId);
+        roleModel.Url = GetUrl(nameof(GetRoleById), new {roleId = role.RoleId});
         return roleModel;
 
     }
 
 
-    private string? GetUrl(int roleId)
-    {
-        return _linkGenerator.GetUriByName(HttpContext, nameof(GetRoleById), new { roleId });
-    }
+
 }

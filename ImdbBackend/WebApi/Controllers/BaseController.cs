@@ -47,6 +47,8 @@ namespace WebApi.Controllers
                           });
         }
 
+        // object routeValues is used to specify the path of the link f.e tconst = title.TConst or nconst = person.NConst
+
         protected string? GetUrl(string linkname, object routeValues)
         {
             return _linkGenerator.GetUriByName(HttpContext, linkname, routeValues);
