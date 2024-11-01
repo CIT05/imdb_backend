@@ -1,4 +1,5 @@
 ﻿using DataLayer.Titles;
+using Microsoft.EntityFrameworkCore;
 
 namespace DBConnection.Titles
 {
@@ -16,7 +17,7 @@ namespace DBConnection.Titles
         public Title? GetTitleById(string tconst)
         {
            var db = new ImdbContext(_connectionString);
-            return db.Titles.FirstOrDefault(title => title.TConst == tconst);
+            return db.Titles.Where(title => title.TConst == tconst).Include(title => title.Rating).SingleOrDefault();
         }
 
         public int NumberOfTitles()

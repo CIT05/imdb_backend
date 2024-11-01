@@ -1,6 +1,6 @@
-﻿using DataLayer.Ratings;
-using DataLayer.TitlePrincipals;
-using DataLayer.TitleAlternatives;
+﻿using WebApi.Models.Ratings;
+
+
 namespace WebApi.Models.Titles
 {
     public class TitleModel
@@ -23,10 +23,10 @@ namespace WebApi.Models.Titles
 
         public string? Poster { get; set; }
 
-        public Rating? Rating { get; set; }
+        public RatingModel? Rating { get; set; }
 
-        public List<TitlePrincipal> Principals { get; set; }
+        //public List<TitlePrincipal> Principals { get; set; }
 
-        public List<TitleAlternative> TitleAlternatives { get; set; }
+        //public List<TitleAlternative> TitleAlternatives { get; set; }
     }
 }
