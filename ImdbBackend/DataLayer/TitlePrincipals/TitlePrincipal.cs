@@ -15,9 +15,9 @@ namespace DataLayer.TitlePrincipals
         public string? Job {  get; set; }
         public string? Characters { get; set; }
 
-        private Title Title { get; set; }
-        private Person Person { get; set; }
-        private Role Role {  get; set; }
+        public Title Title { get; set; }
+        public Person Person { get; set; }
+        public Role Role {  get; set; }
 
     }
 }

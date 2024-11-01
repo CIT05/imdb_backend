@@ -1,12 +1,14 @@
 ﻿
 using DataLayer.Titles;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataLayer.Ratings;
 
-    public class Rating
-    {
+public class Rating
+{
     [Key]
+    [ForeignKey("Title")]
     public string TConst { get; set; } = string.Empty;
 
     public double AverageRating { get; set; }
@@ -14,7 +16,7 @@ namespace DataLayer.Ratings;
     public int NumberOfVotes { get; set; }
 
     //public Title Title { get; set; } --- it was giving me an error like this?? was telling me one to one is not correct relationship, and on diagram it is not one to one
-    public List<Title> Titles { get; set; } = new List<Title>();
-    //public Title Title { get; set; }
+    //public List<Title> Titles { get; set; } = new List<Title>();
+    public Title Title { get; set; }
 
 }

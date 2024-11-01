@@ -29,9 +29,9 @@ public class Title
     public string? Poster { get; set; }
 //had to add this here cause it was complaining about the relationship rating title?? on getTitles method
     //public string? RatingTConst { get; set; }
-
-    public List<TitlePrincipal> TitlePrincipals { get; set; }
     public List<TitleAlternative> TitleAlternatives { get; set; }
     public Rating Rating { get; set; }
+    public List<TitlePrincipal> Principals { get; set; } = new List<TitlePrincipal>();
+
 
 }
