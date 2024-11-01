@@ -16,7 +16,16 @@ public class User
 
 }
 
-public class CreatedUserId
+public class CreateUserResult
 {
     public int UserId { get; set; }
 }
+
+public class UpdateUserResult
+{
+    public int UserId { get; set; }
+}
+
+
+
+

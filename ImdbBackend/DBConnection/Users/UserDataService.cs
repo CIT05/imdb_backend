@@ -15,7 +15,7 @@ public class UserDataService(string connectionString) : IUserDataService
     {
         var db = new ImdbContext(connectionString);
 
-        CreatedUserId createdUser = db.CreatedUserIds.FromSqlInterpolated($"select * from create_user({username}, {password}, {language})").ToList().FirstOrDefault();
+        CreateUserResult createdUser = db.CreateUserResult.FromSqlInterpolated($"select * from create_user({username}, {password}, {language})").ToList().FirstOrDefault();
 
         if(createdUser == null)
         {
@@ -26,4 +26,33 @@ public class UserDataService(string connectionString) : IUserDataService
 
         return newUser;
     }
+
+    public bool DeleteUser(int userId)
+    {
+       var db = new ImdbContext(connectionString);
+       
+        int affectedRows = db.Users
+        .Where(user => user.UserId == userId)
+        .ExecuteDelete();
+
+        return affectedRows > 0;
+    }
+
+    public User? UpdateUser(int userId, string username, string password, string language)
+    {
+        var db = new ImdbContext(connectionString);
+
+        UpdateUserResult updatedUserResult = db.UpdateUserResult.FromSqlInterpolated($"select * from update_user({userId}, {username}, {password}, {language})").ToList().FirstOrDefault();
+
+        if (updatedUserResult == null)
+        {
+            return null;
+        }
+
+        User updatedUser = new() { UserId = userId, Username = username, Password = password, Language = language };
+        return updatedUser;
+
+
+    }
+
 }

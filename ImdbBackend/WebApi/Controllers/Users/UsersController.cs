@@ -1,5 +1,4 @@
-﻿using DataLayer.Titles;
-using DataLayer.Users;
+﻿using DataLayer.Users;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Models.Users;
@@ -36,6 +35,29 @@ public class UsersController(IUserDataService dataService, LinkGenerator linkGen
         }
         UserModel createdUserModel = AdaptUserToUserModel(createdUser);
         return Ok(createdUserModel);
+    }
+
+    [HttpDelete("{userid}")]
+    public IActionResult DeleteUser(int userid)
+    {
+        bool deleted = _dataService.DeleteUser(userid);
+        if (!deleted)
+        {
+            return NotFound();
+        }
+        return NoContent();
+    }
+
+    [HttpPut("{userid}")]
+    public IActionResult UpdateUser(int userid, CreateUserModel createUserModel)
+    {
+        var updatedUser = _dataService.UpdateUser(userid, createUserModel.Username, createUserModel.Password, createUserModel.Language);
+        if (updatedUser == null)
+        {
+            return NotFound();
+        }
+        UserModel updatedUserModel = AdaptUserToUserModel(updatedUser);
+        return Ok(updatedUserModel);
     }
 
     private UserModel AdaptUserToUserModel(User user)

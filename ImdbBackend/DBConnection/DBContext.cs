@@ -23,7 +23,9 @@ namespace DBConnection;
 
         public DbSet<User> Users { get; set; }
 
-        public DbSet<CreatedUserId> CreatedUserIds { get; set; }
+        public DbSet<CreateUserResult> CreateUserResult { get; set; }
+
+        public DbSet<UpdateUserResult> UpdateUserResult { get; set; }
 
         public DbSet<Title> Titles { get; set; }
 
@@ -149,8 +151,11 @@ namespace DBConnection;
         modelBuilder.Entity<User>().Property(user => user.Username).HasColumnName("username");
         modelBuilder.Entity<User>().Property(user => user.Language).HasColumnName("language");
 
-        modelBuilder.Entity<CreatedUserId>().HasNoKey();
-        modelBuilder.Entity<CreatedUserId>().Property(e => e.UserId).HasColumnName("created_user_id");
+        modelBuilder.Entity<CreateUserResult>().HasNoKey();
+        modelBuilder.Entity<CreateUserResult>().Property(e => e.UserId).HasColumnName("created_user_result");
+
+        modelBuilder.Entity<UpdateUserResult>().HasNoKey();
+        modelBuilder.Entity<UpdateUserResult>().Property(e => e.UserId).HasColumnName("updated_user_result");
     }
 
 
