@@ -1,12 +1,14 @@
 ﻿
 using DataLayer.Titles;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataLayer.Ratings;
 
-    public class Rating
-    {
+public class Rating
+{
     [Key]
+    [ForeignKey("Title")]
     public string TConst { get; set; } = string.Empty;
 
     public double AverageRating { get; set; }
