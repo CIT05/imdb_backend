@@ -53,9 +53,9 @@ namespace DBConnection;
     {
         modelBuilder.Entity<Person>().ToTable("name_basics_new");
         modelBuilder.Entity<Person>().Property(person => person.NConst).HasColumnName("nconst");
-        modelBuilder.Entity<Person>().Property(person => person.primaryName).HasColumnName("primaryname");
-        modelBuilder.Entity<Person>().Property(person => person.birthYear).HasColumnName("birthyear");
-        modelBuilder.Entity<Person>().Property(person => person.deathYear).HasColumnName("deathyear");
+        modelBuilder.Entity<Person>().Property(person => person.PrimaryName).HasColumnName("primaryname");
+        modelBuilder.Entity<Person>().Property(person => person.BirthYear).HasColumnName("birthyear");
+        modelBuilder.Entity<Person>().Property(person => person.DeathYear).HasColumnName("deathyear");
     }
 
     private static void BuildRatings(ModelBuilder modelBuilder)

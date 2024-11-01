@@ -8,11 +8,11 @@ public class Person
     [Key]
     public string NConst { get; set; }
 
-    public string primaryName{ get; set; } = string.Empty;
+    public string PrimaryName{ get; set; } = string.Empty;
 
-    public string? birthYear { get; set; } = string.Empty;
+    public string? BirthYear { get; set; } = string.Empty;
 
-    public string? deathYear { get; set; }
+    public string? DeathYear { get; set; }
 
     public List<TitlePrincipal> TitlePrincipals { get; set; }
 

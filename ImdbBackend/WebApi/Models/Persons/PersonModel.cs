@@ -6,9 +6,9 @@
 
         public string PrimaryName { get; set; } = string.Empty;
 
-        public string? birthYear { get; set; }
+        public string? BirthYear { get; set; }
 
-        public string? deathYear { get; set; }
+        public string? DeathYear { get; set; }
 
 
     }

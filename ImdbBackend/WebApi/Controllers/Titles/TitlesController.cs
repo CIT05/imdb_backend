@@ -50,7 +50,7 @@ public class TitlesController(ITitleDataService dataService, LinkGenerator linkG
     {
 
         var titleModel = title.Adapt<TitleModel>();
-        titleModel.Url = GetUrl(nameof(RatingsController.GetRatingById), new {tconst = title.TConst});
+        titleModel.Url = GetUrl(nameof(GetTitleById), new {tconst = title.TConst});
         if(titleModel.Rating != null)
         {
             titleModel.Rating.Url = GetUrl(nameof(RatingsController.GetRatingById), new { tconst = title.TConst });
