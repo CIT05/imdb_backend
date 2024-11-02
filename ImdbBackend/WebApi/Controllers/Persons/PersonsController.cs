@@ -67,7 +67,7 @@ public class PersonsController(IPersonDataService dataService, LinkGenerator lin
 
     }
 
-    private PersonsByMovieResultModel AdaptPersonsByMovieResultToPersonsByMovieResultModel(PersonsByMovieResultWithPerson personsByMovieResult, string tconst)
+    private PersonsByMovieResultModel AdaptPersonsByMovieResultToPersonsByMovieResultModel(PersonsByMovieResult personsByMovieResult, string tconst)
     {
         var personsByMovieResultModel = personsByMovieResult.Adapt<PersonsByMovieResultModel>();
         personsByMovieResultModel.Url = GetUrl(nameof(GetPersonsByMovie), new { tconst });

@@ -33,6 +33,34 @@ public class SearchController(ISearchingDataService dataService, LinkGenerator l
         return Ok(stringSearchResultModel);
     }
 
+    [HttpGet("title/exact/{stringSearch}", Name = nameof(ExactTitleSearch))]
+    public IActionResult ExactTitleSearch(string stringSearch)
+    {
+        var exactSearchResult = _dataService.MovieExactSearch(stringSearch);
+        if (exactSearchResult.Count == 0)
+        {
+            return NotFound();
+        }
+
+        List<ExactSearchResultModel> exactSearchResultModel = exactSearchResult.Select(result => AdaptExactSearchResultToExactSearchResultModel(result, stringSearch)).ToList();
+
+        return Ok(exactSearchResultModel);
+    }
+
+    [HttpGet("title/best/{stringSearch}", Name = nameof(BestMatchTitleSearch))]
+    public IActionResult BestMatchTitleSearch(string stringSearch)
+    {
+        var bestSearchResult = _dataService.MovieBestSearch(stringSearch);
+        if (bestSearchResult.Count == 0)
+        {
+            return NotFound();
+        }
+
+        List<BestSearchResultModel> bestSearchResultModel = bestSearchResult.Select(result => AdaptBestSearchResultToBestSearchResultModel(result, stringSearch)).ToList();
+
+        return Ok(bestSearchResultModel);
+    }
+
     [HttpPost("title", Name = nameof(SearchTitleByMultipleValues))]
     public IActionResult SearchTitleByMultipleValues([FromBody] SearchTitleOrActorByMultipleValuesModel body)
     {
@@ -87,6 +115,31 @@ public class SearchController(ISearchingDataService dataService, LinkGenerator l
         var stringSearchResultModel = actorStringSearchResult.Adapt<ActorStringSearchResultModel>();
         stringSearchResultModel.Url = GetUrl(nameof(PersonsController.GetPersonById), new { nconst = actorStringSearchResult.ActorId }) ?? string.Empty;
         return stringSearchResultModel;
+    }
+
+    private ExactSearchResultModel AdaptExactSearchResultToExactSearchResultModel(ExactSearchResult exactSearchResult, string stringSearch)
+    {
+        var exactSearchResultModel = exactSearchResult.Adapt<ExactSearchResultModel>();
+        exactSearchResultModel.Url = GetUrl(nameof(ExactTitleSearch), new { stringSearch }) ?? string.Empty;
+
+        if(exactSearchResult.Title != null)
+        {
+            exactSearchResultModel.Title.Url = GetUrl(nameof(TitlesController.GetTitleById), new { tconst = exactSearchResult.TConst }) ?? string.Empty;
+        }
+        return exactSearchResultModel;
+    }
+
+  private BestSearchResultModel AdaptBestSearchResultToBestSearchResultModel(BestSearchResult bestSearchResult, string stringSearch)
+    {
+        var bestSearchResultModel = bestSearchResult.Adapt<BestSearchResultModel>();
+        bestSearchResultModel.Url = GetUrl(nameof(BestMatchTitleSearch), new { stringSearch }) ?? string.Empty;
+
+        if (bestSearchResultModel.Title != null)
+        {
+            bestSearchResultModel.Title.Url = GetUrl(nameof(TitlesController.GetTitleById), new { tconst = bestSearchResult.TConst }) ?? string.Empty;
+        }
+
+        return bestSearchResultModel;
     }
 
 

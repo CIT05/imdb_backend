@@ -38,9 +38,13 @@ namespace DBConnection;
 
         public DbSet<AddRatingResult> AddRatingResults { get; set; }
 
-        public DbSet<PersonsByMovieResultWithPerson> PersonsByMovieResult { get; set; }
+        public DbSet<PersonsByMovieResult> PersonsByMovieResult { get; set; }
 
         public DbSet<PersonRatingResult> PersonRatingResults { get; set; }
+
+        public DbSet<ExactSearchResult> ExactSearchResults { get; set; }
+
+        public DbSet<BestSearchResult> BestSearchResults { get; set; }
 
 
     private readonly string _connectionString;
@@ -79,9 +83,10 @@ namespace DBConnection;
         modelBuilder.Entity<Person>().Property(person => person.BirthYear).HasColumnName("birthyear");
         modelBuilder.Entity<Person>().Property(person => person.DeathYear).HasColumnName("deathyear");
 
-        modelBuilder.Entity<PersonsByMovieResultWithPerson>().HasNoKey();
-        modelBuilder.Entity<PersonsByMovieResultWithPerson>().Property(e => e.NConst).HasColumnName("nconst");
-        modelBuilder.Entity<PersonsByMovieResultWithPerson>().Property(e => e.PersonRating).HasColumnName("rating");
+        modelBuilder.Entity<PersonsByMovieResult>().HasKey(personsBymovieResult => personsBymovieResult.NConst);
+        modelBuilder.Entity<PersonsByMovieResult>().Property(e => e.NConst).HasColumnName("nconst");
+        modelBuilder.Entity<PersonsByMovieResult>().Property(e => e.PersonRating).HasColumnName("rating");
+        modelBuilder.Entity<PersonsByMovieResult>().HasOne(e => e.Person).WithMany().HasForeignKey(e => e.NConst);
 
     }
 
@@ -200,6 +205,15 @@ namespace DBConnection;
         modelBuilder.Entity<ActorStringSearchResult>().HasNoKey();
         modelBuilder.Entity<ActorStringSearchResult>().Property(stringSearch => stringSearch.ActorId).HasColumnName("actorId");
         modelBuilder.Entity<ActorStringSearchResult>().Property(stringSearch => stringSearch.ActorName).HasColumnName("actorName");
+
+        modelBuilder.Entity<ExactSearchResult>().HasKey(result => result.TConst);
+        modelBuilder.Entity<ExactSearchResult>().Property(result => result.TConst).HasColumnName("tconst");
+        modelBuilder.Entity<ExactSearchResult>().HasOne(b => b.Title).WithMany().HasForeignKey(b => b.TConst);
+
+        modelBuilder.Entity<BestSearchResult>().HasKey(result => result.TConst);
+        modelBuilder.Entity<BestSearchResult>().Property(result => result.TConst).HasColumnName("tconst");
+        modelBuilder.Entity<BestSearchResult>().Property(result => result.MatchCount).HasColumnName("match_count");
+        modelBuilder.Entity<BestSearchResult>().HasOne(b => b.Title).WithMany().HasForeignKey(b => b.TConst);
 
     }
 

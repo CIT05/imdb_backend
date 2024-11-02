@@ -20,24 +20,10 @@ namespace DBConnection.Persons
             return db.Persons.Find(tconst);
         }
 
-        public List<PersonByMovieResultWithPerson> GetPersonsByMovie(string tconst)
+        public List<PersonsByMovieResult> GetPersonsByMovie(string tconst)
         {
             var db = new ImdbContext(_connectionString);
-            var persons = db.PersonsByMovieResult.FromSqlInterpolated($"SELECT * FROM get_actors_for_movie({tconst})").ToList();
-
-            var personByMovieResultWithPerson = persons.Select(person =>
-            {
-                return new PersonByMovieResultWithPerson
-                {
-                    Person = GetPersonById(person.NConst),
-                    PersonRating = person.PersonRating,
-                    NConst = person.NConst,
-
-
-                };
-             }).ToList();
-
-            return personByMovieResultWithPerson;
+            return db.PersonsByMovieResult.FromSqlInterpolated($"SELECT * FROM get_actors_for_movie({tconst})").Include(result => result.Person).ToList();
         }
 
 

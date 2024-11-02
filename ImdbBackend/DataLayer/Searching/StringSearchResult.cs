@@ -1,4 +1,6 @@
-﻿namespace DataLayer.Searching;
+﻿using DataLayer.Titles;
+
+namespace DataLayer.Searching;
 
 public class TitleStringSearchResult
 {
@@ -12,3 +14,19 @@ public class ActorStringSearchResult
     public string ActorName { get; set; } = string.Empty;
 }
 
+public class ExactSearchResult
+{
+    public string TConst { get; set; } = string.Empty;
+
+    public Title? Title { get; set; }
+}
+
+public class BestSearchResult
+{
+
+    public string TConst { get; set; } = string.Empty;
+
+    public Title? Title { get; set; }
+
+    public int MatchCount { get; set; }
+}

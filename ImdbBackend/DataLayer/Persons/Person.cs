@@ -19,15 +19,11 @@ public class Person
 
 }
 
-public class PersonsByMovieResultWithPerson
+public class PersonsByMovieResult
 {
     public string NConst { get; set; }
 
     public double PersonRating { get; set; }
-}
 
-public class  PersonByMovieResultWithPerson : PersonsByMovieResultWithPerson
-{
-
-    public Person Person { get; set; }
+    public Person? Person { get; set; }
 }

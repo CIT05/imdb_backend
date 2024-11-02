@@ -43,5 +43,23 @@ public class SearchingDataService : ISearchingDataService
 
         return results;
     }
+
+    public List<ExactSearchResult> MovieExactSearch(string searchString)
+    {
+        var db = new ImdbContext(_connectionString);
+        var stringSearchArray = searchString.Split(" ").Select(s => s.ToLower()).ToArray();
+        var results = db.ExactSearchResults.FromSqlInterpolated($"SELECT * FROM exact_match_query({stringSearchArray})").Include(result => result.Title).ToList();
+
+        return results;
+    }
+
+    public List<BestSearchResult> MovieBestSearch(string searchString)
+    {
+        var db = new ImdbContext(_connectionString);
+        var stringSearchArray = searchString.Split(" ").Select(s => s.ToLower()).ToArray();
+        var results = db.BestSearchResults.FromSqlInterpolated($"SELECT * FROM exact_bestmatch_query({stringSearchArray})").Include(result => result.Title).ToList();
+
+        return results;
+    }
 }
 
