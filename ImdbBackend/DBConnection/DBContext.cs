@@ -24,13 +24,15 @@ namespace DBConnection;
 
         public DbSet<User> Users { get; set; }
 
-        public DbSet<CreateUserResult> CreateUserResult { get; set; }
+        public DbSet<CreateUserResult> CreateUserResults { get; set; }
 
-        public DbSet<UpdateUserResult> UpdateUserResult { get; set; }
+        public DbSet<UpdateUserResult> UpdateUserResults { get; set; }
 
         public DbSet<Title> Titles { get; set; }
 
-        public DbSet<StringSearchResult> StringSearchResults { get; set; }
+        public DbSet<TitleStringSearchResult> TitleStringSearchResults { get; set; }
+
+        public DbSet<ActorStringSearchResult> ActorStringSearchResults { get; set; }
 
         public DbSet <RatingForUserResult> RatingForUserResults { get; set; }
 
@@ -179,9 +181,13 @@ namespace DBConnection;
 
     private static void BuildSearch(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<StringSearchResult>().HasNoKey();
-        modelBuilder.Entity<StringSearchResult>().Property(stringSearch => stringSearch.TitleId).HasColumnName("idTitle");
-        modelBuilder.Entity<StringSearchResult>().Property(stringSearch => stringSearch.Title).HasColumnName("title");
+        modelBuilder.Entity<TitleStringSearchResult>().HasNoKey();
+        modelBuilder.Entity<TitleStringSearchResult>().Property(stringSearch => stringSearch.TitleId).HasColumnName("idTitle");
+        modelBuilder.Entity<TitleStringSearchResult>().Property(stringSearch => stringSearch.Title).HasColumnName("title");
+
+        modelBuilder.Entity<ActorStringSearchResult>().HasNoKey();
+        modelBuilder.Entity<ActorStringSearchResult>().Property(stringSearch => stringSearch.ActorId).HasColumnName("actorId");
+        modelBuilder.Entity<ActorStringSearchResult>().Property(stringSearch => stringSearch.ActorName).HasColumnName("actorName");
 
     }
 
