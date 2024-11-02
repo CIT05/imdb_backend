@@ -4,6 +4,7 @@ using DataLayer.TitlePrincipals;
 using DataLayer.TitleAlternatives;
 using WebApi.Models.TitlePrincipals;
 using WebApi.Models.TitleALternatives;
+using WebApi.Models.Genres;
 
 namespace WebApi.Models.Titles
 {
@@ -32,5 +33,7 @@ namespace WebApi.Models.Titles
         public List<TitlePrincipalModel> Principals { get; set; }
 
         public List<TitleAlternativeModel> TitleAlternatives { get; set; }
+
+        public List<GenreModel> Genres { get; set; }
     }
 }

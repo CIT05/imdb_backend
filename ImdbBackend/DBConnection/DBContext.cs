@@ -1,4 +1,5 @@
-﻿using DataLayer.Persons;
+﻿using DataLayer.Genres;
+using DataLayer.Persons;
 using DataLayer.Ratings;
 using DataLayer.Roles;
 using DataLayer.TitleAlternatives;
@@ -20,6 +21,8 @@ namespace DBConnection;
         public DbSet<TitleAlternative> TitleAlternatives { get; set; }
 
         public DbSet<TitlePrincipal> TitlePrincipals { get; set; }
+
+        public DbSet<Genre> Genres { get; set; }
 
         public DbSet<User> Users { get; set; }
 
@@ -52,6 +55,7 @@ namespace DBConnection;
           BuildRoles(modelBuilder);
           BuildTitleAlternatives(modelBuilder);
           BuildTitlePrincipals(modelBuilder);
+          BuildGenres(modelBuilder);
           BuildTitle(modelBuilder);
           BuildUser(modelBuilder);
 
@@ -151,8 +155,32 @@ namespace DBConnection;
           .HasMany(title => title.TitleAlternatives)
             .WithOne(alt => alt.Title)
             .HasForeignKey(ta => ta.TitleId);
-    
+
+     modelBuilder.Entity<Title>()
+    .HasMany(title => title.Genres)
+    .WithMany(genre => genre.Titles)
+    .UsingEntity<Dictionary<string, object>>(
+        "title_genres",
+        j => j.HasOne<Genre>()
+              .WithMany()
+              .HasForeignKey("genreid")   // Specify FK column name for Genre
+              .HasConstraintName("title_genres_genreid_fkey"),
+        j => j.HasOne<Title>()
+              .WithMany()
+              .HasForeignKey("tconst")  // Specify FK column name for Title
+              .HasConstraintName("title_genres_tconst_fkey")
+    );
+
   }
+
+        private static void BuildGenres(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Genre>().ToTable("genres");
+            modelBuilder.Entity<Genre>().Property(genre => genre.GenreId).HasColumnName("genreid");
+            modelBuilder.Entity<Genre>().Property(genre => genre.GenreName).HasColumnName("name");
+        }
+
+
     private static void BuildUser(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>().ToTable("users");
