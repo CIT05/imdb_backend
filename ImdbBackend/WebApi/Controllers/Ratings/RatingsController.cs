@@ -20,11 +20,13 @@ public class RatingsController(IRatingDataService dataService, LinkGenerator lin
     {
         var ratings = _dataService.GetRatings(pageSize, pageNumber);
 
+        List<RatingModel> ratingModels = ratings.Select(rating => AdaptRatingToRatingModel(rating)).ToList();
+
         var numberOfItmes = _dataService.NumberOfRatings();
 
         string linkName = nameof(GetRatings);
 
-        object result = CreatePaging(pageNumber, pageSize, numberOfItmes, linkName, ratings);
+        object result = CreatePaging(pageNumber, pageSize, numberOfItmes, linkName, ratingModels);
 
         return Ok(result);
     }
@@ -46,14 +48,11 @@ public class RatingsController(IRatingDataService dataService, LinkGenerator lin
     {
 
         var ratingModel = rating.Adapt<RatingModel>();
-        ratingModel.Url = GetUrl(rating.TConst);
+        ratingModel.Url = GetUrl(nameof(GetRatingById), new {tconst = rating.TConst});
         return ratingModel;
 
     }
 
 
-    private string? GetUrl(string tconst)
-    {
-        return _linkGenerator.GetUriByName(HttpContext, nameof(GetRatingById), new { tconst });
-    }
+
 }

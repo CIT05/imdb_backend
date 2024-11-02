@@ -10,7 +10,11 @@ namespace DBConnection.Persons
         public List<Person> GetPersons(int pageSize, int pageNumber)
         {
             var db = new ImdbContext(_connectionString);
-            return db.Persons.Skip(pageNumber * pageSize).Take(pageSize).ToList();
+            return db.Persons
+            .Skip(pageNumber * pageSize)
+            .Take(pageSize)
+            .Include(p => p.PersonRoles.OrderBy(pr => pr.Ordering))
+            .ToList();
         }
 
         public Person? GetPersonById(string nconst)

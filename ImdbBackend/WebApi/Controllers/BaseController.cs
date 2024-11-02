@@ -13,7 +13,7 @@ namespace WebApi.Controllers
 
         protected object CreatePaging<T>(int pageNumber, int pageSize, int total, string linkName, IEnumerable<T?> items)
         {
-            const int maxPageSize = 10;
+            const int maxPageSize = 100;
 
             pageSize = pageSize < maxPageSize ? maxPageSize : pageSize;
 
@@ -46,5 +46,13 @@ namespace WebApi.Controllers
                               pageSize
                           });
         }
+
+        // object routeValues is used to specify the path of the link f.e tconst = title.TConst or nconst = person.NConst
+
+        protected string? GetUrl(string linkname, object routeValues)
+        {
+            return _linkGenerator.GetUriByName(HttpContext, linkname, routeValues);
+        }
     }
 }
+

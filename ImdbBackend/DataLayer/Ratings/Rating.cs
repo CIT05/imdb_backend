@@ -16,7 +16,4 @@ public class Rating
 
     public int NumberOfVotes { get; set; }
 
-    [JsonIgnore]
-    public Title Title { get; set; }
-
 }

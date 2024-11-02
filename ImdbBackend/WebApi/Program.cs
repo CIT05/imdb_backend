@@ -20,6 +20,9 @@ using DataLayer.TitlePrincipals;
 using DBConnection.TitleAlternatives;
 using DataLayer.TitleAlternatives;
 
+using DBConnection.Users;
+using DataLayer.Users;
+
 using DataLayer.PersonRoles;
 using DBConnection.PersonRoles;
 
@@ -47,6 +50,9 @@ builder.Services.AddSingleton<ITitlePrincipalDataService>(
 
 builder.Services.AddSingleton<ITitleAlternativeDataService>(
     serviceProvider => new TitleAlternativeDataService(connectionString));
+
+builder.Services.AddSingleton<IUserDataService>(
+    serviceProvider => new UserDataService(connectionString));
 
 builder.Services.AddSingleton<IPersonRoleDataService>(
     serviceProvider => new PersonRoleDataService(connectionString));

@@ -2,6 +2,11 @@ using DataLayer.Persons;
 using WebApi.Models.Persons;
 using Microsoft.AspNetCore.Mvc;
 using Mapster;
+using DataLayer.Titles;
+using WebApi.Controllers.Ratings;
+using WebApi.Models.Titles;
+using WebApi.Controllers.PersonRoles;
+using DataLayer.PersonRoles;
 
 namespace WebApi.Controllers.Persons;
 
@@ -24,7 +29,9 @@ public class PersonsController(IPersonDataService dataService, LinkGenerator lin
 
         string linkName = nameof(GetPersons);
 
-        object result = CreatePaging(pageNumber, pageSize, numberOfItmes, linkName, persons);
+        List<PersonModel> personsModel = persons.Select(person => AdaptPersonToPersonModel(person)).ToList();
+
+        object result = CreatePaging(pageNumber, pageSize, numberOfItmes, linkName, personsModel);
 
         return Ok(result);
     }
@@ -42,18 +49,24 @@ public class PersonsController(IPersonDataService dataService, LinkGenerator lin
         return Ok(PersonModel);
     }
 
-    private PersonModel AdaptPersonToPersonModel(Person persons)
+    private PersonModel AdaptPersonToPersonModel(Person person)
     {
 
-        var personModel = persons.Adapt<PersonModel>();
-        personModel.Url = GetUrl(persons.NConst);
+        var personModel = person.Adapt<PersonModel>();
+        personModel.Url = GetUrl(nameof(GetPersonById), new { nconst = person.NConst });
+
+        if (personModel.PersonRoles != null && personModel.PersonRoles.Count > 0)
+        {
+            personModel.PersonRoles = personModel.PersonRoles.Select((personRoleModel, index) =>
+            {
+                var personRole = person.PersonRoles.ElementAt(index);
+
+                personRoleModel.Url = GetUrl(nameof(PersonRoleController.GetRoleDetailsByPersonId), new { nconst = personRole.NConst });
+
+                return personRoleModel;
+            }).ToList();
+        }
         return personModel;
 
-    }
-
-
-    private string? GetUrl(string nconst)
-    {
-        return _linkGenerator.GetUriByName(HttpContext, nameof(GetPersonById), new { nconst });
     }
 }

@@ -7,7 +7,7 @@ namespace WebApi.Models.PersonRoles
     {
         public string? Url { get; set; }
         public int RoleId { get; set; }
-        public int Ordering { get; set; }
+        //public int Ordering { get; set; }
 
     }
 }
