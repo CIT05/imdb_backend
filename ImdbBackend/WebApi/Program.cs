@@ -26,6 +26,9 @@ using DataLayer.Users;
 using DBConnection.Genres;
 using DataLayer.Genres;
 
+using DBConnection.Type;
+using DataLayer.Types;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("config.json");
@@ -54,10 +57,11 @@ builder.Services.AddSingleton<ITitleAlternativeDataService>(
 builder.Services.AddSingleton<IUserDataService>(
     serviceProvider => new UserDataService(connectionString));
 
-
 builder.Services.AddSingleton<IGenreDataService>(
     serviceProvider => new GenreDataService(connectionString));
     
+builder.Services.AddSingleton<ITypeDataService>(
+    serviceProvider => new TypeDataService(connectionString));
 
 
 

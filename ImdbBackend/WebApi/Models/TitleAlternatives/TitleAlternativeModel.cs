@@ -1,3 +1,5 @@
+using WebApi.Models.Types;
+
 namespace WebApi.Models.TitleALternatives
 {
     public class TitleAlternativeModel
@@ -11,4 +13,6 @@ namespace WebApi.Models.TitleALternatives
         public string? Attributes { get; set; }
         public string? IsOriginalTitle { get; set; }
         public string? TitleId { get; set; }
+
+        public List<TypeModel> Types { get; set; }
     }}

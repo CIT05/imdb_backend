@@ -25,8 +25,8 @@ namespace DBConnection.Titles
 
         public List<Genre> GetGenres(int genreId)
                 {
-                    var db = new ImdbContext(_connectionString);
-                    return db.Genres.Where(genre => genre.GenreId == genreId).ToList();
+     var db = new ImdbContext(_connectionString);
+    return db.Genres.Where(genre => genre.GenreId == genreId).ToList();
                 }
 
         public List<TitleAlternative> GetTitleAlternatives(string tconst)

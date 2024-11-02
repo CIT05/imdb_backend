@@ -6,6 +6,7 @@ using DataLayer.TitleAlternatives;
 using DataLayer.TitlePrincipals;
 using DataLayer.Titles;
 using DataLayer.Users;
+using DataLayer.Types;
 using Microsoft.EntityFrameworkCore;
 
 namespace DBConnection;
@@ -23,6 +24,8 @@ namespace DBConnection;
         public DbSet<TitlePrincipal> TitlePrincipals { get; set; }
 
         public DbSet<Genre> Genres { get; set; }
+
+        public DbSet<TitleType> Types { get; set; }
 
         public DbSet<User> Users { get; set; }
 
@@ -56,8 +59,10 @@ namespace DBConnection;
           BuildTitleAlternatives(modelBuilder);
           BuildTitlePrincipals(modelBuilder);
           BuildGenres(modelBuilder);
+          BuildTypes(modelBuilder);
           BuildTitle(modelBuilder);
           BuildUser(modelBuilder);
+
 
     }
 
@@ -103,6 +108,23 @@ namespace DBConnection;
          .HasOne(tA => tA.Title) 
          .WithMany(title => title.TitleAlternatives) 
          .HasForeignKey(tp => tp.TitleId);
+
+
+        modelBuilder.Entity<TitleAlternative>()
+        .HasMany(title => title.Types)
+        .WithMany(types => types.Titles)
+        .UsingEntity<Dictionary<string, object>>(
+            "title_types",
+        j => j.HasOne<TitleType>()
+              .WithMany()
+              .HasForeignKey("typeid")  
+            .HasConstraintName("title_types_typeid_fkey"),
+
+        j => j.HasOne<TitleAlternative>()
+              .WithMany()
+              .HasForeignKey("akasid")
+              .HasConstraintName("title_types_akasid_fkey")
+    );
     }
 
     private static void BuildTitlePrincipals(ModelBuilder modelBuilder)
@@ -170,7 +192,7 @@ namespace DBConnection;
               .HasForeignKey("tconst")  // Specify FK column name for Title
               .HasConstraintName("title_genres_tconst_fkey")
     );
-
+   
   }
 
         private static void BuildGenres(ModelBuilder modelBuilder)
@@ -180,6 +202,13 @@ namespace DBConnection;
             modelBuilder.Entity<Genre>().Property(genre => genre.GenreName).HasColumnName("name");
         }
 
+
+        private static void BuildTypes(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<TitleType>().ToTable("types");
+            modelBuilder.Entity<TitleType>().Property(type => type.TypeId).HasColumnName("typeid");
+            modelBuilder.Entity<TitleType>().Property(type => type.TypeName).HasColumnName("type");
+        }
 
     private static void BuildUser(ModelBuilder modelBuilder)
     {
@@ -195,7 +224,6 @@ namespace DBConnection;
         modelBuilder.Entity<UpdateUserResult>().HasNoKey();
         modelBuilder.Entity<UpdateUserResult>().Property(e => e.UserId).HasColumnName("updated_user_result");
     }
-
 
 }
 

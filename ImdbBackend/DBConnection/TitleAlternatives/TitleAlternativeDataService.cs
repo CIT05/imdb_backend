@@ -1,4 +1,5 @@
 ﻿using DataLayer.TitleAlternatives;
+using Microsoft.EntityFrameworkCore;
 
 namespace DBConnection.TitleAlternatives
 {
@@ -10,7 +11,7 @@ namespace DBConnection.TitleAlternatives
         public List<TitleAlternative> GetTitleAlternatives(int pageSize, int pageNumber)
         {
             var db = new ImdbContext(_connectionString);
-            return db.TitleAlternatives.Skip(pageNumber * pageSize).Take(pageSize).ToList();
+            return db.TitleAlternatives.Skip(pageNumber * pageSize).Take(pageSize).Include(title => title.Types).ToList();
         }
 
         public TitleAlternative GetTitleAlternative(int akasId, int ordering)
@@ -27,6 +28,17 @@ namespace DBConnection.TitleAlternatives
             
             return result;
         }
+
+
+        public List<TitleAlternative> GetTitleAlternativesByType(string type)
+        {
+            var db = new ImdbContext(_connectionString);
+            return db.TitleAlternatives
+                 .Include(title => title.Types)
+                 .Where(title => title.Types.Any(t => t.TypeName == type))
+                 .ToList();
+        }
+
 
         public int NumberOfTitleAlternatives()
         {
