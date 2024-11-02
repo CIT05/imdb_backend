@@ -1,4 +1,5 @@
 ﻿using DataLayer.Ratings;
+using Microsoft.EntityFrameworkCore;
 
 namespace DBConnection.Ratings;
 
@@ -17,6 +18,19 @@ public class RatingDataService(string connectionString) : IRatingDataService
     {
        var db = new ImdbContext(_connectionString);
         return db.Ratings.Skip(pageNumber * pageSize).Take(pageSize).ToList();
+    }
+
+    public List<RatingForUserResult> GetRatingByUser(int userId, string tconst)
+    {
+        var db = new ImdbContext(_connectionString);
+        return db.RatingForUserResults.FromSqlInterpolated($"SELECT * FROM get_rating_by_user({userId}, {tconst})").ToList();
+    }
+
+    public bool AddRating(int userId, string tconst, int rating)
+    {
+        var db = new ImdbContext(_connectionString);
+        var isAddRatingSuccess = db.AddRatingResults.FromSqlInterpolated($"SELECT * FROM add_rating({tconst}, {userId}, {rating})").ToList().FirstOrDefault().IsSuccess;
+        return isAddRatingSuccess;
     }
 
     public int NumberOfRatings()

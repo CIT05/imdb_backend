@@ -32,8 +32,12 @@ namespace DBConnection;
 
         public DbSet<StringSearchResult> StringSearchResults { get; set; }
 
+        public DbSet <RatingForUserResult> RatingForUserResults { get; set; }
 
-        private readonly string _connectionString;
+        public DbSet<AddRatingResult> AddRatingResults { get; set; }
+
+
+    private readonly string _connectionString;
 
         public ImdbContext(string connectionString)
         {
@@ -76,6 +80,17 @@ namespace DBConnection;
         modelBuilder.Entity<Rating>().Property(rating => rating.TConst).HasColumnName("tconst").IsRequired();
         modelBuilder.Entity<Rating>().Property(rating => rating.AverageRating).HasColumnName("averagerating");
         modelBuilder.Entity<Rating>().Property(rating => rating.NumberOfVotes).HasColumnName("numvotes");
+
+        modelBuilder.Entity<RatingForUserResult>().HasNoKey();
+        modelBuilder.Entity<RatingForUserResult>().Property(e => e.TConst).HasColumnName("tconst");
+        modelBuilder.Entity<RatingForUserResult>().Property(e => e.UserId).HasColumnName("userid");
+        modelBuilder.Entity<RatingForUserResult>().Property(e => e.TimeStamp).HasColumnName("time_stamp");
+        modelBuilder.Entity<RatingForUserResult>().Property(e => e.Rating).HasColumnName("value");
+
+        modelBuilder.Entity<AddRatingResult>().HasNoKey();
+        modelBuilder.Entity<AddRatingResult>().Property(e => e.IsSuccess).HasColumnName("add_rating");
+
+
     }
 
     private static void BuildRoles(ModelBuilder modelBuilder)
