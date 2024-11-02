@@ -18,3 +18,16 @@ public class Person
 
 
 }
+
+public class PersonsByMovieResultWithPerson
+{
+    public string NConst { get; set; }
+
+    public double PersonRating { get; set; }
+}
+
+public class  PersonByMovieResultWithPerson : PersonsByMovieResultWithPerson
+{
+
+    public Person Person { get; set; }
+}

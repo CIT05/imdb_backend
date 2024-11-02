@@ -7,5 +7,7 @@ public interface IPersonDataService
 
     Person? GetPersonById(string personId);
 
+    List<PersonByMovieResultWithPerson> GetPersonsByMovie(string tconst);
+
     int NumberOfPersons();
 }

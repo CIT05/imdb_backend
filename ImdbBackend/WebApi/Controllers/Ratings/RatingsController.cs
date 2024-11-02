@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Mapster;
 using WebApi.Controllers.Titles;
 using WebApi.Controllers.Users;
+using WebApi.Controllers.Persons;
 
 namespace WebApi.Controllers.Ratings;
 
@@ -17,7 +18,7 @@ public class RatingsController(IRatingDataService dataService, LinkGenerator lin
 
     private readonly LinkGenerator _linkGenerator = linkGenerator;
 
-    [HttpGet(Name = nameof(GetRatings))]
+    [HttpGet("/movie", Name = nameof(GetRatings))]
     public IActionResult GetRatings(int pageSize = 2, int pageNumber = 0)
     {
         var ratings = _dataService.GetRatings(pageSize, pageNumber);
@@ -33,7 +34,7 @@ public class RatingsController(IRatingDataService dataService, LinkGenerator lin
         return Ok(result);
     }
 
-    [HttpGet("{tconst}", Name = nameof(GetRatingById))]
+    [HttpGet("movie/{tconst}", Name = nameof(GetRatingById))]
     public IActionResult GetRatingById(string tconst)
     {
         var rating = _dataService.GetRatingById(tconst);
@@ -46,7 +47,7 @@ public class RatingsController(IRatingDataService dataService, LinkGenerator lin
         return Ok(ratingModel);
     }
 
-    [HttpGet("{userId}/{tconst}", Name = nameof(GetRatingByUser))]
+    [HttpGet("movie/{userId}/{tconst}", Name = nameof(GetRatingByUser))]
     public IActionResult GetRatingByUser(int userId, string tconst)
     {
         var ratingResultList = _dataService.GetRatingByUser(userId, tconst);
@@ -59,7 +60,7 @@ public class RatingsController(IRatingDataService dataService, LinkGenerator lin
         return Ok(ratingForUserResultModel);
     }
 
-    [HttpPost("{userId}/{tconst}/{ratingValue}")]
+    [HttpPost("movie/{userId}/{tconst}/{ratingValue}")]
     public IActionResult AddRating(int userId, string tconst, int ratingValue)
     {
         var createdRating = _dataService.AddRating(userId, tconst, ratingValue);
@@ -69,6 +70,19 @@ public class RatingsController(IRatingDataService dataService, LinkGenerator lin
         }
         
         return Ok();
+    }
+
+    [HttpGet("person/{nconst}", Name = nameof(GetRatingByPerson))]
+    public IActionResult GetRatingByPerson(string nconst)
+    {
+        var ratingResultList = _dataService.GetPersonRating(nconst);
+        if (ratingResultList.Count == 0)
+        {
+            return NotFound();
+        }
+
+        List<PersonRatingResultModel> ratingForUserResultModel = ratingResultList.Select(ratingResult => AdaptPersonRatingResultToPersonRatingResultModel(ratingResult, nconst)).ToList();
+        return Ok(ratingForUserResultModel);
     }
     private RatingModel AdaptRatingToRatingModel(Rating rating)
     {
@@ -96,6 +110,15 @@ public class RatingsController(IRatingDataService dataService, LinkGenerator lin
 
         return ratingForUserResultModel;
     }
+
+    private PersonRatingResultModel AdaptPersonRatingResultToPersonRatingResultModel(PersonRatingResult personRatingResult, string nconst)
+    {
+        var personRatingResultModel = personRatingResult.Adapt<PersonRatingResultModel>();
+        personRatingResultModel.Url = GetUrl(nameof(GetRatingByPerson), new { nconst });
+        personRatingResultModel.PersonUrl = GetUrl(nameof(PersonsController.GetPersonById), new { nconst });
+        return personRatingResultModel;
+    }
+
 
 
 

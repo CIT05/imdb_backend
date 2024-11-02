@@ -33,3 +33,8 @@ public class AddRatingResult
     public bool IsSuccess { get; set; }
 
 }
+
+public class PersonRatingResult
+{
+    public double PersonRating { get; set; }
+}

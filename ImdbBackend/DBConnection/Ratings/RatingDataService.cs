@@ -33,6 +33,12 @@ public class RatingDataService(string connectionString) : IRatingDataService
         return isAddRatingSuccess;
     }
 
+    public List<PersonRatingResult> GetPersonRating(string nconst)
+    {
+        var db = new ImdbContext(_connectionString);
+        return db.PersonRatingResults.FromSqlInterpolated($"SELECT * FROM get_rating_per_nconst({nconst})").ToList();
+    }
+
     public int NumberOfRatings()
     {
         var db = new ImdbContext(_connectionString);

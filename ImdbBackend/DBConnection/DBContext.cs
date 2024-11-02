@@ -38,6 +38,10 @@ namespace DBConnection;
 
         public DbSet<AddRatingResult> AddRatingResults { get; set; }
 
+        public DbSet<PersonsByMovieResultWithPerson> PersonsByMovieResult { get; set; }
+
+        public DbSet<PersonRatingResult> PersonRatingResults { get; set; }
+
 
     private readonly string _connectionString;
 
@@ -74,6 +78,11 @@ namespace DBConnection;
         modelBuilder.Entity<Person>().Property(person => person.PrimaryName).HasColumnName("primaryname");
         modelBuilder.Entity<Person>().Property(person => person.BirthYear).HasColumnName("birthyear");
         modelBuilder.Entity<Person>().Property(person => person.DeathYear).HasColumnName("deathyear");
+
+        modelBuilder.Entity<PersonsByMovieResultWithPerson>().HasNoKey();
+        modelBuilder.Entity<PersonsByMovieResultWithPerson>().Property(e => e.NConst).HasColumnName("nconst");
+        modelBuilder.Entity<PersonsByMovieResultWithPerson>().Property(e => e.PersonRating).HasColumnName("rating");
+
     }
 
     private static void BuildRatings(ModelBuilder modelBuilder)
@@ -91,6 +100,9 @@ namespace DBConnection;
 
         modelBuilder.Entity<AddRatingResult>().HasNoKey();
         modelBuilder.Entity<AddRatingResult>().Property(e => e.IsSuccess).HasColumnName("add_rating");
+
+        modelBuilder.Entity<PersonRatingResult>().HasNoKey();
+        modelBuilder.Entity<PersonRatingResult>().Property(e => e.PersonRating).HasColumnName("get_rating_per_nconst");
 
 
     }
