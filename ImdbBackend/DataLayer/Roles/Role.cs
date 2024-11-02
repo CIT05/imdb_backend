@@ -1,5 +1,7 @@
 ﻿
+using DataLayer.PersonRoles;
 using DataLayer.TitlePrincipals;
+using System.Text.Json.Serialization;
 
 namespace DataLayer.Roles;
 
@@ -10,5 +12,6 @@ namespace DataLayer.Roles;
         public string RoleName { get; set; } = string.Empty;
 
         public List<TitlePrincipal> TitlePrincipals { get; set; }
+        public List<PersonRole> PersonRoles { get; set; }
 
 }

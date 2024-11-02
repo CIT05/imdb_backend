@@ -51,7 +51,6 @@ public class TitlesController(ITitleDataService dataService, LinkGenerator linkG
 
     }
 
-
     private string? GetUrl(string tconst)
     {
         return _linkGenerator.GetUriByName(HttpContext, nameof(GetTitleById), new { tconst });

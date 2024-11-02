@@ -1,4 +1,5 @@
-﻿using DataLayer.Persons;
+﻿using DataLayer.PersonRoles;
+using DataLayer.Persons;
 using DataLayer.Ratings;
 using DataLayer.Roles;
 using DataLayer.TitleAlternatives;
@@ -19,6 +20,8 @@ namespace DBConnection;
         public DbSet<TitleAlternative> TitleAlternatives { get; set; }
 
         public DbSet<TitlePrincipal> TitlePrincipals { get; set; }
+        public DbSet<PersonRole> PersonRoles { get; set; }
+
 
     public DbSet<Title> Titles { get; set; }
 
@@ -46,6 +49,7 @@ namespace DBConnection;
           BuildTitleAlternatives(modelBuilder);
           BuildTitlePrincipals(modelBuilder);
           BuildTitle(modelBuilder);
+          BuildPersonRole(modelBuilder);
 
     }
 
@@ -64,7 +68,6 @@ namespace DBConnection;
         modelBuilder.Entity<Rating>().Property(rating => rating.TConst).HasColumnName("tconst").IsRequired();
         modelBuilder.Entity<Rating>().Property(rating => rating.AverageRating).HasColumnName("averagerating");
         modelBuilder.Entity<Rating>().Property(rating => rating.NumberOfVotes).HasColumnName("numvotes");
-        modelBuilder.Entity<Rating>().HasOne(rating => rating.Title).WithOne(titlte => titlte.Rating).HasForeignKey<Rating>(rating => rating.TConst);
     }
 
     private static void BuildRoles(ModelBuilder modelBuilder)
@@ -110,9 +113,9 @@ namespace DBConnection;
                .HasForeignKey(tp => tp.NConst);
 
         modelBuilder.Entity<TitlePrincipal>()
-         .HasOne(tp => tp.Title) // Each TitlePrincipal has one Title
-         .WithMany(title => title.Principals) // Title has many TitlePrincipals
-         .HasForeignKey(tp => tp.TConst); // Foreign key in TitlePrincipal is TConst
+         .HasOne(tp => tp.Title) 
+         .WithMany(title => title.Principals) 
+         .HasForeignKey(tp => tp.TConst); 
 
     }
 
@@ -135,5 +138,23 @@ namespace DBConnection;
             .WithOne(principal => principal.Title)
             .HasForeignKey(principal => principal.TConst);
     }
+
+    private static void BuildPersonRole(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<PersonRole>().ToTable("name_role");
+        modelBuilder.Entity<PersonRole>().HasKey(e => new { e.NConst, e.RoleId });
+        modelBuilder.Entity<PersonRole>().Property(namerole => namerole.NConst).HasColumnName("nconst").IsRequired();
+        modelBuilder.Entity<PersonRole>().Property(namerole => namerole.RoleId).HasColumnName("roleid").IsRequired();
+        modelBuilder.Entity<PersonRole>().Property(namerole => namerole.Ordering).HasColumnName("ordering");
+
+        modelBuilder.Entity<PersonRole>()
+                      .HasOne(pr => pr.Role)
+                      .WithMany(role => role.PersonRoles)
+                      .HasForeignKey(pr => pr.RoleId);
+        modelBuilder.Entity<PersonRole>()
+                      .HasOne(pr => pr.Person)
+                      .WithMany(person => person.PersonRoles)
+                      .HasForeignKey(pr => pr.NConst);
     }
+}
 

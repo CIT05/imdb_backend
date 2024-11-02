@@ -1,4 +1,7 @@
-﻿namespace WebApi.Models.Persons
+﻿using DataLayer.PersonRoles;
+using WebApi.Models.PersonRoles;
+
+namespace WebApi.Models.Persons
 {
     public class PersonModel
     {
@@ -9,7 +12,7 @@
         public string? birthYear { get; set; }
 
         public string? deathYear { get; set; }
-
+        public List<PersonRoleModel> PersonRoles { get; set; }
 
     }
 }

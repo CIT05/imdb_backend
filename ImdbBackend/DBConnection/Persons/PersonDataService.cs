@@ -1,4 +1,5 @@
 ﻿using DataLayer.Persons;
+using Microsoft.EntityFrameworkCore;
 
 namespace DBConnection.Persons
 {
@@ -12,10 +13,15 @@ namespace DBConnection.Persons
             return db.Persons.Skip(pageNumber * pageSize).Take(pageSize).ToList();
         }
 
-        public Person? GetPersonById(string tconst)
+        public Person? GetPersonById(string nconst)
         {
-           var db = new ImdbContext(_connectionString);
-            return db.Persons.Find(tconst);
+
+                using var db = new ImdbContext(_connectionString);
+                var person = db.Persons
+                    .Include(p => p.PersonRoles)
+                    .SingleOrDefault(p => p.NConst == nconst);
+
+                return person;
         }
 
         public int NumberOfPersons()
