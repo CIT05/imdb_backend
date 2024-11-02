@@ -1,6 +1,4 @@
-﻿
-
-namespace DataLayer.TitleAlternatives
+﻿namespace DataLayer.TitleAlternatives
 {
     public interface ITitleAlternativeDataService
     {

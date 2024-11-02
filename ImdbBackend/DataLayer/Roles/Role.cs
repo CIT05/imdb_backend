@@ -1,5 +1,5 @@
-﻿
-using DataLayer.TitlePrincipals;
+﻿using DataLayer.TitlePrincipals;
+using System.Text.Json.Serialization;
 
 namespace DataLayer.Roles;
 
@@ -9,6 +9,9 @@ namespace DataLayer.Roles;
      
         public string RoleName { get; set; } = string.Empty;
 
+
+
+    [JsonIgnore]
         public List<TitlePrincipal> TitlePrincipals { get; set; }
 
 }

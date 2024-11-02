@@ -1,4 +1,6 @@
-﻿using DataLayer.Titles;
+﻿using DataLayer.TitleAlternatives;
+using DataLayer.TitlePrincipals;
+using DataLayer.Titles;
 using Microsoft.EntityFrameworkCore;
 
 namespace DBConnection.Titles
@@ -11,13 +13,25 @@ namespace DBConnection.Titles
         public List<Title> GetTitles(int pageSize, int pageNumber)
         {
             var db = new ImdbContext(_connectionString);
-            return db.Titles.OrderBy(t => t.TConst).Skip(pageNumber * pageSize).Take(pageSize).Include(title => title.Rating).ToList();
+            return db.Titles.OrderBy(t => t.TConst).Skip(pageNumber * pageSize).Take(pageSize).Include(title => title.Rating).Include(title => title.TitleAlternatives).Include(title => title.Principals).ToList();
         }
 
         public Title? GetTitleById(string tconst)
         {
            var db = new ImdbContext(_connectionString);
-            return db.Titles.Where(title => title.TConst == tconst).Include(title => title.Rating).SingleOrDefault();
+            return db.Titles.Where(title => title.TConst == tconst).Include(title => title.Rating).Include(title => title.TitleAlternatives).Include(title => title.Principals).SingleOrDefault();
+        }
+
+        public List<TitleAlternative> GetTitleAlternatives(string tconst)
+        {
+            var db = new ImdbContext(_connectionString);
+            return db.TitleAlternatives.Where(alt => alt.TitleId == tconst).ToList();
+        }
+
+        public List<TitlePrincipal> GetTitlePrincipals(string tconst)
+        {
+            var db = new ImdbContext(_connectionString);
+            return db.TitlePrincipals.Where(principal => principal.TConst == tconst).ToList();
         }
 
         public int NumberOfTitles()

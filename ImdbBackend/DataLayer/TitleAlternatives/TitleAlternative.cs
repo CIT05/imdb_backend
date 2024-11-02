@@ -1,5 +1,6 @@
 ﻿using DataLayer.Titles;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace DataLayer.TitleAlternatives
 {
@@ -16,7 +17,9 @@ namespace DataLayer.TitleAlternatives
 
         public string? TitleId { get; set; }
 
-        private Title Title { get; set; }
+
+    [JsonIgnore] 
+       public Title? Title { get; set; }
 
 
     }

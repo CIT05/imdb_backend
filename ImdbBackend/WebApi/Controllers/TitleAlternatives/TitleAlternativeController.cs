@@ -56,7 +56,7 @@ namespace WebApi.Controllers.TitleAlternatives
         private TitleAlternativeModel AdaptTitleAlternativeToTitleAlternativeModel(TitleAlternative titleAlternative)
         {
             var titleAlternativeModel = titleAlternative.Adapt<TitleAlternativeModel>();
-            // titleAlternativeModel.Url = GetUrl(titleAlternative.AkasId, titleAlternative.Ordering, titleAlternative.Title, titleAlternative.Region, titleAlternative.Language, titleAlternative.Attributes, titleAlternative.IsOriginalTitle);
+            titleAlternativeModel.Url = GetUrl(titleAlternative.AkasId.ToString(), new {akasid = titleAlternative.AkasId});
 
             return titleAlternativeModel;
     }

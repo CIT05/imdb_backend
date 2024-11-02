@@ -3,6 +3,8 @@ using WebApi.Models.Titles;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Controllers.Ratings;
 using Mapster;
+using WebApi.Controllers.TitleAlternatives;
+using WebApi.Controllers.TitlePrincipals;
 
 namespace WebApi.Controllers.Titles;
 
@@ -55,8 +57,17 @@ public class TitlesController(ITitleDataService dataService, LinkGenerator linkG
         {
             titleModel.Rating.Url = GetUrl(nameof(RatingsController.GetRatingById), new { tconst = title.TConst });
         }
+
+        if (titleModel.TitleAlternatives != null)
+        {
+            titleModel.TitleAlternatives.ForEach(alt => alt.Url = GetUrl(nameof(TitleAlternativeController.GetTitleAlternative), new { akasId = alt.AkasId, ordering = alt.Ordering }));
+        }
+
+        if (titleModel.Principals != null)
+        {
+            titleModel.Principals.ForEach(principal => principal.Url = GetUrl(nameof(TitlePrincipalController.GetTitlePrincipals), new { tconst = principal.TConst, ordering = principal.Ordering }));
+        }
         return titleModel;
 
     }
-
 }

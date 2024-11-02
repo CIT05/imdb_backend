@@ -93,6 +93,12 @@ namespace DBConnection;
         modelBuilder.Entity<TitleAlternative>().Property(e => e.Language).HasColumnName("language");
         modelBuilder.Entity<TitleAlternative>().Property(e => e.Attributes).HasColumnName("attributes");
         modelBuilder.Entity<TitleAlternative>().Property(e => e.IsOriginalTitle).HasColumnName("isoriginaltitle");
+
+        //relationships
+        modelBuilder.Entity<TitleAlternative>()
+         .HasOne(tA => tA.Title) 
+         .WithMany(title => title.TitleAlternatives) 
+         .HasForeignKey(tp => tp.TitleId);
     }
 
     private static void BuildTitlePrincipals(ModelBuilder modelBuilder)
@@ -141,8 +147,12 @@ namespace DBConnection;
             .HasMany(title => title.Principals)
             .WithOne(principal => principal.Title)
             .HasForeignKey(principal => principal.TConst);
-    }
-
+        modelBuilder.Entity<Title>()
+          .HasMany(title => title.TitleAlternatives)
+            .WithOne(alt => alt.Title)
+            .HasForeignKey(ta => ta.TitleId);
+    
+  }
     private static void BuildUser(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>().ToTable("users");
