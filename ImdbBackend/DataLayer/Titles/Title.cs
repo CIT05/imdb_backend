@@ -31,7 +31,7 @@ public class Title
     //public string? RatingTConst { get; set; }
     public List<TitleAlternative> TitleAlternatives { get; set; }
     public Rating Rating { get; set; }
-    public List<TitlePrincipal> Principals { get; set; } = new List<TitlePrincipal>();
+    public List<TitlePrincipal> Principals { get; set; }
 
 
 }

@@ -11,13 +11,13 @@ namespace DBConnection.Titles
         public List<Title> GetTitles(int pageSize, int pageNumber)
         {
             var db = new ImdbContext(_connectionString);
-            return db.Titles.OrderBy(t => t.TConst).Skip(pageNumber * pageSize).Take(pageSize).Include(title => title.Rating).ToList();
+            return db.Titles.OrderBy(t => t.TConst).Skip(pageNumber * pageSize).Take(pageSize).Include(title => title.Rating).Include(title => title.TitleAlternatives).ToList();
         }
 
         public Title? GetTitleById(string tconst)
         {
            var db = new ImdbContext(_connectionString);
-            return db.Titles.Where(title => title.TConst == tconst).Include(title => title.Rating).SingleOrDefault();
+            return db.Titles.Where(title => title.TConst == tconst).Include(title => title.Rating).Include(title => title.TitleAlternatives).SingleOrDefault();
         }
 
         public int NumberOfTitles()

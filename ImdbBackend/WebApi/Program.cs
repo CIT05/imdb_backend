@@ -23,6 +23,9 @@ using DataLayer.TitleAlternatives;
 using DBConnection.Users;
 using DataLayer.Users;
 
+using DBConnection.Searching;
+using DataLayer.Searching;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("config.json");
@@ -50,6 +53,9 @@ builder.Services.AddSingleton<ITitleAlternativeDataService>(
 
 builder.Services.AddSingleton<IUserDataService>(
     serviceProvider => new UserDataService(connectionString));
+
+builder.Services.AddSingleton<ISearchingDataService>(
+    serviceProvider => new SearchingDataService(connectionString));
 
 
 

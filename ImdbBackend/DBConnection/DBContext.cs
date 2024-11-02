@@ -1,6 +1,7 @@
 ﻿using DataLayer.Persons;
 using DataLayer.Ratings;
 using DataLayer.Roles;
+using DataLayer.Searching;
 using DataLayer.TitleAlternatives;
 using DataLayer.TitlePrincipals;
 using DataLayer.Titles;
@@ -29,6 +30,8 @@ namespace DBConnection;
 
         public DbSet<Title> Titles { get; set; }
 
+        public DbSet<StringSearchResult> StringSearchResults { get; set; }
+
 
         private readonly string _connectionString;
 
@@ -54,6 +57,7 @@ namespace DBConnection;
           BuildTitlePrincipals(modelBuilder);
           BuildTitle(modelBuilder);
           BuildUser(modelBuilder);
+        BuildSearch(modelBuilder);
 
     }
 
@@ -158,6 +162,13 @@ namespace DBConnection;
         modelBuilder.Entity<UpdateUserResult>().Property(e => e.UserId).HasColumnName("updated_user_result");
     }
 
+    private static void BuildSearch(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<StringSearchResult>().HasNoKey();
+        modelBuilder.Entity<StringSearchResult>().Property(stringSearch => stringSearch.TitleId).HasColumnName("idTitle");
+        modelBuilder.Entity<StringSearchResult>().Property(stringSearch => stringSearch.Title).HasColumnName("title");
+
+    }
 
 }
 
