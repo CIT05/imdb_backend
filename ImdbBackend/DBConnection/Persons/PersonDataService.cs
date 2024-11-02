@@ -10,11 +10,26 @@ namespace DBConnection.Persons
         public List<Person> GetPersons(int pageSize, int pageNumber)
         {
             var db = new ImdbContext(_connectionString);
-            return db.Persons
+            var persons = db.Persons
+            .OrderBy(persons => persons.NConst)
+            .Include(p => p.PersonRoles)
+            .Include(kf => kf.KnownFors)
             .Skip(pageNumber * pageSize)
             .Take(pageSize)
-            .Include(p => p.PersonRoles.OrderBy(pr => pr.Ordering))
+            .Select(person => new Person
+             {
+                 NConst = person.NConst,
+                 PrimaryName = person.PrimaryName,
+                 BirthYear = person.BirthYear,
+                 DeathYear = person.DeathYear,
+                 PersonRoles = person.PersonRoles.OrderBy(pr => pr.Ordering).ToList(),
+                 KnownFors = person.KnownFors.OrderBy(kf => kf.Ordering).ToList()
+
+
+             })
             .ToList();
+
+            return persons;
         }
 
         public Person? GetPersonById(string nconst)
@@ -23,6 +38,7 @@ namespace DBConnection.Persons
                 using var db = new ImdbContext(_connectionString);
                 var person = db.Persons
                     .Include(p => p.PersonRoles)
+                    .Include(kf => kf.KnownFors.OrderBy(kf => kf.Ordering))
                     .SingleOrDefault(p => p.NConst == nconst);
 
                 return person;

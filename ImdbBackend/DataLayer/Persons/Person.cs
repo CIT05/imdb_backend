@@ -1,5 +1,6 @@
 ﻿using DataLayer.TitlePrincipals;
 using DataLayer.PersonRoles;
+using DataLayer.KnownFors;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -18,5 +19,6 @@ public class Person
 
     public List<TitlePrincipal> TitlePrincipals { get; set; }
     public List<PersonRole> PersonRoles { get; set; }
+    public List<KnownFor> KnownFors { get; set; }
 
 }

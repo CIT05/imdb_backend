@@ -6,6 +6,7 @@ using DataLayer.TitleAlternatives;
 using DataLayer.TitlePrincipals;
 using DataLayer.Titles;
 using DataLayer.Users;
+using DataLayer.KnownFors;
 using Microsoft.EntityFrameworkCore;
 
 namespace DBConnection
@@ -22,6 +23,7 @@ namespace DBConnection
         public DbSet<CreateUserResult> CreateUserResult { get; set; }
         public DbSet<UpdateUserResult> UpdateUserResult { get; set; }
         public DbSet<Title> Titles { get; set; }
+        public DbSet<KnownFor> KnownFors { get; set; }
 
         private readonly string _connectionString;
 
@@ -47,6 +49,7 @@ namespace DBConnection
             BuildTitle(modelBuilder);
             BuildPersonRole(modelBuilder);
             BuildUser(modelBuilder);
+            BuildKnownFor(modelBuilder);
         }
 
         private static void BuildPersons(ModelBuilder modelBuilder)
@@ -169,6 +172,25 @@ namespace DBConnection
 
             modelBuilder.Entity<UpdateUserResult>().HasNoKey();
             modelBuilder.Entity<UpdateUserResult>().Property(e => e.UserId).HasColumnName("updated_user_result");
+        }
+
+        private static void BuildKnownFor(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<KnownFor>().ToTable("name_title");
+            modelBuilder.Entity<KnownFor>().HasKey(e => new { e.NConst, e.TConst });
+            modelBuilder.Entity<KnownFor>().Property(knownfor => knownfor.NConst).HasColumnName("nconst");
+            modelBuilder.Entity<KnownFor>().Property(knownfor => knownfor.TConst).HasColumnName("tconst");
+            modelBuilder.Entity<KnownFor>().Property(knownfor => knownfor.Ordering).HasColumnName("ordering");
+
+            modelBuilder.Entity<KnownFor>()
+                    .HasOne(title => title.Title)
+                    .WithMany(kf => kf.KnownFors)
+                    .HasForeignKey(pr => pr.TConst);
+
+            modelBuilder.Entity<KnownFor>()
+                .HasOne(pr => pr.Person)
+                .WithMany(kf => kf.KnownFors)
+                .HasForeignKey(pr => pr.NConst);
         }
     }
 }

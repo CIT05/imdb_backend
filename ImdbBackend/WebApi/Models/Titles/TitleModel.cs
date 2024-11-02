@@ -1,6 +1,7 @@
 ﻿using WebApi.Models.Ratings;
 using DataLayer.Ratings;
 using WebApi.Models.TitlePrincipals;
+using WebApi.Models.KnownFors;
 
 
 namespace WebApi.Models.Titles
@@ -28,6 +29,7 @@ namespace WebApi.Models.Titles
         public RatingModel? Rating { get; set; }
 
         public List<TitlePrincipalDTO> Principals { get; set; }
+        public List<KnownForModel> KnownFors { get; set; }
 
         //public List<TitleAlternative> TitleAlternatives { get; set; }
     }

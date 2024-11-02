@@ -5,18 +5,28 @@ using WebApi.Controllers.Ratings;
 using Mapster;
 using WebApi.Controllers.TitlePrincipals;
 using WebApi.Models.TitlePrincipals;
+using WebApi.Models.Persons;
+using DataLayer.Persons;
+using WebApi.Models.KnownFors;
+using DataLayer.KnownFors;
 
 namespace WebApi.Controllers.Titles;
 
 [ApiController]
 [Route("api/title")]
 
-public class TitlesController(ITitleDataService dataService, LinkGenerator linkGenerator) : BaseController(linkGenerator)
+public class TitlesController : BaseController
 {
-    private readonly ITitleDataService _dataService = dataService;
+    private readonly ITitleDataService _dataService;
+    private readonly IKnownForDataService _knownForDataService;
 
+    public TitlesController(ITitleDataService dataService, IKnownForDataService knownForDataService, LinkGenerator linkGenerator)
+      : base(linkGenerator)
+    {
+        _dataService = dataService;
+        _knownForDataService = knownForDataService;
+    }
 
-    private readonly LinkGenerator _linkGenerator = linkGenerator;
 
     [HttpGet(Name = nameof(GetTitles))]
     public IActionResult GetTitles(int pageSize = 2, int pageNumber = 0)
@@ -68,8 +78,29 @@ public class TitlesController(ITitleDataService dataService, LinkGenerator linkG
                         principal.Url = GetUrl(nameof(TitlePrincipalController.GetTitlePrincipalsForATitle), new { tconst = titlePrincipal.TConst, nconst = titlePrincipal.NConst, ordering = titlePrincipal.Ordering, roleId = titlePrincipal.RoleId });
                         return principal;
                     }
-                ).ToList();
+            ).ToList();
+    }
+        if (title.KnownFors != null && title.KnownFors.Count > 0)
+        {
+            titleModel.KnownFors = title.KnownFors.Select(knownFor =>
+            {
+                string nameId = knownFor.NConst;
+                var knownForEntity = _knownForDataService.GetKnownForByNameId(nameId);
 
+                if (knownForEntity != null)
+                {
+                    var generatedUrl = GetUrl(
+                        nameof(TitlesController.GetTitleById),
+                        new { tconst = knownForEntity.TConst }
+                    );
+                    return new KnownForModel { Url = generatedUrl };
+                }
+                else
+                {
+                    Console.WriteLine($"No KnownFor found for title ID: {nameId}");
+                    return new KnownForModel { Url = null };
+                }
+            }).ToList();
         }
 
         return titleModel; 

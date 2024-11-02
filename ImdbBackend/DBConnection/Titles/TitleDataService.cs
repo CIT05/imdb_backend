@@ -10,44 +10,47 @@ namespace DBConnection.Titles
 
         public List<Title> GetTitles(int pageSize, int pageNumber)
         {
-            var db = new ImdbContext(_connectionString);
+            using var db = new ImdbContext(_connectionString);
             return db.Titles
                  .OrderBy(t => t.TConst)
                  .Skip(pageNumber * pageSize)
                  .Take(pageSize)
                  .Include(title => title.Rating)
+                 .Include(title => title.KnownFors)
                  .Select(title => new
-                    {
+                 {
                      Title = title,
-                     OrderedPrincipals = title.Principals.OrderBy(p => p.Ordering).ToList()
-                     })
-                 .ToList()
+                     OrderedPrincipals = title.Principals.OrderBy(p => p.Ordering).ToList() // Materialize to List
+                 })
+                 .ToList() // Materialize the anonymous objects to a List
                  .Select(t =>
-                     {
-                      t.Title.Principals = t.OrderedPrincipals;
-                      return t.Title;
-                     })
-                 .ToList();
+                 {
+                     t.Title.Principals = t.OrderedPrincipals; // Assign ordered principals
+                     return t.Title; // Return the modified Title
+                 })
+                 .ToList(); // Final materialization
         }
 
         public Title? GetTitleById(string tconst)
         {
-           var db = new ImdbContext(_connectionString);
+            using var db = new ImdbContext(_connectionString);
             var title = db.Titles
                 .Where(title => title.TConst == tconst)
                 .Include(title => title.Rating)
+                .Include(title => title.Principals)
+                .Include(title => title.KnownFors)
                 .Select(title => new
-     {
-         Title = title,
-         OrderedPrincipals = title.Principals.OrderBy(p => p.Ordering).ToList()
-     })
-      .ToList()
-     .Select(t =>
-     {
-         t.Title.Principals = t.OrderedPrincipals;
-         return t.Title;
-     })
-     .SingleOrDefault();
+                {
+                    Title = title,
+                    OrderedPrincipals = title.Principals.OrderBy(p => p.Ordering).ToList() // Convert to List
+                })
+                .AsEnumerable() // Switch to client-side evaluation here
+                .Select(t =>
+                {
+                    t.Title.Principals = t.OrderedPrincipals; // Assign ordered principals
+                    return t.Title; // Return the modified Title
+                })
+                .SingleOrDefault();
 
             return title;
         }
