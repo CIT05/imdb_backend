@@ -29,6 +29,9 @@ using DataLayer.Genres;
 using DBConnection.Type;
 using DataLayer.Types;
 
+using DBConnection.TitleEpisodes;
+using DataLayer.TitleEpisodes;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("config.json");
@@ -63,7 +66,8 @@ builder.Services.AddSingleton<IGenreDataService>(
 builder.Services.AddSingleton<ITypeDataService>(
     serviceProvider => new TypeDataService(connectionString));
 
-
+builder.Services.AddSingleton<ITitleEpisodeDataService>(
+    serviceProvider => new TitleEpisodeDataService(connectionString));
 
 
 builder.Services.AddMapster();

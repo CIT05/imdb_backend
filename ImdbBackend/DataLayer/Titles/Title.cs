@@ -2,6 +2,7 @@
 using DataLayer.Ratings;
 using DataLayer.TitlePrincipals;
 using DataLayer.TitleAlternatives;
+using DataLayer.TitleEpisodes;
 using DataLayer.Genres;
 
 namespace DataLayer.Titles;
@@ -33,6 +34,8 @@ public class Title
     public List<TitleAlternative> TitleAlternatives { get; set; } = new List<TitleAlternative>();
     public Rating Rating { get; set; }
     public List<TitlePrincipal> Principals { get; set; } = new List<TitlePrincipal>();
+
+    public List<TitleEpisode> Episodes { get; set; } = new List<TitleEpisode>();
 
     public ICollection<Genre> Genres { get; set; } = new List<Genre>();
 

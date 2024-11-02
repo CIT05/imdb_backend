@@ -7,6 +7,7 @@ using DataLayer.TitlePrincipals;
 using DataLayer.Titles;
 using DataLayer.Users;
 using DataLayer.Types;
+using DataLayer.TitleEpisodes;
 using Microsoft.EntityFrameworkCore;
 
 namespace DBConnection;
@@ -26,6 +27,9 @@ namespace DBConnection;
         public DbSet<Genre> Genres { get; set; }
 
         public DbSet<TitleType> Types { get; set; }
+
+
+        public DbSet<TitleEpisode> TitleEpisodes { get; set; }
 
         public DbSet<User> Users { get; set; }
 
@@ -61,6 +65,7 @@ namespace DBConnection;
           BuildGenres(modelBuilder);
           BuildTypes(modelBuilder);
           BuildTitle(modelBuilder);
+          BuildTitleEpisodes(modelBuilder);
           BuildUser(modelBuilder);
 
 
@@ -192,6 +197,11 @@ namespace DBConnection;
               .HasForeignKey("tconst")  // Specify FK column name for Title
               .HasConstraintName("title_genres_tconst_fkey")
     );
+    modelBuilder.Entity<Title>()
+    .HasMany(title => title.Episodes)
+    .WithOne(ep => ep.Title)
+    .HasForeignKey(ep => ep.ParentTConst);
+
    
   }
 
@@ -209,6 +219,17 @@ namespace DBConnection;
             modelBuilder.Entity<TitleType>().Property(type => type.TypeId).HasColumnName("typeid");
             modelBuilder.Entity<TitleType>().Property(type => type.TypeName).HasColumnName("type");
         }
+
+
+
+    private static void BuildTitleEpisodes(ModelBuilder modelBuilder)
+    {
+     modelBuilder.Entity<TitleEpisode>().ToTable("title_episode_new");
+        modelBuilder.Entity<TitleEpisode>().Property(e => e.Tconst).HasColumnName("tconst");
+        modelBuilder.Entity<TitleEpisode>().Property(e => e.ParentTConst).HasColumnName("parenttconst");
+        modelBuilder.Entity<TitleEpisode>().Property(e => e.SeasonNumber).HasColumnName("seasonnumber");
+        modelBuilder.Entity<TitleEpisode>().Property(e => e.EpisodeNumber).HasColumnName("episodenumber");
+    }
 
     private static void BuildUser(ModelBuilder modelBuilder)
     {

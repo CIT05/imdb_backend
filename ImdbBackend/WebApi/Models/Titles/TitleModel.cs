@@ -1,9 +1,7 @@
 ﻿using WebApi.Models.Ratings;
-using DataLayer.Ratings;
-using DataLayer.TitlePrincipals;
-using DataLayer.TitleAlternatives;
 using WebApi.Models.TitlePrincipals;
 using WebApi.Models.TitleALternatives;
+using WebApi.Models.TitleEpisodes;
 using WebApi.Models.Genres;
 
 namespace WebApi.Models.Titles
@@ -35,5 +33,7 @@ namespace WebApi.Models.Titles
         public List<TitleAlternativeModel> TitleAlternatives { get; set; }
 
         public List<GenreModel> Genres { get; set; }
+
+        public List<TitleEpisodeModel> Episodes { get; set;}
     }
 }
