@@ -11,7 +11,7 @@ using WebApi.Models.Users;
 [ApiController]
 [Route("api/bookmarking")]
 
-public class BookmarkingControlller(IBookmarkingDataService dataService, LinkGenerator linkGenerator) : BaseController(linkGenerator)
+public class BookmarkingController(IBookmarkingDataService dataService, LinkGenerator linkGenerator) : BaseController(linkGenerator)
 {
 
     private readonly IBookmarkingDataService _dataService = dataService;
