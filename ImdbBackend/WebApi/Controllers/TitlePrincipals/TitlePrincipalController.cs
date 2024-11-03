@@ -2,6 +2,8 @@
 using WebApi.Models.TitlePrincipals;
 using Microsoft.AspNetCore.Mvc;
 using Mapster;
+using WebApi.Controllers.Persons;
+using WebApi.Controllers.Roles;
 
 namespace WebApi.Controllers.TitlePrincipals
 {
@@ -36,33 +38,37 @@ namespace WebApi.Controllers.TitlePrincipals
             return Ok(result);
         }
 
-        [HttpGet("{tconst}/{nconst}/{ordering}/{roleId}", Name = nameof(GetRoleInTitle))]
-        public IActionResult GetRoleInTitle(string tconst, string nconst, int ordering, int roleId)
+        [HttpGet("{tconst}", Name = nameof(GetTitlePrincipalsForATitle))]
+        public IActionResult GetTitlePrincipalsForATitle(string tconst)
         {
-            Console.WriteLine($"Received parameters: tconst={tconst}, nconst={nconst}, ordering={ordering}, roleId={roleId}");
-            var titlePrincipal = _dataService.GetRoleInTitle(tconst, nconst, ordering, roleId);
-            if (titlePrincipal == null)
+            var titlePrincipals = _dataService.GetPrincipalsByTitleId(tconst);
+            if (titlePrincipals == null)
             {
                 return NotFound();
             }
 
-            var titlePrincipalModel = AdaptTitlePrincipalToTitlePrincipalModel(titlePrincipal);
+            List<TitlePrincipalModel> titlePrincipalModel = titlePrincipals.Select(titlePrinicpal => AdaptTitlePrincipalToTitlePrincipalModel(titlePrinicpal)).ToList();
             return Ok(titlePrincipalModel);
         }
 
         private TitlePrincipalModel AdaptTitlePrincipalToTitlePrincipalModel(TitlePrincipal titlePrincipal)
         {
             var titlePrincipalModel = titlePrincipal.Adapt<TitlePrincipalModel>();
-            titlePrincipalModel.Url = GetUrl(titlePrincipal.TConst, titlePrincipal.NConst, titlePrincipal.Ordering, titlePrincipal.RoleId);
+            titlePrincipalModel.Url = GetUrl(nameof(GetTitlePrincipalsForATitle), new { tconst = titlePrincipal.TConst, nconst = titlePrincipal.NConst, ordering = titlePrincipal.Ordering, roleId = titlePrincipal.RoleId });
+           
+            if(titlePrincipalModel.Person != null)
+            {
+                titlePrincipalModel.Person.Url = GetUrl(nameof(PersonsController.GetPersonById), new { nconst = titlePrincipal.NConst });
+            }
 
+            if(titlePrincipalModel.Role != null)
+            {
+                titlePrincipalModel.Role.Url = GetUrl(nameof(RolesController.GetRoleById), new { roleId = titlePrincipal.RoleId });
+            }
+
+            
             return titlePrincipalModel;
         }
 
-        private string? GetUrl(string tconst, string nconst, int ordering, int roleId)
-        {
-            var url = _linkGenerator.GetUriByName(HttpContext, nameof(GetRoleInTitle), new { tconst, nconst, ordering, roleId });
-            Console.WriteLine($"Generated URL: {url}");
-            return url;
-        }
     }
 }

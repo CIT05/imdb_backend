@@ -2,6 +2,7 @@
 using DataLayer.Persons;
 using DataLayer.Roles;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace DataLayer.TitlePrincipals
 {
@@ -15,6 +16,8 @@ namespace DataLayer.TitlePrincipals
         public string? Job {  get; set; }
         public string? Characters { get; set; }
 
+
+        [JsonIgnore]
         public Title Title { get; set; }
         public Person Person { get; set; }
         public Role Role {  get; set; }

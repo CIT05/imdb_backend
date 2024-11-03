@@ -1,5 +1,9 @@
 ﻿using DataLayer.TitlePrincipals;
+using DataLayer.PersonRoles;
+using DataLayer.KnownFors;
+using DataLayer.Productions;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace DataLayer.Persons;
 
@@ -14,8 +18,12 @@ public class Person
 
     public string? DeathYear { get; set; }
 
-    public List<TitlePrincipal> TitlePrincipals { get; set; }
 
+    [JsonIgnore]
+    public List<TitlePrincipal> TitlePrincipals { get; set; }
+    public List<PersonRole> PersonRoles { get; set; }
+    public List<KnownFor> KnownFors { get; set; }
+    public List<Production> ProductionPersons { get; set; }
 
 }
 
