@@ -50,8 +50,7 @@ public class TitlesController : BaseController
     }
 
     [HttpGet("{tconst}", Name = nameof(GetTitleById))]
-    public IActionResult 
-        (string tconst)
+    public IActionResult GetTitleById(string tconst)
     {
         var title = _dataService.GetTitleById(tconst);
         if (title == null)
