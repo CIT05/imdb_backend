@@ -29,6 +29,9 @@ using DBConnection.PersonRoles;
 using DataLayer.KnownFors;
 using DBConnection.KnownFors;
 
+using DataLayer.Productions;
+using DBConnection.Productions;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("config.json");
@@ -61,6 +64,8 @@ builder.Services.AddSingleton<IPersonRoleDataService>(
     serviceProvider => new PersonRoleDataService(connectionString));
 builder.Services.AddSingleton<IKnownForDataService>(
     serviceProvider => new KnownForDataService(connectionString));
+builder.Services.AddSingleton<IProductionDataService>(
+    serviceProvider => new ProductionDataService(connectionString));
 
 
 

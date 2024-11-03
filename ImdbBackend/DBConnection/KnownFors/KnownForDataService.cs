@@ -7,23 +7,22 @@ namespace DBConnection.KnownFors
     public class KnownForDataService(string connectionString) : IKnownForDataService
     {
         private readonly string _connectionString = connectionString;
-        public KnownFor? GetKnownForByTitleId(string titleId)
+        public List<KnownFor> GetKnownForByTitleIds(List<string> titleIds)
         {
             using var db = new ImdbContext(_connectionString);
             return db.KnownFors
-                .Where(k => k.TConst == titleId)
-                .OrderBy(k => k.TConst) 
-                .FirstOrDefault(); 
+                .Where(kf => titleIds.Contains(kf.TConst))
+                .ToList();
         }
 
-        public KnownFor? GetKnownForByNameId(string nameId)
+        public List<KnownFor> GetKnownForByNameId(string nameId)
         {
             using var db = new ImdbContext(_connectionString);
 
             return db.KnownFors
                 .Where(k => k.NConst == nameId) 
-                .OrderBy(k => k.NConst) 
-                .FirstOrDefault(); 
+                .OrderBy(k => k.NConst)
+                .ToList();
         }
     }
 }

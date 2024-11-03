@@ -3,6 +3,7 @@ using DataLayer.Ratings;
 using DataLayer.TitlePrincipals;
 using DataLayer.TitleAlternatives;
 using DataLayer.KnownFors;
+using DataLayer.Productions;
 
 namespace DataLayer.Titles;
 
@@ -32,6 +33,7 @@ public class Title
     public Rating Rating { get; set; }
     public List<TitlePrincipal> Principals { get; set; } = new List<TitlePrincipal>();
     public List<KnownFor> KnownFors { get; set; }
+    public List<Production> ProductionPersons { get; set; }
 
 
 }

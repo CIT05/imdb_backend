@@ -8,6 +8,7 @@ using DataLayer.Titles;
 using DataLayer.Users;
 using DataLayer.KnownFors;
 using Microsoft.EntityFrameworkCore;
+using DataLayer.Productions;
 
 namespace DBConnection
 {
@@ -24,6 +25,8 @@ namespace DBConnection
         public DbSet<UpdateUserResult> UpdateUserResult { get; set; }
         public DbSet<Title> Titles { get; set; }
         public DbSet<KnownFor> KnownFors { get; set; }
+        public DbSet<Production> Productions { get; set; }
+
 
         private readonly string _connectionString;
 
@@ -50,6 +53,7 @@ namespace DBConnection
             BuildPersonRole(modelBuilder);
             BuildUser(modelBuilder);
             BuildKnownFor(modelBuilder);
+            BuildProduction(modelBuilder);
         }
 
         private static void BuildPersons(ModelBuilder modelBuilder)
@@ -191,6 +195,29 @@ namespace DBConnection
                 .HasOne(pr => pr.Person)
                 .WithMany(kf => kf.KnownFors)
                 .HasForeignKey(pr => pr.NConst);
+        }
+
+        private static void BuildProduction(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Production>().ToTable("title_crew_new");
+            modelBuilder.Entity<Production>().HasKey(e => new { e.NConst, e.TConst, e.RoleId });
+            modelBuilder.Entity<Production>().Property(production => production.NConst).HasColumnName("nconst");
+            modelBuilder.Entity<Production>().Property(production => production.TConst).HasColumnName("tconst");
+            modelBuilder.Entity<Production>().Property(production => production.RoleId).HasColumnName("roleid");
+
+            modelBuilder.Entity<Production>()
+                    .HasOne(title => title.Title)
+                    .WithMany(production => production.ProductionPersons)
+                    .HasForeignKey(pr => pr.TConst);
+
+            modelBuilder.Entity<Production>()
+                .HasOne(pr => pr.Person)
+                .WithMany(production => production.ProductionPersons)
+                .HasForeignKey(pr => pr.NConst);
+            modelBuilder.Entity<Production>()
+              .HasOne(r => r.Role)
+              .WithMany(production => production.ProductionPersons)
+              .HasForeignKey(pr => pr.RoleId);
         }
     }
 }

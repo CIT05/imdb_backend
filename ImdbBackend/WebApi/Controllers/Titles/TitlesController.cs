@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using WebApi.Controllers.Ratings;
 using Mapster;
 using WebApi.Controllers.TitlePrincipals;
-using WebApi.Models.TitlePrincipals;
-using WebApi.Models.Persons;
-using DataLayer.Persons;
+using WebApi.Controllers.Persons;
 using WebApi.Models.KnownFors;
+using WebApi.Models.Production;
 using DataLayer.KnownFors;
+using DataLayer.Productions;
+
 
 namespace WebApi.Controllers.Titles;
 
@@ -19,12 +20,14 @@ public class TitlesController : BaseController
 {
     private readonly ITitleDataService _dataService;
     private readonly IKnownForDataService _knownForDataService;
+    private readonly IProductionDataService _productionDataService;
 
-    public TitlesController(ITitleDataService dataService, IKnownForDataService knownForDataService, LinkGenerator linkGenerator)
+    public TitlesController(ITitleDataService dataService, IKnownForDataService knownForDataService, IProductionDataService productionDataService, LinkGenerator linkGenerator)
       : base(linkGenerator)
     {
         _dataService = dataService;
         _knownForDataService = knownForDataService;
+        _productionDataService = productionDataService;
     }
 
 
@@ -60,50 +63,51 @@ public class TitlesController : BaseController
 
     private TitleModel AdaptTitleToTitleModel(Title title)
     {
+
         var titleModel = title.Adapt<TitleModel>();
         titleModel.Url = GetUrl(nameof(GetTitleById), new { tconst = title.TConst });
+
 
         if (titleModel.Rating != null)
         {
             titleModel.Rating.Url = GetUrl(nameof(RatingsController.GetRatingById), new { tconst = title.TConst });
         }
 
-        if (titleModel.Principals.Count > 0)
-        {
-            titleModel.Principals = titleModel.Principals.Select(
-                    (principal, principalIndex) =>
-                    {
+        var knownForIds = title.KnownFors.Select(kf => kf.TConst).Distinct().ToList();
+        var productionPersonIds = title.ProductionPersons.Select(pp => pp.TConst).Distinct().ToList();
 
-                        var titlePrincipal = title.Principals.ElementAt(principalIndex);
-                        principal.Url = GetUrl(nameof(TitlePrincipalController.GetTitlePrincipalsForATitle), new { tconst = titlePrincipal.TConst, nconst = titlePrincipal.NConst, ordering = titlePrincipal.Ordering, roleId = titlePrincipal.RoleId });
-                        return principal;
-                    }
-            ).ToList();
-    }
-        if (title.KnownFors != null && title.KnownFors.Count > 0)
+        var knownForEntities = _knownForDataService.GetKnownForByTitleIds(knownForIds);
+        var productionEntities = _productionDataService.GetProductionsByTitleIds(productionPersonIds);
+
+        if (knownForEntities != null && knownForEntities.Count > 0)
         {
-            titleModel.KnownFors = title.KnownFors.Select(knownFor =>
+            titleModel.KnownFors = knownForEntities.Select(kf => new KnownForModel
             {
-                string nameId = knownFor.NConst;
-                var knownForEntity = _knownForDataService.GetKnownForByNameId(nameId);
-
-                if (knownForEntity != null)
-                {
-                    var generatedUrl = GetUrl(
-                        nameof(TitlesController.GetTitleById),
-                        new { tconst = knownForEntity.TConst }
-                    );
-                    return new KnownForModel { Url = generatedUrl };
-                }
-                else
-                {
-                    Console.WriteLine($"No KnownFor found for title ID: {nameId}");
-                    return new KnownForModel { Url = null };
-                }
+                Url = GetUrl(nameof(PersonsController.GetPersonById), new { nconst = kf.NConst }),
             }).ToList();
         }
 
-        return titleModel; 
+        if (productionEntities != null && productionEntities.Count > 0)
+        {
+            titleModel.ProductionPersons = productionEntities.Select(pe => new ProductionModel
+            {
+                Url = GetUrl(nameof(PersonsController.GetPersonById), new { nconst = pe.NConst }),
+                RoleId = pe.RoleId
+            }).ToList();
+        }
+
+        if (titleModel.Principals != null && titleModel.Principals.Count > 0)
+        {
+            titleModel.Principals = titleModel.Principals.Select((principal, index) =>
+            {
+                var titlePrincipal = title.Principals.ElementAt(index);
+                principal.Url = GetUrl(nameof(TitlePrincipalController.GetTitlePrincipalsForATitle),
+                    new { tconst = titlePrincipal.TConst, nconst = titlePrincipal.NConst, ordering = titlePrincipal.Ordering, roleId = titlePrincipal.RoleId });
+                return principal;
+            }).ToList();
+        }
+
+        return titleModel;
     }
 
 }

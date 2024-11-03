@@ -79,24 +79,31 @@ public class PersonsController : BaseController
         }
         if (person.KnownFors != null && person.KnownFors.Count > 0)
         {
-            personModel.KnownFors = person.KnownFors.Select(knownFor =>
+            personModel.KnownFors = person.KnownFors.SelectMany(knownFor =>
             {
-                string titleId = knownFor.TConst;  
-                var knownForEntity = _knownForDataService.GetKnownForByTitleId(titleId);
+                string nameId = knownFor.NConst;
+                var knownForEntities = _knownForDataService.GetKnownForByNameId(nameId);
 
-                if (knownForEntity != null)
+                var knownForModels = new List<KnownForModel>();
+
+                if (knownForEntities != null)
                 {
-                    var generatedUrl = GetUrl(
-                        nameof(TitlesController.GetTitleById),
-                        new { tconst = knownForEntity.TConst }
-                    );
-                    return new KnownForModel { Url = generatedUrl };
+                    foreach (var knownForEntity in knownForEntities)
+                    {
+                        var generatedUrl = GetUrl(
+                            nameof(TitlesController.GetTitleById),
+                            new { tconst = knownForEntity.TConst }
+                        );
+                        knownForModels.Add(new KnownForModel { Url = generatedUrl });
+                    }
                 }
                 else
                 {
-                    Console.WriteLine($"No KnownFor found for title ID: {titleId}");
-                    return new KnownForModel { Url = null };
+                    Console.WriteLine($"No KnownFor found for name ID: {nameId}");
+                    knownForModels.Add(new KnownForModel { Url = null });
                 }
+
+                return knownForModels;
             }).ToList();
         }
 

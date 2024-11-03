@@ -2,6 +2,7 @@
 using DataLayer.Ratings;
 using WebApi.Models.TitlePrincipals;
 using WebApi.Models.KnownFors;
+using WebApi.Models.Production;
 
 
 namespace WebApi.Models.Titles
@@ -30,6 +31,8 @@ namespace WebApi.Models.Titles
 
         public List<TitlePrincipalDTO> Principals { get; set; }
         public List<KnownForModel> KnownFors { get; set; }
+
+        public List<ProductionModel> ProductionPersons { get; set; }
 
         //public List<TitleAlternative> TitleAlternatives { get; set; }
     }

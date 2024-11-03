@@ -12,23 +12,17 @@ namespace DBConnection.Titles
         {
             using var db = new ImdbContext(_connectionString);
             return db.Titles
-                 .OrderBy(t => t.TConst)
-                 .Skip(pageNumber * pageSize)
-                 .Take(pageSize)
-                 .Include(title => title.Rating)
-                 .Include(title => title.KnownFors)
-                 .Select(title => new
-                 {
-                     Title = title,
-                     OrderedPrincipals = title.Principals.OrderBy(p => p.Ordering).ToList() // Materialize to List
-                 })
-                 .ToList() // Materialize the anonymous objects to a List
-                 .Select(t =>
-                 {
-                     t.Title.Principals = t.OrderedPrincipals; // Assign ordered principals
-                     return t.Title; // Return the modified Title
-                 })
-                 .ToList(); // Final materialization
+                .OrderBy(t => t.TConst)
+                .Skip(pageNumber * pageSize)
+                .Take(pageSize)
+                .Include(title => title.Rating)
+                .Include(title => title.KnownFors)
+                .Include(title => title.ProductionPersons)
+                .Include(title => title.Principals.OrderBy(p => p.Ordering)) // EF Core should apply ordering here
+                .AsSplitQuery() // Ensures that related collections are loaded as separate queries
+                .ToList();
+
+
         }
 
         public Title? GetTitleById(string tconst)
@@ -39,6 +33,8 @@ namespace DBConnection.Titles
                 .Include(title => title.Rating)
                 .Include(title => title.Principals)
                 .Include(title => title.KnownFors)
+                .Include(title => title.ProductionPersons)
+                .AsSplitQuery()
                 .Select(title => new
                 {
                     Title = title,

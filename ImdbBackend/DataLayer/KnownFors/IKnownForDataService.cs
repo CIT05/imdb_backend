@@ -3,8 +3,8 @@ namespace DataLayer.KnownFors
 {
     public interface IKnownForDataService
     {
-        KnownFor? GetKnownForByTitleId(string titleId);
+        List<KnownFor> GetKnownForByTitleIds(List<string> titleIds);
 
-        KnownFor? GetKnownForByNameId(string nameId);
+        List<KnownFor> GetKnownForByNameId(string nameId);
     }
 }
