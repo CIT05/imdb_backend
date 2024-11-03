@@ -44,6 +44,9 @@ using DBConnection.KnownFors;
 using DataLayer.Productions;
 using DBConnection.Productions;
 
+using DataLayer.Bookmarkings;
+using DBConnection.Bookmarkings;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("config.json");
@@ -86,6 +89,8 @@ builder.Services.AddSingleton<IKnownForDataService>(
     serviceProvider => new KnownForDataService(connectionString));
 builder.Services.AddSingleton<IProductionDataService>(
     serviceProvider => new ProductionDataService(connectionString));
+builder.Services.AddSingleton<IBookmarkingDataService>(
+    serviceProvider => new BookmarkingDataService(connectionString));
 
 
 
