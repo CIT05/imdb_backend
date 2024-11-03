@@ -18,6 +18,8 @@ public class Person
 
     public string? DeathYear { get; set; }
 
+
+    [JsonIgnore]
     public List<TitlePrincipal> TitlePrincipals { get; set; }
     public List<PersonRole> PersonRoles { get; set; }
     public List<KnownFor> KnownFors { get; set; }

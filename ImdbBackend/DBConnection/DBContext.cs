@@ -1,4 +1,5 @@
-﻿using DataLayer.PersonRoles;
+﻿using DataLayer.Genres;
+using DataLayer.PersonRoles;
 using DataLayer.Persons;
 using DataLayer.Ratings;
 using DataLayer.Roles;
@@ -7,6 +8,8 @@ using DataLayer.TitleAlternatives;
 using DataLayer.TitlePrincipals;
 using DataLayer.Titles;
 using DataLayer.Users;
+using DataLayer.Types;
+using DataLayer.TitleEpisodes;
 using DataLayer.KnownFors;
 using Microsoft.EntityFrameworkCore;
 using DataLayer.Productions;
@@ -21,6 +24,14 @@ namespace DBConnection
         public DbSet<Role> Roles { get; set; }
         public DbSet<TitleAlternative> TitleAlternatives { get; set; }
         public DbSet<TitlePrincipal> TitlePrincipals { get; set; }
+
+        public DbSet<Genre> Genres { get; set; }
+
+        public DbSet<TitleType> Types { get; set; }
+
+
+        public DbSet<TitleEpisode> TitleEpisodes { get; set; }
+
         public DbSet<PersonRole> PersonRoles { get; set; }
         public DbSet<User> Users { get; set; }
 
@@ -67,18 +78,20 @@ namespace DBConnection
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            BuildPersons(modelBuilder);
-            BuildRatings(modelBuilder);
-            BuildRoles(modelBuilder);
-            BuildTitleAlternatives(modelBuilder);
-            BuildTitlePrincipals(modelBuilder);
-            BuildTitle(modelBuilder);
-            BuildPersonRole(modelBuilder);
-            BuildUser(modelBuilder);
-            BuildKnownFor(modelBuilder);
-            BuildProduction(modelBuilder);
-            BuildUser(modelBuilder);
-            BuildSearch(modelBuilder);
+          BuildPersons(modelBuilder);
+          BuildRatings(modelBuilder);
+          BuildRoles(modelBuilder);
+          BuildTitleAlternatives(modelBuilder);
+          BuildTitlePrincipals(modelBuilder);
+          BuildGenres(modelBuilder);
+          BuildTypes(modelBuilder);
+          BuildTitle(modelBuilder);
+          BuildTitleEpisodes(modelBuilder);
+          BuildUser(modelBuilder);
+          BuildPersonRole(modelBuilder);
+          BuildKnownFor(modelBuilder);
+          BuildProduction(modelBuilder);
+          BuildSearch(modelBuilder);
     }
 
     private static void BuildPersons(ModelBuilder modelBuilder)
@@ -140,19 +153,55 @@ namespace DBConnection
             modelBuilder.Entity<Role>().Property(role => role.RoleName).HasColumnName("name");
         }
 
-        private static void BuildTitleAlternatives(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<TitleAlternative>().ToTable("title_akas_new");
-            modelBuilder.Entity<TitleAlternative>().HasKey(e => new { e.AkasId });
-            modelBuilder.Entity<TitleAlternative>().Property(e => e.TitleId).HasColumnName("tconst");
-            modelBuilder.Entity<TitleAlternative>().Property(e => e.AkasId).HasColumnName("akasid");
-            modelBuilder.Entity<TitleAlternative>().Property(e => e.Ordering).HasColumnName("ordering");
-            modelBuilder.Entity<TitleAlternative>().Property(e => e.AltTitle).HasColumnName("title");
-            modelBuilder.Entity<TitleAlternative>().Property(e => e.Region).HasColumnName("region");
-            modelBuilder.Entity<TitleAlternative>().Property(e => e.Language).HasColumnName("language");
-            modelBuilder.Entity<TitleAlternative>().Property(e => e.Attributes).HasColumnName("attributes");
-            modelBuilder.Entity<TitleAlternative>().Property(e => e.IsOriginalTitle).HasColumnName("isoriginaltitle");
-        }
+    private static void BuildTitleAlternatives(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<TitleAlternative>().ToTable("title_akas_new");
+        modelBuilder.Entity<TitleAlternative>().HasKey(e => new { e.AkasId});
+        modelBuilder.Entity<TitleAlternative>().Property(TitleAlternative => TitleAlternative.TitleId).HasColumnName("tconst");
+        modelBuilder.Entity<TitleAlternative>().Property(e => e.AkasId).HasColumnName("akasid");
+        modelBuilder.Entity<TitleAlternative>().Property(e => e.Ordering).HasColumnName("ordering");
+        modelBuilder.Entity<TitleAlternative>().Property(e => e.AltTitle).HasColumnName("title");
+        modelBuilder.Entity<TitleAlternative>().Property(e => e.Region).HasColumnName("region");
+        modelBuilder.Entity<TitleAlternative>().Property(e => e.Language).HasColumnName("language");
+        modelBuilder.Entity<TitleAlternative>().Property(e => e.Attributes).HasColumnName("attributes");
+        modelBuilder.Entity<TitleAlternative>().Property(e => e.IsOriginalTitle).HasColumnName("isoriginaltitle");
+
+        //relationships
+        modelBuilder.Entity<TitleAlternative>()
+         .HasOne(tA => tA.Title) 
+         .WithMany(title => title.TitleAlternatives) 
+         .HasForeignKey(tp => tp.TitleId);
+
+
+        modelBuilder.Entity<TitleAlternative>()
+        .HasMany(title => title.Types)
+        .WithMany(types => types.Titles)
+        .UsingEntity<Dictionary<string, object>>(
+            "title_types",
+        j => j.HasOne<TitleType>()
+              .WithMany()
+              .HasForeignKey("typeid")  
+            .HasConstraintName("title_types_typeid_fkey"),
+
+        j => j.HasOne<TitleAlternative>()
+              .WithMany()
+              .HasForeignKey("akasid")
+              .HasConstraintName("title_types_akasid_fkey")
+    );
+    }
+        //private static void BuildTitleAlternatives(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<TitleAlternative>().ToTable("title_akas_new");
+        //    modelBuilder.Entity<TitleAlternative>().HasKey(e => new { e.AkasId });
+        //    modelBuilder.Entity<TitleAlternative>().Property(e => e.TitleId).HasColumnName("tconst");
+        //    modelBuilder.Entity<TitleAlternative>().Property(e => e.AkasId).HasColumnName("akasid");
+        //    modelBuilder.Entity<TitleAlternative>().Property(e => e.Ordering).HasColumnName("ordering");
+        //    modelBuilder.Entity<TitleAlternative>().Property(e => e.AltTitle).HasColumnName("title");
+        //    modelBuilder.Entity<TitleAlternative>().Property(e => e.Region).HasColumnName("region");
+        //    modelBuilder.Entity<TitleAlternative>().Property(e => e.Language).HasColumnName("language");
+        //    modelBuilder.Entity<TitleAlternative>().Property(e => e.Attributes).HasColumnName("attributes");
+        //    modelBuilder.Entity<TitleAlternative>().Property(e => e.IsOriginalTitle).HasColumnName("isoriginaltitle");
+        //}
 
         private static void BuildTitlePrincipals(ModelBuilder modelBuilder)
         {
@@ -182,28 +231,103 @@ namespace DBConnection
                 .HasForeignKey(tp => tp.TConst);
         }
 
-        private static void BuildTitle(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Title>().ToTable("title_basics_new");
-            modelBuilder.Entity<Title>().Property(title => title.TConst).HasColumnName("tconst").IsRequired();
-            modelBuilder.Entity<Title>().Property(title => title.TitleType).HasColumnName("titletype");
-            modelBuilder.Entity<Title>().Property(title => title.PrimaryTitle).HasColumnName("primarytitle");
-            modelBuilder.Entity<Title>().Property(title => title.OriginalTitle).HasColumnName("originaltitle");
-            modelBuilder.Entity<Title>().Property(title => title.IsAdult).HasColumnName("isadult");
-            modelBuilder.Entity<Title>().Property(title => title.StartYear).HasColumnName("startyear");
-            modelBuilder.Entity<Title>().Property(title => title.EndYear).HasColumnName("endyear");
-            modelBuilder.Entity<Title>().Property(title => title.RuntimeMinutes).HasColumnName("runtimeminutes");
-            modelBuilder.Entity<Title>().Property(title => title.Plot).HasColumnName("plot");
-            modelBuilder.Entity<Title>().Property(title => title.Poster).HasColumnName("poster");
-            modelBuilder.Entity<Title>()
-                .HasOne(title => title.Rating)
-                .WithOne()
-                .HasForeignKey<Rating>(rating => rating.TConst);
-            modelBuilder.Entity<Title>()
-                .HasMany(title => title.Principals)
-                .WithOne(principal => principal.Title)
-                .HasForeignKey(principal => principal.TConst);
+    private static void BuildTitle(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Title>().ToTable("title_basics_new");
+        modelBuilder.Entity<Title>().Property(title => title.TConst).HasColumnName("tconst").IsRequired(); ;
+        modelBuilder.Entity<Title>().Property(title => title.TitleType).HasColumnName("titletype");
+        modelBuilder.Entity<Title>().Property(title => title.PrimaryTitle).HasColumnName("primarytitle");
+        modelBuilder.Entity<Title>().Property(title => title.OriginalTitle).HasColumnName("originaltitle");
+        modelBuilder.Entity<Title>().Property(title => title.IsAdult).HasColumnName("isadult");
+        modelBuilder.Entity<Title>().Property(title => title.StartYear).HasColumnName("startyear");
+        modelBuilder.Entity<Title>().Property(title => title.EndYear).HasColumnName("endyear");
+        modelBuilder.Entity<Title>().Property(title => title.RuntimeMinutes).HasColumnName("runtimeminutes");
+        modelBuilder.Entity<Title>().Property(title => title.Plot).HasColumnName("plot");
+        modelBuilder.Entity<Title>().Property(title => title.Poster).HasColumnName("poster");
+        modelBuilder.Entity<Title>().HasOne(title => title.Rating).WithOne().HasForeignKey<Rating>(rating => rating.TConst);
+        modelBuilder.Entity<Title>()
+            .HasMany(title => title.Principals)
+            .WithOne(principal => principal.Title)
+            .HasForeignKey(principal => principal.TConst);
+        modelBuilder.Entity<Title>()
+          .HasMany(title => title.TitleAlternatives)
+            .WithOne(alt => alt.Title)
+            .HasForeignKey(ta => ta.TitleId);
+
+     modelBuilder.Entity<Title>()
+    .HasMany(title => title.Genres)
+    .WithMany(genre => genre.Titles)
+    .UsingEntity<Dictionary<string, object>>(
+        "title_genres",
+        j => j.HasOne<Genre>()
+              .WithMany()
+              .HasForeignKey("genreid")   // Specify FK column name for Genre
+              .HasConstraintName("title_genres_genreid_fkey"),
+        j => j.HasOne<Title>()
+              .WithMany()
+              .HasForeignKey("tconst")  // Specify FK column name for Title
+              .HasConstraintName("title_genres_tconst_fkey")
+    );
+    modelBuilder.Entity<Title>()
+    .HasMany(title => title.Episodes)
+    .WithOne(ep => ep.Title)
+    .HasForeignKey(ep => ep.ParentTConst);
+
+     modelBuilder.Entity<Title>()
+    .HasOne(title => title.Rating)
+    .WithOne()
+    .HasForeignKey<Rating>(rating => rating.TConst);
+
+
         }
+
+        private static void BuildGenres(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Genre>().ToTable("genres");
+            modelBuilder.Entity<Genre>().Property(genre => genre.GenreId).HasColumnName("genreid");
+            modelBuilder.Entity<Genre>().Property(genre => genre.GenreName).HasColumnName("name");
+        }
+
+
+        private static void BuildTypes(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<TitleType>().ToTable("types");
+            modelBuilder.Entity<TitleType>().Property(type => type.TypeId).HasColumnName("typeid");
+            modelBuilder.Entity<TitleType>().Property(type => type.TypeName).HasColumnName("type");
+        }
+
+
+
+    private static void BuildTitleEpisodes(ModelBuilder modelBuilder)
+    {
+     modelBuilder.Entity<TitleEpisode>().ToTable("title_episode_new");
+        modelBuilder.Entity<TitleEpisode>().Property(e => e.Tconst).HasColumnName("tconst");
+        modelBuilder.Entity<TitleEpisode>().Property(e => e.ParentTConst).HasColumnName("parenttconst");
+        modelBuilder.Entity<TitleEpisode>().Property(e => e.SeasonNumber).HasColumnName("seasonnumber");
+        modelBuilder.Entity<TitleEpisode>().Property(e => e.EpisodeNumber).HasColumnName("episodenumber");
+    }
+        //private static void BuildTitle(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<Title>().ToTable("title_basics_new");
+        //    modelBuilder.Entity<Title>().Property(title => title.TConst).HasColumnName("tconst").IsRequired();
+        //    modelBuilder.Entity<Title>().Property(title => title.TitleType).HasColumnName("titletype");
+        //    modelBuilder.Entity<Title>().Property(title => title.PrimaryTitle).HasColumnName("primarytitle");
+        //    modelBuilder.Entity<Title>().Property(title => title.OriginalTitle).HasColumnName("originaltitle");
+        //    modelBuilder.Entity<Title>().Property(title => title.IsAdult).HasColumnName("isadult");
+        //    modelBuilder.Entity<Title>().Property(title => title.StartYear).HasColumnName("startyear");
+        //    modelBuilder.Entity<Title>().Property(title => title.EndYear).HasColumnName("endyear");
+        //    modelBuilder.Entity<Title>().Property(title => title.RuntimeMinutes).HasColumnName("runtimeminutes");
+        //    modelBuilder.Entity<Title>().Property(title => title.Plot).HasColumnName("plot");
+        //    modelBuilder.Entity<Title>().Property(title => title.Poster).HasColumnName("poster");
+        //    modelBuilder.Entity<Title>()
+        //        .HasOne(title => title.Rating)
+        //        .WithOne()
+        //        .HasForeignKey<Rating>(rating => rating.TConst);
+        //    modelBuilder.Entity<Title>()
+        //        .HasMany(title => title.Principals)
+        //        .WithOne(principal => principal.Title)
+        //        .HasForeignKey(principal => principal.TConst);
+        //}
 
         private static void BuildPersonRole(ModelBuilder modelBuilder)
         {
@@ -258,7 +382,7 @@ namespace DBConnection
         modelBuilder.Entity<BestSearchResult>().HasOne(b => b.Title).WithMany().HasForeignKey(b => b.TConst);
 
     }
-        private static void BuildKnownFor(ModelBuilder modelBuilder)
+    private static void BuildKnownFor(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<KnownFor>().ToTable("name_title");
             modelBuilder.Entity<KnownFor>().HasKey(e => new { e.NConst, e.TConst });
@@ -267,15 +391,18 @@ namespace DBConnection
             modelBuilder.Entity<KnownFor>().Property(knownfor => knownfor.Ordering).HasColumnName("ordering");
 
             modelBuilder.Entity<KnownFor>()
-                    .HasOne(title => title.Title)
-                    .WithMany(kf => kf.KnownFors)
-                    .HasForeignKey(pr => pr.TConst);
+                .HasOne(title => title.Title)
+                .WithMany(kf => kf.KnownFors)
+                .HasForeignKey(pr => pr.TConst);
 
             modelBuilder.Entity<KnownFor>()
                 .HasOne(pr => pr.Person)
                 .WithMany(kf => kf.KnownFors)
                 .HasForeignKey(pr => pr.NConst);
+
         }
+
+        //}
 
         private static void BuildProduction(ModelBuilder modelBuilder)
         {

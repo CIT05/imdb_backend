@@ -3,6 +3,8 @@ using WebApi.Models.Titles;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Controllers.Ratings;
 using Mapster;
+using WebApi.Controllers.TitleAlternatives;
+using WebApi.Controllers.TitlePrincipals;
 using WebApi.Controllers.TitlePrincipals;
 using WebApi.Controllers.Persons;
 using WebApi.Models.KnownFors;
@@ -73,6 +75,11 @@ public class TitlesController : BaseController
             titleModel.Rating.Url = GetUrl(nameof(RatingsController.GetRatingById), new { tconst = title.TConst });
         }
 
+        if (titleModel.TitleAlternatives != null)
+        {
+            titleModel.TitleAlternatives.ForEach(alt => alt.Url = GetUrl(nameof(TitleAlternativeController.GetTitleAlternative), new { akasId = alt.AkasId, ordering = alt.Ordering }));
+        }
+
         var knownForIds = title.KnownFors.Select(kf => kf.TConst).Distinct().ToList();
         var productionPersonIds = title.ProductionPersons.Select(pp => pp.TConst).Distinct().ToList();
 
@@ -109,5 +116,4 @@ public class TitlesController : BaseController
 
         return titleModel;
     }
-
 }

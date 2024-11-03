@@ -12,6 +12,9 @@ namespace DataLayer.Roles;
      
         public string RoleName { get; set; } = string.Empty;
 
+
+
+    [JsonIgnore]
         public List<TitlePrincipal> TitlePrincipals { get; set; }
         public List<PersonRole> PersonRoles { get; set; }
         public List<Production> ProductionPersons { get; set; }

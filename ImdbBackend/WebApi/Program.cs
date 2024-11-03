@@ -23,6 +23,15 @@ using DataLayer.TitleAlternatives;
 using DBConnection.Users;
 using DataLayer.Users;
 
+using DBConnection.Genres;
+using DataLayer.Genres;
+
+using DBConnection.Type;
+using DataLayer.Types;
+
+using DBConnection.TitleEpisodes;
+using DataLayer.TitleEpisodes;
+
 using DBConnection.Searching;
 using DataLayer.Searching;
 
@@ -63,6 +72,11 @@ builder.Services.AddSingleton<ITitleAlternativeDataService>(
 builder.Services.AddSingleton<IUserDataService>(
     serviceProvider => new UserDataService(connectionString));
 
+builder.Services.AddSingleton<IGenreDataService>(
+    serviceProvider => new GenreDataService(connectionString));
+    
+builder.Services.AddSingleton<ITypeDataService>(
+    serviceProvider => new TypeDataService(connectionString));
 builder.Services.AddSingleton<ISearchingDataService>(
     serviceProvider => new SearchingDataService(connectionString));
 
@@ -76,6 +90,8 @@ builder.Services.AddSingleton<IProductionDataService>(
 
 
 
+builder.Services.AddSingleton<ITitleEpisodeDataService>(
+    serviceProvider => new TitleEpisodeDataService(connectionString));
 
 
 builder.Services.AddMapster();
