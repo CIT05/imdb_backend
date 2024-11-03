@@ -442,8 +442,8 @@ namespace DBConnection
         private static void BuildSearchHistory(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<SearchHistory>()
-                .ToTable("search_history") // Mapping to the database table
-                .HasKey(sh => new { sh.UserId, sh.SearchId }); // Composite key
+                .ToTable("search_history")
+                .HasKey(sh => new { sh.UserId, sh.SearchId });
             modelBuilder.Entity<SearchHistory>().Property(sh => sh.SearchId).HasColumnName("searchid");
             modelBuilder.Entity<SearchHistory>().Property(sh => sh.UserId).HasColumnName("userid");
             modelBuilder.Entity<SearchHistory>().Property(sh => sh.Phrase).HasColumnName("phrase");
@@ -454,8 +454,8 @@ namespace DBConnection
         private static void BuildRatingHistory(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<RatingHistory>()
-                .ToTable("rating_history") // Mapping to the database table
-                .HasKey(rh => new { rh.UserId, rh.TConst }); // Composite key
+                .ToTable("rating_history")
+                .HasKey(rh => new { rh.UserId, rh.TConst });
             modelBuilder.Entity<RatingHistory>().Property(rh => rh.UserId).HasColumnName("userid");
             modelBuilder.Entity<RatingHistory>().Property(rh => rh.TConst).HasColumnName("tconst");
             modelBuilder.Entity<RatingHistory>().Property(rh => rh.Timestamp).HasColumnName("timestamp");
