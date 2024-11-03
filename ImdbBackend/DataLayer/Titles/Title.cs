@@ -8,7 +8,7 @@ namespace DataLayer.Titles;
 public class Title
 {
     [Key]
-    public string TConst { get; set; }
+    public string TConst { get; set; } = string.Empty;
 
     public string TitleType { get; set; } = string.Empty;
 

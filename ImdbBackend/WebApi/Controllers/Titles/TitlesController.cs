@@ -33,7 +33,8 @@ public class TitlesController(ITitleDataService dataService, LinkGenerator linkG
     }
 
     [HttpGet("{tconst}", Name = nameof(GetTitleById))]
-    public IActionResult GetTitleById(string tconst)
+    public IActionResult 
+        (string tconst)
     {
         var title = _dataService.GetTitleById(tconst);
         if (title == null)
