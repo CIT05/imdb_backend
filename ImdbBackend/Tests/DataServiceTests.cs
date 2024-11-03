@@ -1,5 +1,7 @@
 using DataLayer.Titles;
+using DataLayer.Bookmarkings;
 using Moq;
+
 
 namespace Tests;
 
@@ -20,14 +22,21 @@ public class DataServiceTests
 
     List<Title> titlesStub = new List<Title>();
 
+    //Personality Bookmarking
+    PersonalityBookmarking personalityBookmarkingStub1 = new PersonalityBookmarking { UserId = 1, NConst = "nm0000001", Timestamp = DateTime.Now };
+    PersonalityBookmarking personalityBookmarkingStub2 = new PersonalityBookmarking { UserId = 1, NConst = "nm0000002", Timestamp = DateTime.Now };
+
+    List<PersonalityBookmarking> personalityBookmarksStub = new List<PersonalityBookmarking>();
+
+
 
     [Fact]
     public void Title_Object_HasTConstTitleTypePrimaryTitleOriginalTitleIsAdultStartYearEndYearRuntimeMinutesPlotAndPoster()
     {
         var title = new Title();
-        Assert.Equal("",title.TConst);
-        Assert.Equal("",title.TitleType);
-        Assert.Equal("",title.PrimaryTitle);
+        Assert.Equal("", title.TConst);
+        Assert.Equal("", title.TitleType);
+        Assert.Equal("", title.PrimaryTitle);
         Assert.Equal("", title.OriginalTitle);
         Assert.False(title.IsAdult);
         Assert.Null(title.StartYear);
@@ -35,7 +44,7 @@ public class DataServiceTests
         Assert.Null(title.RuntimeMinutes);
         Assert.Null(title.Plot);
         Assert.Null(title.Poster);
-        
+
     }
 
     [Fact]
@@ -63,7 +72,7 @@ public class DataServiceTests
         var result = mockedTitleDataSerivce.GetTitles(10, 0);
         Assert.IsType<List<Title>>(result);
         Assert.True(result.Count == 10);
-        Assert.True(result.ElementAt(0).TConst == "tt0000001"); 
+        Assert.True(result.ElementAt(0).TConst == "tt0000001");
 
     }
 
@@ -84,7 +93,7 @@ public class DataServiceTests
         titlesStub.Add(TitleStub9);
         titlesStub.Add(TitleStub10);
 
-        mockService.Setup(service => service.GetTitleById("tt0000001")).Returns(titlesStub.Where(title=> title.TConst == "tt0000001").SingleOrDefault());
+        mockService.Setup(service => service.GetTitleById("tt0000001")).Returns(titlesStub.Where(title => title.TConst == "tt0000001").SingleOrDefault());
 
         var mockedTitleDataSerivce = mockService.Object;
 
@@ -94,4 +103,48 @@ public class DataServiceTests
 
 
     }
+
+
+    [Fact]
+    public void Adds_Personality_Bookmark()
+    {
+        var mockService = new Mock<IBookmarkingDataService>();
+        var userId = 1;
+        var nconst = "nm0000001";
+
+        mockService.Setup(service => service.AddPersonalityBookmarking(userId, nconst))
+                    .Returns((PersonalityBookmarking)new PersonalityBookmarking { UserId = userId, NConst = nconst, Timestamp = DateTime.Now });
+
+        var mockedDataService = mockService.Object;
+
+        var result = mockedDataService.AddPersonalityBookmarking(userId, nconst);
+
+        Assert.NotNull(result);
+        Assert.Equal(userId, result.UserId);
+        Assert.Equal(nconst, result.NConst);
+        Assert.True(result.Timestamp != default(DateTime));
+    }
+
+    [Fact]
+    public void DeletePersonalityBookmarking_Removes_Record_When_Exists()
+    {
+        var mockService = new Mock<IBookmarkingDataService>(); 
+        var userId = 1;
+        var nconst = "nm0000001";
+
+        mockService.Setup(service => service.DeletePersonalityBookmarking(userId, nconst))
+                    .Returns((PersonalityBookmarking)new PersonalityBookmarking { UserId = userId, NConst = nconst, Timestamp = DateTime.Now });
+
+        var mockedDataService = mockService.Object;
+
+        var result = mockedDataService.DeletePersonalityBookmarking(userId, nconst);
+
+        Assert.NotNull(result);
+        Assert.Equal(userId, result.UserId);
+        Assert.Equal(nconst, result.NConst);
+    }
+
+
+
+
 }
