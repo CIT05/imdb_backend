@@ -15,6 +15,8 @@ using Microsoft.EntityFrameworkCore;
 using DataLayer.Productions;
 using System.Reflection.Emit;
 using DataLayer.Bookmarkings;
+using DataLayer.History;
+
 
 namespace DBConnection
 {
@@ -65,6 +67,10 @@ namespace DBConnection
         public DbSet<TitleBookmarking> TitleBookmarkings { get; set; }
         public DbSet<PersonalityBookmarking> PersonalityBookmarkings { get; set; }
 
+        public DbSet<SearchHistory> SearchHistory { get; set; }
+
+        public DbSet<RatingHistory> RatingHistory { get; set; }
+
 
         private readonly string _connectionString;
 
@@ -98,6 +104,9 @@ namespace DBConnection
             BuildSearch(modelBuilder);
             BuildTitleBookmarking(modelBuilder);
             BuildPersonalityBookmarking(modelBuilder);
+            BuildSearchHistory(modelBuilder);
+            BuildRatingHistory(modelBuilder);
+
         }
 
         private static void BuildPersons(ModelBuilder modelBuilder)
@@ -337,6 +346,11 @@ namespace DBConnection
             modelBuilder.Entity<BestSearchResult>().Property(result => result.MatchCount).HasColumnName("match_count");
             modelBuilder.Entity<BestSearchResult>().HasOne(b => b.Title).WithMany().HasForeignKey(b => b.TConst);
 
+
+
+
+
+
         }
         private static void BuildKnownFor(ModelBuilder modelBuilder)
         {
@@ -425,6 +439,28 @@ namespace DBConnection
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
         }
+        private static void BuildSearchHistory(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<SearchHistory>()
+                .ToTable("search_history") // Mapping to the database table
+                .HasKey(sh => new { sh.UserId, sh.SearchId }); // Composite key
+            modelBuilder.Entity<SearchHistory>().Property(sh => sh.SearchId).HasColumnName("searchid");
+            modelBuilder.Entity<SearchHistory>().Property(sh => sh.UserId).HasColumnName("userid");
+            modelBuilder.Entity<SearchHistory>().Property(sh => sh.Phrase).HasColumnName("phrase");
+            modelBuilder.Entity<SearchHistory>().Property(sh => sh.Timestamp).HasColumnName("timestamp");
+        }
 
+
+        private static void BuildRatingHistory(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<RatingHistory>()
+                .ToTable("rating_history") // Mapping to the database table
+                .HasKey(rh => new { rh.UserId, rh.TConst }); // Composite key
+            modelBuilder.Entity<RatingHistory>().Property(rh => rh.UserId).HasColumnName("userid");
+            modelBuilder.Entity<RatingHistory>().Property(rh => rh.TConst).HasColumnName("tconst");
+            modelBuilder.Entity<RatingHistory>().Property(rh => rh.Timestamp).HasColumnName("timestamp");
+            modelBuilder.Entity<RatingHistory>().Property(rh => rh.Value).HasColumnName("value");
+        }
+      
     }
 }    

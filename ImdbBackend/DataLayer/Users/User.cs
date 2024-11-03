@@ -1,4 +1,5 @@
 ﻿using DataLayer.Bookmarkings;
+using DataLayer.History;
 using System.ComponentModel.DataAnnotations;
 
 namespace DataLayer.Users;
@@ -17,6 +18,11 @@ public class User
     public List<TitleBookmarking> TitleBookmarkings { get; set; }
 
     public List<PersonalityBookmarking> PersonalityBookmarkings { get; set; }
+
+    public List<RatingHistory> RatingHistory { get; set; }
+
+    public List<SearchHistory> SearchHistory { get; set; }
+
 
 }
 

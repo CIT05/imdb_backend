@@ -39,7 +39,7 @@ public class Title
 
     public List<TitleEpisode> Episodes { get; set; } = new List<TitleEpisode>();
 
-    public ICollection<Genre> Genres { get; set; } = new List<Genre>();
+    public List<Genre> Genres { get; set; } = new List<Genre>();
 
 
 }

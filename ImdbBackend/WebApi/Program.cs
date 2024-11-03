@@ -47,6 +47,9 @@ using DBConnection.Productions;
 using DataLayer.Bookmarkings;
 using DBConnection.Bookmarkings;
 
+using DataLayer.History;
+using DBConnection.History;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("config.json");
@@ -91,12 +94,10 @@ builder.Services.AddSingleton<IProductionDataService>(
     serviceProvider => new ProductionDataService(connectionString));
 builder.Services.AddSingleton<IBookmarkingDataService>(
     serviceProvider => new BookmarkingDataService(connectionString));
-
-
-
-
 builder.Services.AddSingleton<ITitleEpisodeDataService>(
     serviceProvider => new TitleEpisodeDataService(connectionString));
+builder.Services.AddSingleton<IHistoryDataService>(
+    serviceProvider => new HistoryDataService(connectionString));
 
 
 builder.Services.AddMapster();

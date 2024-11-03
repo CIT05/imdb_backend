@@ -1,4 +1,5 @@
 ﻿using DataLayer.Users;
+using DataLayer.History;
 using Microsoft.EntityFrameworkCore;
 
 namespace DBConnection.Users;
@@ -8,7 +9,11 @@ public class UserDataService(string connectionString) : IUserDataService
     public User? GetUserById(int UserId)
     {
         var db = new ImdbContext(connectionString);
-        return db.Users.Find(UserId);
+        return db.Users.Include(u => u.RatingHistory)
+                 .Include(u => u.SearchHistory)
+                 .Include(u => u.PersonalityBookmarkings)
+                .Include(u => u.TitleBookmarkings)
+                 .FirstOrDefault(u => u.UserId == UserId);
     }
 
     public User? CreateUser(string username, string password, string language)
