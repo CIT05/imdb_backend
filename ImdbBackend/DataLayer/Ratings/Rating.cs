@@ -1,8 +1,6 @@
 ﻿
-using DataLayer.Titles;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
 namespace DataLayer.Ratings;
 
@@ -16,4 +14,27 @@ public class Rating
 
     public int NumberOfVotes { get; set; }
 
+}
+
+public class RatingForUserResult
+{
+    public string TConst { get; set; } = string.Empty;
+    
+    public int UserId { get; set; } 
+
+    public DateTime TimeStamp { get; set; }
+
+    public double Rating { get; set; }
+
+}
+
+public class AddRatingResult
+{
+    public bool IsSuccess { get; set; }
+
+}
+
+public class PersonRatingResult
+{
+    public double PersonRating { get; set; }
 }

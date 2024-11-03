@@ -1,5 +1,7 @@
 ﻿using DataLayer.Persons;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
+using Microsoft.EntityFrameworkCore;
 
 namespace DBConnection.Persons
 {
@@ -43,6 +45,13 @@ namespace DBConnection.Persons
 
                 return person;
         }
+
+        public List<PersonsByMovieResult> GetPersonsByMovie(string tconst)
+        {
+            var db = new ImdbContext(_connectionString);
+            return db.PersonsByMovieResult.FromSqlInterpolated($"SELECT * FROM get_actors_for_movie({tconst})").Include(result => result.Person).ToList();
+        }
+
 
         public int NumberOfPersons()
         {

@@ -15,7 +15,7 @@ public class UserDataService(string connectionString) : IUserDataService
     {
         var db = new ImdbContext(connectionString);
 
-        CreateUserResult createdUser = db.CreateUserResult.FromSqlInterpolated($"select * from create_user({username}, {password}, {language})").ToList().FirstOrDefault();
+        CreateUserResult createdUser = db.CreateUserResults.FromSqlInterpolated($"select * from create_user({username}, {password}, {language})").ToList().FirstOrDefault();
 
         if(createdUser == null)
         {
@@ -42,7 +42,7 @@ public class UserDataService(string connectionString) : IUserDataService
     {
         var db = new ImdbContext(connectionString);
 
-        UpdateUserResult updatedUserResult = db.UpdateUserResult.FromSqlInterpolated($"select * from update_user({userId}, {username}, {password}, {language})").ToList().FirstOrDefault();
+        UpdateUserResult updatedUserResult = db.UpdateUserResults.FromSqlInterpolated($"select * from update_user({userId}, {username}, {password}, {language})").ToList().FirstOrDefault();
 
         if (updatedUserResult == null)
         {

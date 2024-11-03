@@ -18,11 +18,10 @@ namespace DBConnection.Titles
                 .Include(title => title.Rating)
                 .Include(title => title.KnownFors)
                 .Include(title => title.ProductionPersons)
+                .Include(title => title.TitleAlternatives)
                 .Include(title => title.Principals.OrderBy(p => p.Ordering)) // EF Core should apply ordering here
                 .AsSplitQuery() // Ensures that related collections are loaded as separate queries
                 .ToList();
-
-
         }
 
         public Title? GetTitleById(string tconst)
@@ -34,6 +33,7 @@ namespace DBConnection.Titles
                 .Include(title => title.Principals)
                 .Include(title => title.KnownFors)
                 .Include(title => title.ProductionPersons)
+                .Include(title => title.TitleAlternatives)
                 .AsSplitQuery()
                 .Select(title => new
                 {
@@ -49,6 +49,7 @@ namespace DBConnection.Titles
                 .SingleOrDefault();
 
             return title;
+          
         }
 
         public int NumberOfTitles()

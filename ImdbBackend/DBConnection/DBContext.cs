@@ -2,6 +2,7 @@
 using DataLayer.Persons;
 using DataLayer.Ratings;
 using DataLayer.Roles;
+using DataLayer.Searching;
 using DataLayer.TitleAlternatives;
 using DataLayer.TitlePrincipals;
 using DataLayer.Titles;
@@ -9,6 +10,7 @@ using DataLayer.Users;
 using DataLayer.KnownFors;
 using Microsoft.EntityFrameworkCore;
 using DataLayer.Productions;
+using System.Reflection.Emit;
 
 namespace DBConnection
 {
@@ -21,14 +23,35 @@ namespace DBConnection
         public DbSet<TitlePrincipal> TitlePrincipals { get; set; }
         public DbSet<PersonRole> PersonRoles { get; set; }
         public DbSet<User> Users { get; set; }
+
+        public DbSet<CreateUserResult> CreateUserResults { get; set; }
+
+        public DbSet<UpdateUserResult> UpdateUserResults { get; set; }
+
         public DbSet<CreateUserResult> CreateUserResult { get; set; }
         public DbSet<UpdateUserResult> UpdateUserResult { get; set; }
         public DbSet<Title> Titles { get; set; }
         public DbSet<KnownFor> KnownFors { get; set; }
         public DbSet<Production> Productions { get; set; }
 
+        public DbSet<TitleStringSearchResult> TitleStringSearchResults { get; set; }
 
-        private readonly string _connectionString;
+        public DbSet<ActorStringSearchResult> ActorStringSearchResults { get; set; }
+
+        public DbSet <RatingForUserResult> RatingForUserResults { get; set; }
+
+        public DbSet<AddRatingResult> AddRatingResults { get; set; }
+
+        public DbSet<PersonsByMovieResult> PersonsByMovieResult { get; set; }
+
+        public DbSet<PersonRatingResult> PersonRatingResults { get; set; }
+
+        public DbSet<ExactSearchResult> ExactSearchResults { get; set; }
+
+        public DbSet<BestSearchResult> BestSearchResults { get; set; }
+
+
+    private readonly string _connectionString;
 
         public ImdbContext(string connectionString)
         {
@@ -54,24 +77,61 @@ namespace DBConnection
             BuildUser(modelBuilder);
             BuildKnownFor(modelBuilder);
             BuildProduction(modelBuilder);
-        }
+            BuildUser(modelBuilder);
+            BuildSearch(modelBuilder);
+    }
 
-        private static void BuildPersons(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Person>().ToTable("name_basics_new");
-            modelBuilder.Entity<Person>().Property(person => person.NConst).HasColumnName("nconst");
-            modelBuilder.Entity<Person>().Property(person => person.PrimaryName).HasColumnName("primaryname");
-            modelBuilder.Entity<Person>().Property(person => person.BirthYear).HasColumnName("birthyear");
-            modelBuilder.Entity<Person>().Property(person => person.DeathYear).HasColumnName("deathyear");
-        }
+    private static void BuildPersons(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Person>().ToTable("name_basics_new");
+        modelBuilder.Entity<Person>().Property(person => person.NConst).HasColumnName("nconst");
+        modelBuilder.Entity<Person>().Property(person => person.PrimaryName).HasColumnName("primaryname");
+        modelBuilder.Entity<Person>().Property(person => person.BirthYear).HasColumnName("birthyear");
+        modelBuilder.Entity<Person>().Property(person => person.DeathYear).HasColumnName("deathyear");
 
-        private static void BuildRatings(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Rating>().ToTable("title_ratings_new");
-            modelBuilder.Entity<Rating>().Property(rating => rating.TConst).HasColumnName("tconst").IsRequired();
-            modelBuilder.Entity<Rating>().Property(rating => rating.AverageRating).HasColumnName("averagerating");
-            modelBuilder.Entity<Rating>().Property(rating => rating.NumberOfVotes).HasColumnName("numvotes");
-        }
+        modelBuilder.Entity<PersonsByMovieResult>().HasKey(personsBymovieResult => personsBymovieResult.NConst);
+        modelBuilder.Entity<PersonsByMovieResult>().Property(e => e.NConst).HasColumnName("nconst");
+        modelBuilder.Entity<PersonsByMovieResult>().Property(e => e.PersonRating).HasColumnName("rating");
+        modelBuilder.Entity<PersonsByMovieResult>().HasOne(e => e.Person).WithMany().HasForeignKey(e => e.NConst);
+
+    }
+        //private static void BuildPersons(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<Person>().ToTable("name_basics_new");
+        //    modelBuilder.Entity<Person>().Property(person => person.NConst).HasColumnName("nconst");
+        //    modelBuilder.Entity<Person>().Property(person => person.PrimaryName).HasColumnName("primaryname");
+        //    modelBuilder.Entity<Person>().Property(person => person.BirthYear).HasColumnName("birthyear");
+        //    modelBuilder.Entity<Person>().Property(person => person.DeathYear).HasColumnName("deathyear");
+        //}
+
+    private static void BuildRatings(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Rating>().ToTable("title_ratings_new");
+        modelBuilder.Entity<Rating>().Property(rating => rating.TConst).HasColumnName("tconst").IsRequired();
+        modelBuilder.Entity<Rating>().Property(rating => rating.AverageRating).HasColumnName("averagerating");
+        modelBuilder.Entity<Rating>().Property(rating => rating.NumberOfVotes).HasColumnName("numvotes");
+
+        modelBuilder.Entity<RatingForUserResult>().HasNoKey();
+        modelBuilder.Entity<RatingForUserResult>().Property(e => e.TConst).HasColumnName("tconst");
+        modelBuilder.Entity<RatingForUserResult>().Property(e => e.UserId).HasColumnName("userid");
+        modelBuilder.Entity<RatingForUserResult>().Property(e => e.TimeStamp).HasColumnName("time_stamp");
+        modelBuilder.Entity<RatingForUserResult>().Property(e => e.Rating).HasColumnName("value");
+
+        modelBuilder.Entity<AddRatingResult>().HasNoKey();
+        modelBuilder.Entity<AddRatingResult>().Property(e => e.IsSuccess).HasColumnName("add_rating");
+
+        modelBuilder.Entity<PersonRatingResult>().HasNoKey();
+        modelBuilder.Entity<PersonRatingResult>().Property(e => e.PersonRating).HasColumnName("get_rating_per_nconst");
+
+
+    }
+        //private static void BuildRatings(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<Rating>().ToTable("title_ratings_new");
+        //    modelBuilder.Entity<Rating>().Property(rating => rating.TConst).HasColumnName("tconst").IsRequired();
+        //    modelBuilder.Entity<Rating>().Property(rating => rating.AverageRating).HasColumnName("averagerating");
+        //    modelBuilder.Entity<Rating>().Property(rating => rating.NumberOfVotes).HasColumnName("numvotes");
+        //}
 
         private static void BuildRoles(ModelBuilder modelBuilder)
         {
@@ -178,6 +238,26 @@ namespace DBConnection
             modelBuilder.Entity<UpdateUserResult>().Property(e => e.UserId).HasColumnName("updated_user_result");
         }
 
+    private static void BuildSearch(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<TitleStringSearchResult>().HasNoKey();
+        modelBuilder.Entity<TitleStringSearchResult>().Property(stringSearch => stringSearch.TitleId).HasColumnName("idTitle");
+        modelBuilder.Entity<TitleStringSearchResult>().Property(stringSearch => stringSearch.Title).HasColumnName("title");
+
+        modelBuilder.Entity<ActorStringSearchResult>().HasNoKey();
+        modelBuilder.Entity<ActorStringSearchResult>().Property(stringSearch => stringSearch.ActorId).HasColumnName("actorId");
+        modelBuilder.Entity<ActorStringSearchResult>().Property(stringSearch => stringSearch.ActorName).HasColumnName("actorName");
+
+        modelBuilder.Entity<ExactSearchResult>().HasKey(result => result.TConst);
+        modelBuilder.Entity<ExactSearchResult>().Property(result => result.TConst).HasColumnName("tconst");
+        modelBuilder.Entity<ExactSearchResult>().HasOne(b => b.Title).WithMany().HasForeignKey(b => b.TConst);
+
+        modelBuilder.Entity<BestSearchResult>().HasKey(result => result.TConst);
+        modelBuilder.Entity<BestSearchResult>().Property(result => result.TConst).HasColumnName("tconst");
+        modelBuilder.Entity<BestSearchResult>().Property(result => result.MatchCount).HasColumnName("match_count");
+        modelBuilder.Entity<BestSearchResult>().HasOne(b => b.Title).WithMany().HasForeignKey(b => b.TConst);
+
+    }
         private static void BuildKnownFor(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<KnownFor>().ToTable("name_title");

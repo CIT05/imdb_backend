@@ -24,3 +24,12 @@ public class Person
     public List<Production> ProductionPersons { get; set; }
 
 }
+
+public class PersonsByMovieResult
+{
+    public string NConst { get; set; }
+
+    public double PersonRating { get; set; }
+
+    public Person? Person { get; set; }
+}

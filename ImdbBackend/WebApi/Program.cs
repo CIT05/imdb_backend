@@ -23,6 +23,9 @@ using DataLayer.TitleAlternatives;
 using DBConnection.Users;
 using DataLayer.Users;
 
+using DBConnection.Searching;
+using DataLayer.Searching;
+
 using DataLayer.PersonRoles;
 using DBConnection.PersonRoles;
 
@@ -59,6 +62,9 @@ builder.Services.AddSingleton<ITitleAlternativeDataService>(
 
 builder.Services.AddSingleton<IUserDataService>(
     serviceProvider => new UserDataService(connectionString));
+
+builder.Services.AddSingleton<ISearchingDataService>(
+    serviceProvider => new SearchingDataService(connectionString));
 
 builder.Services.AddSingleton<IPersonRoleDataService>(
     serviceProvider => new PersonRoleDataService(connectionString));
