@@ -1,5 +1,4 @@
 ﻿
-using DataLayer.Titles;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -15,8 +14,27 @@ public class Rating
 
     public int NumberOfVotes { get; set; }
 
-    //public Title Title { get; set; } --- it was giving me an error like this?? was telling me one to one is not correct relationship, and on diagram it is not one to one
-    //public List<Title> Titles { get; set; } = new List<Title>();
-    public Title Title { get; set; }
+}
 
+public class RatingForUserResult
+{
+    public string TConst { get; set; } = string.Empty;
+    
+    public int UserId { get; set; } 
+
+    public DateTime TimeStamp { get; set; }
+
+    public double Rating { get; set; }
+
+}
+
+public class AddRatingResult
+{
+    public bool IsSuccess { get; set; }
+
+}
+
+public class PersonRatingResult
+{
+    public double PersonRating { get; set; }
 }

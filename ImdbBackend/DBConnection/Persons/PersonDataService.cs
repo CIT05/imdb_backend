@@ -1,4 +1,7 @@
 ﻿using DataLayer.Persons;
+using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
+using Microsoft.EntityFrameworkCore;
 
 namespace DBConnection.Persons
 {
@@ -9,14 +12,46 @@ namespace DBConnection.Persons
         public List<Person> GetPersons(int pageSize, int pageNumber)
         {
             var db = new ImdbContext(_connectionString);
-            return db.Persons.Skip(pageNumber * pageSize).Take(pageSize).ToList();
+            var persons = db.Persons
+            .OrderBy(persons => persons.NConst)
+            .Include(p => p.PersonRoles)
+            .Include(kf => kf.KnownFors)
+            .Skip(pageNumber * pageSize)
+            .Take(pageSize)
+            .Select(person => new Person
+             {
+                 NConst = person.NConst,
+                 PrimaryName = person.PrimaryName,
+                 BirthYear = person.BirthYear,
+                 DeathYear = person.DeathYear,
+                 PersonRoles = person.PersonRoles.OrderBy(pr => pr.Ordering).ToList(),
+                 KnownFors = person.KnownFors.OrderBy(kf => kf.Ordering).ToList()
+
+
+             })
+            .ToList();
+
+            return persons;
         }
 
-        public Person? GetPersonById(string tconst)
+        public Person? GetPersonById(string nconst)
         {
-           var db = new ImdbContext(_connectionString);
-            return db.Persons.Find(tconst);
+
+                using var db = new ImdbContext(_connectionString);
+                var person = db.Persons
+                    .Include(p => p.PersonRoles)
+                    .Include(kf => kf.KnownFors.OrderBy(kf => kf.Ordering))
+                    .SingleOrDefault(p => p.NConst == nconst);
+
+                return person;
         }
+
+        public List<PersonsByMovieResult> GetPersonsByMovie(string tconst)
+        {
+            var db = new ImdbContext(_connectionString);
+            return db.PersonsByMovieResult.FromSqlInterpolated($"SELECT * FROM get_actors_for_movie({tconst})").Include(result => result.Person).ToList();
+        }
+
 
         public int NumberOfPersons()
         {
