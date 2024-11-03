@@ -4,7 +4,7 @@ public class PersonRatingResultModel
 {
     public string? Url { get; set; } = string.Empty;
 
-    public double? PersonRating { get; set; }
+    public decimal? PersonRating { get; set; }
 
     public string? PersonUrl { get; set; } = string.Empty;
 }

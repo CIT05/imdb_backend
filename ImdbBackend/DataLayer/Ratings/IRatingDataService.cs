@@ -13,7 +13,7 @@ public interface IRatingDataService
 
     List<PersonRatingResult> GetPersonRating(string nconst);
 
-    bool AddRating(int userId, string tconst, int rating);
+    bool AddRating(int userId, string tconst, decimal rating);
 
     int NumberOfRatings();
 }

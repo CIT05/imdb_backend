@@ -61,7 +61,7 @@ public class RatingsController(IRatingDataService dataService, LinkGenerator lin
     }
 
     [HttpPost("movie/{userId}/{tconst}/{ratingValue}")]
-    public IActionResult AddRating(int userId, string tconst, int ratingValue)
+    public IActionResult AddRating(int userId, string tconst, decimal ratingValue)
     {
         var createdRating = _dataService.AddRating(userId, tconst, ratingValue);
         if (createdRating == null || createdRating == false)

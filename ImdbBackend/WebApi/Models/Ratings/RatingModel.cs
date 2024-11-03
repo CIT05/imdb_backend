@@ -4,7 +4,7 @@
     {
         public string? Url { get; set; }
 
-        public int AverageRating { get; set; }
+        public decimal AverageRating { get; set; }
 
         public int NumberOfVotes { get; set; }
 
