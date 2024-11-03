@@ -39,11 +39,11 @@ namespace WebApi.Controllers.TitleAlternatives
             return Ok(result);
         }
 
-        [HttpGet("{akasId}/{ordering}", Name = nameof(GetTitleAlternative))]
-        public IActionResult GetTitleAlternative(int akasId, int ordering)
+        [HttpGet("{akasId}", Name = nameof(GetTitleAlternative))]
+        public IActionResult GetTitleAlternative(int akasId)
         {
-            Console.WriteLine($"Received parameters: akasId={akasId}, ordering={ordering}");
-            var titleAlternative = _dataService.GetTitleAlternative(akasId, ordering);
+            Console.WriteLine($"Received parameters: akasId={akasId}");
+            var titleAlternative = _dataService.GetTitleAlternative(akasId);
             if (titleAlternative == null)
             {
                 return NotFound();

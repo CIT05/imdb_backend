@@ -14,12 +14,11 @@ namespace DBConnection.TitleAlternatives
             return db.TitleAlternatives.Skip(pageNumber * pageSize).Take(pageSize).Include(title => title.Types).ToList();
         }
 
-        public TitleAlternative GetTitleAlternative(int akasId, int ordering)
+        public TitleAlternative GetTitleAlternative(int akasId)
         {
             var db = new ImdbContext(_connectionString);
             var result = db.TitleAlternatives.FirstOrDefault(akas =>
-            akas.AkasId == akasId &&
-            akas.Ordering == ordering);
+            akas.AkasId == akasId);
             
             if (result == null)
             {
