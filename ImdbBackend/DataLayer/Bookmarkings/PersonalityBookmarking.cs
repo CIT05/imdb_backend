@@ -4,7 +4,7 @@ namespace DataLayer.Bookmarkings
 {
     public class PersonalityBookmarking : Bookmarking
     {
-        public string NConst { get; set; }
+        public string NConst { get; set; } = String.Empty;
 
         public int UserId { get; set; }
 

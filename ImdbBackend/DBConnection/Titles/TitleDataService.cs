@@ -1,4 +1,5 @@
-﻿using DataLayer.TitleAlternatives;
+﻿
+using DataLayer.TitleAlternatives;
 using DataLayer.TitlePrincipals;
 using DataLayer.Titles;
 using DataLayer.Genres;
@@ -26,6 +27,7 @@ namespace DBConnection.Titles
                 .Include(title => title.Episodes)
                 .Include(title => title.Genres)
                 .Include(title => title.Principals.OrderBy(p => p.Ordering))
+                .AsSplitQuery()
                 .ToList();
        
                 }
@@ -43,6 +45,7 @@ namespace DBConnection.Titles
                 .Include(title => title.TitleAlternatives)
                 .Include(title => title.Episodes)
                 .Include(title => title.Genres)
+                .AsSplitQuery()
                 .SingleOrDefault();
 
             return title;

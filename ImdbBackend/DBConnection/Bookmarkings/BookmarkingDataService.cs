@@ -51,7 +51,7 @@ namespace DBConnection.Bookmarkings
             using (var db = new ImdbContext(connectionString))
             {
                 return db.PersonalityBookmarkings
-                    .FromSqlInterpolated($"SELECT * FROM remove_personality({userid}, {nconst})")
+                    .FromSqlInterpolated($"SELECT * FROM delete_personality({userid}, {nconst})")
                     .AsEnumerable()
                     .FirstOrDefault();
             }
