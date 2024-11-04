@@ -16,18 +16,28 @@ public class UserDataService(string connectionString) : IUserDataService
                  .FirstOrDefault(u => u.UserId == UserId);
     }
 
-    public User? CreateUser(string username, string password, string language)
+    public User? GetUserByName(string UserName)
+    {
+        var db = new ImdbContext(connectionString);
+        return db.Users.Include(u => u.RatingHistory)
+                 .Include(u => u.SearchHistory)
+                 .Include(u => u.PersonalityBookmarkings)
+                .Include(u => u.TitleBookmarkings)
+                 .FirstOrDefault(u => u.Username == UserName);
+    }
+
+    public User? CreateUser(string username, string password, string language, string salt)
     {
         var db = new ImdbContext(connectionString);
 
-        CreateUserResult createdUser = db.CreateUserResults.FromSqlInterpolated($"select * from create_user({username}, {password}, {language})").ToList().FirstOrDefault();
+        CreateUserResult createdUser = db.CreateUserResults.FromSqlInterpolated($"select * from create_user({username}, {password}, {language}, {salt})").ToList().FirstOrDefault();
 
         if(createdUser == null)
         {
             return null;
         }
 
-        User newUser = new() { UserId = createdUser.UserId, Username = username, Password = password, Language = language };
+        User newUser = new() { UserId = createdUser.UserId, Username = username, Password = password, Language = language, Salt = salt };
 
         return newUser;
     }

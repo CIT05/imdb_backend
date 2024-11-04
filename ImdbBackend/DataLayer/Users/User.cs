@@ -15,6 +15,8 @@ public class User
 
     public string Language { get; set; } = string.Empty;
 
+    public string? Salt {  get; set; } = string.Empty;
+
     public List<TitleBookmarking> TitleBookmarkings { get; set; }
 
     public List<PersonalityBookmarking> PersonalityBookmarkings { get; set; }

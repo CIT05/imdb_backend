@@ -1,4 +1,5 @@
 using Mapster;
+using Microsoft.IdentityModel.Tokens;
 
 // Role imports
 using DBConnection.Roles;
@@ -49,6 +50,11 @@ using DBConnection.Bookmarkings;
 
 using DataLayer.History;
 using DBConnection.History;
+using WebApi.Middleware;
+using WebApi.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -98,9 +104,54 @@ builder.Services.AddSingleton<ITitleEpisodeDataService>(
     serviceProvider => new TitleEpisodeDataService(connectionString));
 builder.Services.AddSingleton<IHistoryDataService>(
     serviceProvider => new HistoryDataService(connectionString));
+builder.Services.AddSingleton<Hashing>(new Hashing());
 
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
 
+    // Configure JWT Bearer authentication for Swagger
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter 'Bearer' [space] and then your token in the text input below.\n\nExample: 'Bearer abcdef12345'"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                Array.Empty<string>()
+            }
+        });
+});
 builder.Services.AddMapster();
+
+var secret = builder.Configuration.GetSection("Auth:Secret").Value;
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(opt =>
+    opt.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateIssuerSigningKey = false,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret)),
+        ClockSkew = TimeSpan.Zero
+
+    }
+    );
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -114,11 +165,16 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
 }
 
 app.UseHttpsRedirection();
 
-//app.UseAuthorization();
+app.UseAuth();
+
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 

@@ -3,6 +3,7 @@ namespace WebApi.Controllers.Bookmarkings;
 
 using DataLayer.Users;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Models.Bookmarkings;
 using WebApi.Models.Users;
@@ -68,10 +69,18 @@ public class BookmarkingController(IBookmarkingDataService dataService, LinkGene
 
     // GET: api/bookmarking/personality/user/{userId}
     [HttpGet("personality/user/{userId}")]
+    [Authorize]
     public IActionResult GetPersonalitiesBookmarkedByUser(int userId)
     {
-        var results = _dataService.GetPersonalitiesBookmarkedByUser(userId);
-        return Ok(results);
+        try
+        {
+            var results = _dataService.GetPersonalitiesBookmarkedByUser(userId);
+            return Ok(results);
+        }
+        catch
+        {
+            return Unauthorized();
+        }
     }
 
     // GET: api/bookmarking/title/user/{userId}

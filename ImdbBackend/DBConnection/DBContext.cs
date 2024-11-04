@@ -319,6 +319,8 @@ namespace DBConnection
             modelBuilder.Entity<User>().Property(user => user.Password).HasColumnName("password");
             modelBuilder.Entity<User>().Property(user => user.Username).HasColumnName("username");
             modelBuilder.Entity<User>().Property(user => user.Language).HasColumnName("language");
+            modelBuilder.Entity<User>().Property(user => user.Salt).HasColumnName("salt");
+
 
             modelBuilder.Entity<CreateUserResult>().HasNoKey();
             modelBuilder.Entity<CreateUserResult>().Property(e => e.UserId).HasColumnName("created_user_result");
