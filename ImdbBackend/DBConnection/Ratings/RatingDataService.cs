@@ -26,8 +26,13 @@ public class RatingDataService(string connectionString) : IRatingDataService
         return db.RatingForUserResults.FromSqlInterpolated($"SELECT * FROM get_rating_by_user({userId}, {tconst})").ToList();
     }
 
-    public bool AddRating(int userId, string tconst, int rating)
+    public bool AddRating(int userId, string tconst, decimal rating)
     {
+        if(rating < 0 || rating > 10)
+        {
+            return false;
+        }
+
         var db = new ImdbContext(_connectionString);
         var isAddRatingSuccess = db.AddRatingResults.FromSqlInterpolated($"SELECT * FROM add_rating({tconst}, {userId}, {rating})").ToList().FirstOrDefault().IsSuccess;
         return isAddRatingSuccess;

@@ -1,36 +1,19 @@
 using DataLayer.Titles;
 using DataLayer.Bookmarkings;
 using Moq;
+using DBConnection.Titles;
 
 
 namespace Tests;
 
 public class DataServiceTests
 {
-    // Title
 
-    Title TitleStub1 = new Title { TConst = "tt0000001", TitleType = "movie", PrimaryTitle = "The Big Operator", OriginalTitle = "The Big Operator", IsAdult = false, StartYear = "1959", EndYear = null, RuntimeMinutes = 91, Plot = null, Poster = null };
-    Title TitleStub2 = new Title { TConst = "tt0000002", TitleType = "movie", PrimaryTitle = "The Big Operator", OriginalTitle = "The Big Operator", IsAdult = false, StartYear = "1959", EndYear = null, RuntimeMinutes = 91, Plot = null, Poster = null };
-    Title TitleStub3 = new Title { TConst = "tt0000003", TitleType = "movie", PrimaryTitle = "The Big Operator", OriginalTitle = "The Big Operator", IsAdult = false, StartYear = "1959", EndYear = null, RuntimeMinutes = 91, Plot = null, Poster = null };
-    Title TitleStub4 = new Title { TConst = "tt0000004", TitleType = "movie", PrimaryTitle = "The Big Operator", OriginalTitle = "The Big Operator", IsAdult = false, StartYear = "1959", EndYear = null, RuntimeMinutes = 91, Plot = null, Poster = null };
-    Title TitleStub5 = new Title { TConst = "tt0000005", TitleType = "movie", PrimaryTitle = "The Big Operator", OriginalTitle = "The Big Operator", IsAdult = false, StartYear = "1959", EndYear = null, RuntimeMinutes = 91, Plot = null, Poster = null };
-    Title TitleStub6 = new Title { TConst = "tt0000006", TitleType = "movie", PrimaryTitle = "The Big Operator", OriginalTitle = "The Big Operator", IsAdult = false, StartYear = "1959", EndYear = null, RuntimeMinutes = 91, Plot = null, Poster = null };
-    Title TitleStub7 = new Title { TConst = "tt0000007", TitleType = "movie", PrimaryTitle = "The Big Operator", OriginalTitle = "The Big Operator", IsAdult = false, StartYear = "1959", EndYear = null, RuntimeMinutes = 91, Plot = null, Poster = null };
-    Title TitleStub8 = new Title { TConst = "tt0000008", TitleType = "movie", PrimaryTitle = "The Big Operator", OriginalTitle = "The Big Operator", IsAdult = false, StartYear = "1959", EndYear = null, RuntimeMinutes = 91, Plot = null, Poster = null };
-    Title TitleStub9 = new Title { TConst = "tt0000009", TitleType = "movie", PrimaryTitle = "The Big Operator", OriginalTitle = "The Big Operator", IsAdult = false, StartYear = "1959", EndYear = null, RuntimeMinutes = 91, Plot = null, Poster = null };
-    Title TitleStub10 = new Title { TConst = "tt0000010", TitleType = "movie", PrimaryTitle = "The Big Operator", OriginalTitle = "The Big Operator", IsAdult = false, StartYear = "1959", EndYear = null, RuntimeMinutes = 91, Plot = null, Poster = null };
-
-    List<Title> titlesStub = new List<Title>();
-
-    //Personality Bookmarking
-    PersonalityBookmarking personalityBookmarkingStub1 = new PersonalityBookmarking { UserId = 1, NConst = "nm0000001", Timestamp = DateTime.Now };
-    PersonalityBookmarking personalityBookmarkingStub2 = new PersonalityBookmarking { UserId = 1, NConst = "nm0000002", Timestamp = DateTime.Now };
-
-    List<PersonalityBookmarking> personalityBookmarksStub = new List<PersonalityBookmarking>();
+    string connectionString = "";
 
 
 
-    [Fact]
+[Fact]
     public void Title_Object_HasTConstTitleTypePrimaryTitleOriginalTitleIsAdultStartYearEndYearRuntimeMinutesPlotAndPoster()
     {
         var title = new Title();
@@ -50,58 +33,54 @@ public class DataServiceTests
     [Fact]
     public void Returns_List_Of_Titles()
     {
-        var title = new Title();
-        var mockService = new Mock<ITitleDataService>();
+        var service = new TitleDataService(connectionString);
 
-        titlesStub.Add(TitleStub1);
-        titlesStub.Add(TitleStub2);
-        titlesStub.Add(TitleStub3);
-        titlesStub.Add(TitleStub4);
-        titlesStub.Add(TitleStub5);
-        titlesStub.Add(TitleStub6);
-        titlesStub.Add(TitleStub7);
-        titlesStub.Add(TitleStub8);
-        titlesStub.Add(TitleStub9);
-        titlesStub.Add(TitleStub10);
+        var result = service.GetTitles(10, 0);
+            
+        Console.WriteLine("Result count: " + result.Count);
 
-
-        mockService.Setup(service => service.GetTitles(10, 0)).Returns(titlesStub);
-
-        var mockedTitleDataSerivce = mockService.Object;
-
-        var result = mockedTitleDataSerivce.GetTitles(10, 0);
         Assert.IsType<List<Title>>(result);
         Assert.True(result.Count == 10);
-        Assert.True(result.ElementAt(0).TConst == "tt0000001");
+        Assert.True(result.ElementAt(0).TConst == "tt0052520");
 
     }
 
     [Fact]
     public void Returns_Title_By_Id()
     {
-        var title = new Title();
-        var mockService = new Mock<ITitleDataService>();
+        var service = new TitleDataService(connectionString);
 
-        titlesStub.Add(TitleStub1);
-        titlesStub.Add(TitleStub2);
-        titlesStub.Add(TitleStub3);
-        titlesStub.Add(TitleStub4);
-        titlesStub.Add(TitleStub5);
-        titlesStub.Add(TitleStub6);
-        titlesStub.Add(TitleStub7);
-        titlesStub.Add(TitleStub8);
-        titlesStub.Add(TitleStub9);
-        titlesStub.Add(TitleStub10);
-
-        mockService.Setup(service => service.GetTitleById("tt0000001")).Returns(titlesStub.Where(title => title.TConst == "tt0000001").SingleOrDefault());
-
-        var mockedTitleDataSerivce = mockService.Object;
-
-        var result = mockedTitleDataSerivce.GetTitleById("tt0000001");
+        var result = service.GetTitleById("tt0052520");
         Assert.IsType<Title>(result);
-        Assert.True(result.TConst == "tt0000001");
+        Assert.True(result.TConst == "tt0052520");
 
+    }
 
+    [Fact]
+    public void Title_Has_RatingTitleAlternativesTitlePrinciplesKnownForProductionTitleEpisodesGenres()
+    {
+        
+
+        try
+        {
+            var service = new TitleDataService(connectionString);
+            var title = service.GetTitleById("tt0052520");
+
+            Assert.NotNull(title.Rating);
+            Assert.NotNull(title.TitleAlternatives);
+            Assert.NotNull(title.Principals);
+            Assert.NotNull(title.KnownFors);
+            Assert.NotNull(title.ProductionPersons);
+            Assert.NotNull(title.Episodes);
+            Assert.NotNull(title.Genres);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception: {ex.Message}");
+            throw;
+        }
+
+       
     }
 
 
