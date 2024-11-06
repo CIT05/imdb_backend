@@ -1,38 +1,52 @@
-@WebApi_HostAddress = http://localhost:5001
+@WebApi_HostAddress = https://localhost:5002
  
+
+@token = null
+
 ### bookmarking
 POST {{WebApi_HostAddress}}/api/bookmarking/personality
+Accept: application/json
 Content-Type: application/json
+Authorization: Bearer {{token}}
 {
     "userid": "1",
-    "timestamp": "{{new Date().toISOString()}}",
+    "timestamp": "2024-11-06T17:38:37.084Z",
     "nconst": "nm0000001"
 }
+
 
 ###
 DELETE {{WebApi_HostAddress}}/api/bookmarking/personality?userid=1&nconst=nm0000001
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 ### 
 POST {{WebApi_HostAddress}}/api/bookmarking/title
 Content-Type: application/json
+Authorization: Bearer {{token}}
+
 {
     "userid": "1",
-    "timestamp": "{{new Date().toISOString()}}",
-    "nconst": "tt0052520"
+    "timestamp": "2024-11-06T17:38:37.084Z",
+    "tConst": "tt0052520"
 }
 
 ###
-DELETE {{WebApi_HostAddress}}/api/bookmarking/title?userid=1&nconst=tt0052520
+DELETE {{WebApi_HostAddress}}/api/bookmarking/title?userid=1&titleId=tt0052520
 Content-Type: application/json
+Authorization: Bearer {{token}}
+
 
 ###
-GET {{WebApi_HostAddress}}/api/personality/personality/user/1
+GET {{WebApi_HostAddress}}/api/bookmarking/personality/user/1
 Accept: application/json
+Authorization: Bearer {{token}}
+
 
 ###
 GET {{WebApi_HostAddress}}/api/bookmarking/title/user/1
 Accept: application/json
+Authorization: Bearer {{token}}
 
 
 ### genre
@@ -41,25 +55,29 @@ Accept: application/json
 
 ###
 GET {{WebApi_HostAddress}}/api/genre/1
+Accept: application/json
 
 ### history
-GET {{WebApi_HostAddress}}/api/history/search
-Accept: application/json
 
 ###
 GET {{WebApi_HostAddress}}/api/history/search/1
+Accept: application/json
+Authorization: Bearer {{token}}
 
 ###
 GET {{WebApi_HostAddress}}/api/history/search/phrase/hi
-
-###
-GET {{WebApi_HostAddress}}/api/history/rating
+Accept: application/json
+Authorization: Bearer {{token}}
 
 ###
 GET {{WebApi_HostAddress}}/api/history/rating/user/1
+Accept: application/json
+Authorization: Bearer {{token}}
 
 ###
 GET {{WebApi_HostAddress}}/api/history/rating/tt0052520
+Accept: application/json
+Authorization: Bearer {{token}}
 
 
 ### PersonRole
@@ -81,11 +99,11 @@ GET {{WebApi_HostAddress}}/api/person
 Accept: application/json
 
 ###
-GET {{WebApi_HostAddress}}/api/person/nm0000001
+GET {{WebApi_HostAddress}}/api/person/nm0000035 
 Accept: application/json
 
 ###
-GET {{WebApi_HostAddress}}/api/person/nm0000001/tt0052520
+GET {{WebApi_HostAddress}}/api/person/movie/tt2390476 
 Accept: application/json
 
 ### Ratings
@@ -99,14 +117,17 @@ Accept: application/json
 ###
 GET {{WebApi_HostAddress}}/api/rating/movie/1/tt0052520
 Accept: application/json
+Authorization: Bearer {{token}}
 
 ###
 POST {{WebApi_HostAddress}}/api/rating/movie/1/tt0052520/9
 Accept: application/json
+Authorization: Bearer {{token}}
 
 ###
 GET {{WebApi_HostAddress}}/api/rating/person/nm0000001
 Accept: application/json
+Authorization: Bearer {{token}}
 
 ### Roles
 GET {{WebApi_HostAddress}}/api/role
@@ -118,8 +139,9 @@ Accept: application/json
 
 ### Search
 
-GET {{WebApi_HostAddress}}/api/search/title/1/tt0052520
+GET {{WebApi_HostAddress}}/api/search/title/1/Lala
 Accept: application/json
+Authorization: Bearer {{token}}
 
 ###
 GET {{WebApi_HostAddress}}/api/search/title/exact/harry%20potter
@@ -134,15 +156,13 @@ POST {{WebApi_HostAddress}}/api/search/title
 Content-Type: application/json
 {
   "titleMovie": "Catch me if you can",
-  "moviePlot": "",
-  "titleCharacters": "",
-  "personName: "",
-  "userId": "1
+  "userId": 1
 }
 
 ###
 GET {{WebApi_HostAddress}}/api/search/actor/1/DiCaprio
 Accept: application/json
+Authorization: Bearer {{token}}
 
 ###
 POST {{WebApi_HostAddress}}/api/search/actor
@@ -151,11 +171,98 @@ Content-Type: application/json
   "titleMovie": "",
   "moviePlot": "",
   "titleCharacters": "",
-  "personName: "Leonardo DiCaprio",
-  "userId": "1
+  "personName": "Leonardo DiCaprio",
+  "userId": 1
+
+}
+
+### TitleAlternative
+
+GET {{WebApi_HostAddress}}/api/titlealternative
+Accept: application/json
+
+###
+GET {{WebApi_HostAddress}}/api/titlealternative/1
+Accept: application/json
+
+###
+GET {{WebApi_HostAddress}}/api/titlealternative/type/1
+Accept: application/json
+
+### TitleEpisode
+GET {{WebApi_HostAddress}}/api/titleepisode
+Accept: application/json
+
+###
+GET {{WebApi_HostAddress}}/api/titleepisode/tt0583586/tt0108778
+Accept: application/json
+
+### TitlePrincipal
+GET {{WebApi_HostAddress}}/api/titleprincipal
+Accept: application/json
+
+### TitlePrincipal
+GET {{WebApi_HostAddress}}/api/titleprincipal/tt0052520
+Accept: application/json
+
+### Titles
+GET {{WebApi_HostAddress}}/api/title
+Accept: application/json
+
+###
+GET {{WebApi_HostAddress}}/api/title/tt0052520
+Accept: application/json
+
+### Types
+GET {{WebApi_HostAddress}}/api/type
+Accept: application/json
+
+###
+GET {{WebApi_HostAddress}}/api/type/1
+Accept: application/json
+
+### Users
+GET {{WebApi_HostAddress}}/api/user/id/1
+Accept: application/json
+
+###
+DELETE {{WebApi_HostAddress}}/api/user/3
+Accept: application/json
+Authorization: Bearer {{token}}
+
+###
+PUT {{WebApi_HostAddress}}/api/user/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+{
+    "username": "test",
+    "password": "testPassword",
+    "langauge": "en"
 }
 
 
+###
+GET {{WebApi_HostAddress}}/api/user/test
+Accept: application/json
+
+###
+POST {{WebApi_HostAddress}}/api/user
+Accept: application/json
+Content-Type: application/json
+{
+    "username": "test1234",
+    "password": "testPassword",
+    "langauge": "en"
+}
+
+###
+PUT {{WebApi_HostAddress}}/api/user/login
+Accept: application/json
+Content-Type: application/json
+{
+    "username": "test",
+    "password": "test"
+}
 
 
 
