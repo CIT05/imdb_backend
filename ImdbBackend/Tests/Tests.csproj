@@ -35,6 +35,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DataLayer\DataLayer.csproj" />
     <ProjectReference Include="..\DBConnection\DBConnection.csproj" />
+	  <ProjectReference Include="..\WebApi\WebApi.csproj" />
   </ItemGroup>
 
   <ItemGroup>

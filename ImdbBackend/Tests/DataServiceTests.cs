@@ -6,6 +6,9 @@ using DBConnection.Bookmarkings;
 using DBConnection.Users;
 using DBConnection.Ratings;
 using DataLayer.Ratings;
+using System.Text.Json;
+using WebApi.Models.Titles;
+using WebApi.Models.TitleALternatives;
 
 
 namespace Tests;
@@ -117,7 +120,7 @@ public class DataServiceTests
         var service = new BookmarkingDataService(connectionString);
         var userService = new UserDataService(connectionString);
 
-        var user = userService.CreateUser("testUser123", "testPassword", "en", "someSaltValue");
+        var user = userService.CreateUser("testUser1234", "testPassword", "en", "someSaltValue");
         var userId = user.UserId;
 
         string nconst = "nm0000002";
@@ -240,8 +243,28 @@ public class DataServiceTests
         Assert.True(result);
     }
 
+    [Fact]
+    public async Task GetTitleEndpoint_Returns_Correct_JSON_Response()
+    {
+        var client = new HttpClient { BaseAddress = new Uri("https://localhost:5002/") };
+        string titleId = "tt0052520";
 
+        var response = await client.GetAsync($"/api/title/{titleId}");
+        response.EnsureSuccessStatusCode();
+        var json = await response.Content.ReadAsStringAsync();
+        var title = JsonSerializer.Deserialize<TitleModel>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-
+        Assert.NotNull(title.Url);
+        Assert.NotNull(title.PrimaryTitle);
+        Assert.NotNull(title.OriginalTitle);
+        Assert.IsType<bool>(title.IsAdult);
+        Assert.NotNull(title.Poster);
+        Assert.NotNull(title.Rating);
+        Assert.IsType<string>(title.Rating.Url);
+        Assert.IsType<decimal>(title.Rating.AverageRating);
+        Assert.IsType<int>(title.Rating.NumberOfVotes);
+        Assert.NotNull(title.TitleAlternatives);
+        Assert.IsType<List<TitleAlternativeModel>>(title.TitleAlternatives); // Update type if different
+    }
 
 }
