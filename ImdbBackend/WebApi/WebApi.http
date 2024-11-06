@@ -1,6 +1,175 @@
-@WebApi_HostAddress = http://localhost:5146
+@WebApi_HostAddress = http://localhost:5001
+ 
+### bookmarking
+POST {{WebApi_HostAddress}}/api/bookmarking/personality
+Content-Type: application/json
+{
+    "userid": "1",
+    "timestamp": "{{new Date().toISOString()}}",
+    "nconst": "nm0000001"
+}
 
-GET {{WebApi_HostAddress}}/weatherforecast/
+###
+DELETE {{WebApi_HostAddress}}/api/bookmarking/personality?userid=1&nconst=nm0000001
+Content-Type: application/json
+
+### 
+POST {{WebApi_HostAddress}}/api/bookmarking/title
+Content-Type: application/json
+{
+    "userid": "1",
+    "timestamp": "{{new Date().toISOString()}}",
+    "nconst": "tt0052520"
+}
+
+###
+DELETE {{WebApi_HostAddress}}/api/bookmarking/title?userid=1&nconst=tt0052520
+Content-Type: application/json
+
+###
+GET {{WebApi_HostAddress}}/api/personality/personality/user/1
 Accept: application/json
 
 ###
+GET {{WebApi_HostAddress}}/api/bookmarking/title/user/1
+Accept: application/json
+
+
+### genre
+GET {{WebApi_HostAddress}}/api/genre
+Accept: application/json
+
+###
+GET {{WebApi_HostAddress}}/api/genre/1
+
+### history
+GET {{WebApi_HostAddress}}/api/history/search
+Accept: application/json
+
+###
+GET {{WebApi_HostAddress}}/api/history/search/1
+
+###
+GET {{WebApi_HostAddress}}/api/history/search/phrase/hi
+
+###
+GET {{WebApi_HostAddress}}/api/history/rating
+
+###
+GET {{WebApi_HostAddress}}/api/history/rating/user/1
+
+###
+GET {{WebApi_HostAddress}}/api/history/rating/tt0052520
+
+
+### PersonRole
+
+GET {{WebApi_HostAddress}}/api/personRole
+Accept: application/json
+
+###
+GET {{WebApi_HostAddress}}/api/personRole/nm0000001
+Accept: application/json
+
+###
+GET {{WebApi_HostAddress}}/api/personRole/nm0000001/18
+Accept: application/json
+
+### Persons
+
+GET {{WebApi_HostAddress}}/api/person
+Accept: application/json
+
+###
+GET {{WebApi_HostAddress}}/api/person/nm0000001
+Accept: application/json
+
+###
+GET {{WebApi_HostAddress}}/api/person/nm0000001/tt0052520
+Accept: application/json
+
+### Ratings
+GET {{WebApi_HostAddress}}/api/rating/movie
+Accept: application/json
+
+###
+GET {{WebApi_HostAddress}}/api/rating/movie/tt0052520
+Accept: application/json
+
+###
+GET {{WebApi_HostAddress}}/api/rating/movie/1/tt0052520
+Accept: application/json
+
+###
+POST {{WebApi_HostAddress}}/api/rating/movie/1/tt0052520/9
+Accept: application/json
+
+###
+GET {{WebApi_HostAddress}}/api/rating/person/nm0000001
+Accept: application/json
+
+### Roles
+GET {{WebApi_HostAddress}}/api/role
+Accept: application/json
+
+###
+GET {{WebApi_HostAddress}}/api/role/1
+Accept: application/json
+
+### Search
+
+GET {{WebApi_HostAddress}}/api/search/title/1/tt0052520
+Accept: application/json
+
+###
+GET {{WebApi_HostAddress}}/api/search/title/exact/harry%20potter
+Accept: application/json
+
+###
+GET {{WebApi_HostAddress}}/api/search/title/best/pride%20and%20prejudice
+Accept: application/json
+
+###
+POST {{WebApi_HostAddress}}/api/search/title
+Content-Type: application/json
+{
+  "titleMovie": "Catch me if you can",
+  "moviePlot": "",
+  "titleCharacters": "",
+  "personName: "",
+  "userId": "1
+}
+
+###
+GET {{WebApi_HostAddress}}/api/search/actor/1/DiCaprio
+Accept: application/json
+
+###
+POST {{WebApi_HostAddress}}/api/search/actor
+Content-Type: application/json
+{
+  "titleMovie": "",
+  "moviePlot": "",
+  "titleCharacters": "",
+  "personName: "Leonardo DiCaprio",
+  "userId": "1
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

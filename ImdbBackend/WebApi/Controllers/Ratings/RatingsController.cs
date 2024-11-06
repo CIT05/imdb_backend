@@ -19,7 +19,7 @@ public class RatingsController(IRatingDataService dataService, LinkGenerator lin
 
     private readonly LinkGenerator _linkGenerator = linkGenerator;
 
-    [HttpGet("/movie", Name = nameof(GetRatings))]
+    [HttpGet("movie", Name = nameof(GetRatings))]
     public IActionResult GetRatings(int pageSize = 2, int pageNumber = 0)
     {
         var ratings = _dataService.GetRatings(pageSize, pageNumber);
