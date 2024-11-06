@@ -407,11 +407,6 @@ namespace DBConnection
             modelBuilder.Entity<TitleBookmarking>().Property(tb => tb.UserId).HasColumnName("userid");
             modelBuilder.Entity<TitleBookmarking>().Property(tb => tb.Timestamp).HasColumnName("timestamp");
 
-
-            //modelBuilder.Entity<TitleBookmarking>()
-            //    .Property(tb => tb.Timestamp)
-            //    .HasDefaultValueSql("CURRENT_TIMESTAMP"); // Set default value for timestamp
-
             modelBuilder.Entity<TitleBookmarking>()
                 .HasOne(tb => tb.User)
                 .WithMany(tb => tb.TitleBookmarkings)

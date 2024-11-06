@@ -5,6 +5,7 @@ using Mapster;
 using WebApi.Controllers.Titles;
 using WebApi.Controllers.Users;
 using WebApi.Controllers.Persons;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApi.Controllers.Ratings;
 
@@ -48,21 +49,32 @@ public class RatingsController(IRatingDataService dataService, LinkGenerator lin
     }
 
     [HttpGet("movie/{userId}/{tconst}", Name = nameof(GetRatingByUser))]
+    [Authorize]
     public IActionResult GetRatingByUser(int userId, string tconst)
     {
-        var ratingResultList = _dataService.GetRatingByUser(userId, tconst);
-        if (ratingResultList.Count == 0)
+        try
         {
-            return NotFound();
-        }
+            var ratingResultList = _dataService.GetRatingByUser(userId, tconst);
+            if (ratingResultList.Count == 0)
+            {
+                return NotFound();
+            }
 
-        List<RatingForUserResultModel> ratingForUserResultModel = ratingResultList.Select(ratingResult => AdaptRatingForUserResultToRatingForUserResultModel(ratingResult)).ToList();
-        return Ok(ratingForUserResultModel);
+            List<RatingForUserResultModel> ratingForUserResultModel = ratingResultList.Select(ratingResult => AdaptRatingForUserResultToRatingForUserResultModel(ratingResult)).ToList();
+            return Ok(ratingForUserResultModel);
+        }
+        catch
+        {
+            return Unauthorized();
+        }
     }
 
     [HttpPost("movie/{userId}/{tconst}/{ratingValue}")]
+    [Authorize]
     public IActionResult AddRating(int userId, string tconst, decimal ratingValue)
     {
+        try 
+        {
         var createdRating = _dataService.AddRating(userId, tconst, ratingValue);
         if (createdRating == null || createdRating == false)
         {
@@ -70,6 +82,11 @@ public class RatingsController(IRatingDataService dataService, LinkGenerator lin
         }
         
         return Ok();
+        }
+        catch
+        {
+            return Unauthorized();
+        }
     }
 
     [HttpGet("person/{nconst}", Name = nameof(GetRatingByPerson))]

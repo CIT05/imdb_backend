@@ -17,32 +17,46 @@ public class BookmarkingController(IBookmarkingDataService dataService, LinkGene
 
     private readonly IBookmarkingDataService _dataService = dataService;
 
-    // POST: api/bookmarking/personality
     [HttpPost("personality")]
+    [Authorize]
     public IActionResult AddPersonalityBookmarking([FromBody] PersonalityBookmarkingModel model)
     {
         if (model == null)
             return BadRequest("Invalid data.");
 
-        var result = _dataService.AddPersonalityBookmarking(model.UserId, model.NConst);
-
-        return CreatedAtAction(nameof(GetPersonalitiesBookmarkedByUser), new { userId = model.UserId }, result);
+        try
+        {
+            var result = _dataService.AddPersonalityBookmarking(model.UserId, model.NConst);
+            return CreatedAtAction(nameof(GetPersonalitiesBookmarkedByUser), new { userId = model.UserId }, result);
+        }
+        catch 
+        {
+            return Unauthorized();
+        }
     }
 
-    // POST: api/bookmarking/title
     [HttpPost("title")]
+    [Authorize]
     public IActionResult AddTitleBookmarking([FromBody] TitleBookmarkingModel model)
     {
         if (model == null)
             return BadRequest("Invalid data.");
 
+        try {
         var result = _dataService.AddTitleBookmarking(model.UserId, model.TConst);
 
         return CreatedAtAction(nameof(GetTitlesBookmarkedByUsers), new { userId = model.UserId }, result);
-    }
+        }
 
-    // DELETE: api/bookmarking/personality
+        catch 
+        {
+            return Unauthorized();
+        }
+        }
+
+
     [HttpDelete("personality")]
+    [Authorize]
     public IActionResult DeletePersonalityBookmarking(int userId, string nconst)
     {
         try
@@ -51,23 +65,30 @@ public class BookmarkingController(IBookmarkingDataService dataService, LinkGene
             // If the deletion is successful, return a NoContent (204) response
             return NoContent(); // or return Ok() if you prefer
         }
-        catch (Exception ex)
+        catch 
         {
-            // Log the exception (if you have logging set up) and return an appropriate error response
-            return StatusCode(500, $"Internal server error: {ex.Message}");
+            return Unauthorized();
+
         }
     }
 
-    // DELETE: api/bookmarking/title
+
     [HttpDelete("title")]
+    [Authorize]
     public IActionResult DeleteTitleBookmarking(int userId, string titleId)
     {
+        try 
+        {
         var result = _dataService.DeleteTitleBookmarking(userId, titleId);
-
         return Ok(result);
+        }
+
+        catch 
+        {
+            return Unauthorized();
+        }
     }
 
-    // GET: api/bookmarking/personality/user/{userId}
     [HttpGet("personality/user/{userId}")]
     [Authorize]
     public IActionResult GetPersonalitiesBookmarkedByUser(int userId)
@@ -77,18 +98,28 @@ public class BookmarkingController(IBookmarkingDataService dataService, LinkGene
             var results = _dataService.GetPersonalitiesBookmarkedByUser(userId);
             return Ok(results);
         }
-        catch
+        catch(Exception ex)
         {
+            Console.WriteLine($"Error: {ex.Message}");
             return Unauthorized();
         }
     }
 
-    // GET: api/bookmarking/title/user/{userId}
     [HttpGet("title/user/{userId}")]
+    [Authorize]
     public IActionResult GetTitlesBookmarkedByUsers(int userId)
     {
+
+        try 
+        {
         var results = _dataService.GetTitlesBookmarkedByUsers(userId);
         return Ok(results);
+        }
+
+        catch 
+        {
+            return Unauthorized();
+        }
     }
 
 

@@ -4,6 +4,7 @@ using DataLayer.Searching;
 using WebApi.Controllers.Titles;
 using WebApi.Models.Searching;
 using WebApi.Controllers.Persons;
+using Microsoft.AspNetCore.Authorization;
 
 
 
@@ -20,8 +21,12 @@ public class SearchController(ISearchingDataService dataService, LinkGenerator l
     private readonly LinkGenerator _linkGenerator = linkGenerator;
 
     [HttpGet("title/{userId}/{title}", Name = nameof(TitleSearchStringResult))]
+    [Authorize]
+    
     public IActionResult TitleSearchStringResult(int userId, string title)
     {
+        try 
+        {
         var titleSearchStringResult = _dataService.SearchTitles(title, userId);
         if (titleSearchStringResult.Count == 0)
         {
@@ -31,6 +36,11 @@ public class SearchController(ISearchingDataService dataService, LinkGenerator l
         List<TitleStringSearchResultModel> stringSearchResultModel = titleSearchStringResult.Select(result => AdaptTitleStringSearchToTitleStringSearchResultModel(result)).ToList();
 
         return Ok(stringSearchResultModel);
+        }
+        catch
+        {
+            return Unauthorized();
+        }
     }
 
     [HttpGet("title/exact/{stringSearch}", Name = nameof(ExactTitleSearch))]
@@ -76,8 +86,11 @@ public class SearchController(ISearchingDataService dataService, LinkGenerator l
     }
 
     [HttpGet("actor/{userId}/{name}", Name = nameof(ActorSearchStringResult))]
+    [Authorize]
     public IActionResult ActorSearchStringResult(int userId, string name)
     {
+        try 
+        {
         var actorSearchStringResult = _dataService.SearchActors(name, userId);
         if (actorSearchStringResult.Count == 0)
         {
@@ -87,6 +100,11 @@ public class SearchController(ISearchingDataService dataService, LinkGenerator l
         List<ActorStringSearchResultModel> stringSearchResultModel = actorSearchStringResult.Select(result => AdaptActorStringSearchToActorStringSearchResultModel(result)).ToList();
 
         return Ok(stringSearchResultModel);
+        }
+        catch
+        {
+            return Unauthorized();
+        }
     }
 
     [HttpPost("actor", Name = nameof(SearchActorByMultipleValues))]

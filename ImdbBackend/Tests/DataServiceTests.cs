@@ -117,7 +117,7 @@ public class DataServiceTests
         var service = new BookmarkingDataService(connectionString);
         var userService = new UserDataService(connectionString);
 
-        var user = userService.CreateUser("testUser123", "testPassword", "en");
+        var user = userService.CreateUser("testUser123", "testPassword", "en", "someSaltValue");
         var userId = user.UserId;
 
         string nconst = "nm0000002";

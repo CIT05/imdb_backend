@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using WebApi.Models.Users;
 using WebApi.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApi.Controllers.Users;
 
@@ -18,10 +19,10 @@ public class UsersController(IUserDataService dataService,Hashing hashing, IConf
     private readonly Hashing _hashing = hashing;
 
 
-    [HttpGet("{userid}", Name = nameof(GetUserById))]
+    [HttpGet("id/{userid}", Name = nameof(GetUserById))]
     public IActionResult GetUserById(int userid)
     {
-        User user = _dataService.GetUserById(userid);
+        User user = _dataService.GetUserById(userid)!;
         if (user == null)
         {
             return NotFound();
@@ -34,7 +35,7 @@ public class UsersController(IUserDataService dataService,Hashing hashing, IConf
     [HttpGet("{username}", Name = nameof(GetUserByName))]
     public IActionResult GetUserByName(string username)
     {
-        User user = _dataService.GetUserByName(username);
+        User? user = _dataService.GetUserByName(username);
         if (user == null)
         {
             return NotFound();
@@ -54,8 +55,7 @@ public class UsersController(IUserDataService dataService,Hashing hashing, IConf
         {
             return BadRequest();
         }
-        //try
-        //{
+    
             (var hashedPwd, var salt) = _hashing.Hash(createUserModel.Password);
 
             var createdUser = _dataService.CreateUser(createUserModel.Username, hashedPwd, createUserModel.Language, salt);
@@ -66,11 +66,7 @@ public class UsersController(IUserDataService dataService,Hashing hashing, IConf
 
             UserModel createdUserModel = AdaptUserToUserModel(createdUser);
             return Ok(createdUserModel);
-        //}
-        //catch (Exception ex)
-        //{
-        //    return StatusCode(500, "An internal server error occurred. Please try again later.");
-        //}
+     
     }
 
     [HttpPut("login")]
@@ -106,19 +102,29 @@ public class UsersController(IUserDataService dataService,Hashing hashing, IConf
 
 
     [HttpDelete("{userid}")]
+    [Authorize]
     public IActionResult DeleteUser(int userid)
     {
-        bool deleted = _dataService.DeleteUser(userid);
-        if (!deleted)
+        try
         {
-            return NotFound();
+            bool deleted = _dataService.DeleteUser(userid);
+            if (!deleted)
+            {
+                return NotFound();
+            }
+            return NoContent();
         }
-        return NoContent();
+        catch
+        {
+            return Unauthorized();
+        }
     }
 
     [HttpPut("{userid}")]
+    [Authorize]
     public IActionResult UpdateUser(int userid, CreateUserModel createUserModel)
     {
+        try {
         var updatedUser = _dataService.UpdateUser(userid, createUserModel.Username, createUserModel.Password, createUserModel.Language);
         if (updatedUser == null)
         {
@@ -126,6 +132,11 @@ public class UsersController(IUserDataService dataService,Hashing hashing, IConf
         }
         UserModel updatedUserModel = AdaptUserToUserModel(updatedUser);
         return Ok(updatedUserModel);
+        }
+        catch
+        {
+            return Unauthorized();
+        }
     }
 
     private UserModel AdaptUserToUserModel(User user)

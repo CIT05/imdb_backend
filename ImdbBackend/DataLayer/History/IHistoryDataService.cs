@@ -9,13 +9,9 @@ namespace DataLayer.History
 {
     public interface IHistoryDataService
     {
-        List<SearchHistory> GetSearchHistory();
         List<SearchHistory> GetSearchHistoryByUser(int userId);
 
         List<SearchHistory> GetSearchHistoryByPhrase(string phrase);
-
-
-        List<RatingHistory> GetRatingHistory();
 
         List<RatingHistory> GetRatingHistoryByUser(int userId);
 
