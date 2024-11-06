@@ -256,7 +256,7 @@ Content-Type: application/json
 }
 
 ###
-PUT {{WebApi_HostAddress}}/api/user/login
+POST {{WebApi_HostAddress}}/api/user/login
 Accept: application/json
 Content-Type: application/json
 {

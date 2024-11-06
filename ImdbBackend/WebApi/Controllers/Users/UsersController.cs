@@ -69,7 +69,7 @@ public class UsersController(IUserDataService dataService,Hashing hashing, IConf
      
     }
 
-    [HttpPut("login")]
+    [HttpPost("login")]
     public IActionResult Login(LoginUserModel model)
     {
         var user = _dataService.GetUserByName(model.Username);
