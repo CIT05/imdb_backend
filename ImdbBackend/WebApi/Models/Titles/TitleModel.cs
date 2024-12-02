@@ -23,9 +23,9 @@ namespace WebApi.Models.Titles
 
         public bool IsAdult { get; set; }
 
-        public string? startYear { get; set; } = string.Empty;
+        public string? StartYear { get; set; } = string.Empty;
 
-        public string? endYear { get; set; }
+        public string? EndYear { get; set; }
 
         public int? RuntimeMinutes { get; set; }
 
