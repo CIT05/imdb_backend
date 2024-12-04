@@ -43,6 +43,22 @@ public class SearchController(ISearchingDataService dataService, LinkGenerator l
         }
     }
 
+   [HttpGet("title/{title}", Name = nameof(TitleSearchResult))]
+
+    public IActionResult TitleSearchResult(string title)
+    {
+        var TitleSearchResult = _dataService.TitleSearchResult(title);
+        if (TitleSearchResult.Count == 0)
+        {
+            return NotFound();
+        }
+
+        List<TitleStringSearchResultModel> stringSearchResultModel = TitleSearchResult.Select(result => AdaptTitleStringSearchToTitleStringSearchResultModel(result)).ToList();
+
+        return Ok(stringSearchResultModel);
+    }
+
+
     [HttpGet("title/exact/{stringSearch}", Name = nameof(ExactTitleSearch))]
     public IActionResult ExactTitleSearch(string stringSearch)
     {
@@ -106,6 +122,21 @@ public class SearchController(ISearchingDataService dataService, LinkGenerator l
             return Unauthorized();
         }
     }
+
+    [HttpGet("actor/{name}", Name = nameof(SearchCelebs))]
+
+    public IActionResult SearchCelebs(string name)
+    {      
+        var SearchCelebs = _dataService.SearchCelebs(name);
+        if (SearchCelebs.Count == 0)
+        {
+            return NotFound();
+        }
+
+        List<ActorStringSearchResultModel> stringSearchResultModel = SearchCelebs.Select(result => AdaptActorStringSearchToActorStringSearchResultModel(result)).ToList();
+
+        return Ok(stringSearchResultModel);
+        }
 
     [HttpPost("actor", Name = nameof(SearchActorByMultipleValues))]
     public IActionResult SearchActorByMultipleValues([FromBody] SearchTitleOrActorByMultipleValuesModel body)

@@ -19,7 +19,15 @@ public class SearchingDataService : ISearchingDataService
 
         return results;
     }
+    
+     public List<TitleStringSearchResult> TitleSearchResult(string searchString)
+    {
+        var db = new ImdbContext(_connectionString);
+        var results = db.TitleStringSearchResults.FromSqlInterpolated($"SELECT * FROM string_search_titles({searchString})").ToList();
 
+        return results;
+    }
+    
     public List<TitleStringSearchResult> SearchTitlesByMultipleValues(string? titleMovie, string? moviePlot, string? titleCharacters, string? personName, int userId)
     {
         var db = new ImdbContext(_connectionString);
@@ -28,7 +36,15 @@ public class SearchingDataService : ISearchingDataService
         return results;
     }
 
-    public List<ActorStringSearchResult> SearchActors(string searchString, int userId)
+    public List<ActorStringSearchResult> SearchCelebs(string searchString)
+    {
+        var db = new ImdbContext(_connectionString);
+        var results = db.ActorStringSearchResults.FromSqlInterpolated($"SELECT * FROM name_search({searchString})").ToList();
+
+        return results;
+    }
+
+        public List<ActorStringSearchResult> SearchActors(string searchString, int userId)
     {
         var db = new ImdbContext(_connectionString);
         var results = db.ActorStringSearchResults.FromSqlInterpolated($"SELECT * FROM name_string_search({searchString}, {userId})").ToList();
