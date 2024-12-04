@@ -8,5 +8,7 @@ namespace WebApi.Models.TitlePrincipals
         public string? Url { get; set; }
         public string? Job { get; set; }
         public string? Characters { get; set; }
+
+        public string? PersonUrl { get; set; }
     }
 }

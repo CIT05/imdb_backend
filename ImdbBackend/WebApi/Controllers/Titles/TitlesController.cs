@@ -110,6 +110,7 @@ public class TitlesController : BaseController
                 var titlePrincipal = title.Principals.ElementAt(index);
                 principal.Url = GetUrl(nameof(TitlePrincipalController.GetTitlePrincipalsForATitle),
                     new { tconst = titlePrincipal.TConst, nconst = titlePrincipal.NConst, ordering = titlePrincipal.Ordering, roleId = titlePrincipal.RoleId });
+                principal.PersonUrl = GetUrl(nameof(PersonsController.GetPersonById), new { nconst = titlePrincipal.NConst });
                 return principal;
             }).ToList();
         }
