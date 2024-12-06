@@ -36,17 +36,28 @@ namespace DBConnection.Titles
             GetTitleById(string tconst)
         {
             using var db = new ImdbContext(_connectionString);
+
+            
             var title = db.Titles
                 .Where(title => title.TConst == tconst)
                 .Include(title => title.Rating)
-                .Include(title => title.Principals.OrderBy(p => p.Ordering))
+                .Include(title => title.Principals)
+                    .ThenInclude(principal => principal.Person)
                 .Include(title => title.KnownFors)
                 .Include(title => title.ProductionPersons)
+                    .ThenInclude(ProductionPersons => ProductionPersons.Person)
                 .Include(title => title.TitleAlternatives.OrderBy(ta => ta.Ordering))
                 .Include(title => title.Episodes)
                 .Include(title => title.Genres)
                 .AsSplitQuery()
                 .SingleOrDefault();
+
+            if (title != null)
+            {
+                title.Principals = title.Principals
+                    .OrderBy(p => p.Ordering)
+                    .ToList();
+            }
 
             return title;
            }
