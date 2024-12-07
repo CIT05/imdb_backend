@@ -63,6 +63,7 @@ public class TitlesController : BaseController
         return Ok(titleModel);
     }
 
+
     private TitleModel AdaptTitleToTitleModel(Title title)
     {
         var titleModel = title.Adapt<TitleModel>();
@@ -79,7 +80,7 @@ public class TitlesController : BaseController
             titleModel.TitleAlternatives.ForEach(alt => alt.Url = GetUrl(nameof(TitleAlternativeController.GetTitleAlternative), new { akasId = alt.AkasId, ordering = alt.Ordering }));
         }
 
-        if(title.KnownFors != null)
+        if (title.KnownFors != null)
         {
             titleModel.KnownFors = title.KnownFors.Select(kf => new KnownForModel
             {
@@ -88,13 +89,13 @@ public class TitlesController : BaseController
             }).ToList();
         }
 
-        if(title.ProductionPersons != null && title.ProductionPersons.Count > 0)
+        if (title.ProductionPersons != null && title.ProductionPersons.Count > 0)
         {
             titleModel.ProductionPersons = title.ProductionPersons.Select(pe => new ProductionModel
             {
                 Url = GetUrl(nameof(PersonsController.GetPersonById), new { nconst = pe.NConst }) ?? string.Empty,
                 RoleId = pe.RoleId,
-                PrimaryName = pe.Person.PrimaryName
+                PrimaryName = pe.Person?.PrimaryName ??  string.Empty
             }).ToList();
         }
 
@@ -109,7 +110,7 @@ public class TitlesController : BaseController
                 Person = new PersonDTO
                 {
                     Url = GetUrl(nameof(PersonsController.GetPersonById), new { nconst = titlePrincipals.NConst }),
-                    PrimaryName = titlePrincipals.Person.PrimaryName
+                    PrimaryName = titlePrincipals.Person?.PrimaryName ?? string.Empty
                 }
             }).ToList();
         }

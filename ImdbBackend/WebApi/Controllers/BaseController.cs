@@ -15,7 +15,7 @@ namespace WebApi.Controllers
         {
             const int maxPageSize = 100;
 
-            pageSize = pageSize < maxPageSize ? maxPageSize : pageSize;
+            pageSize = pageSize > maxPageSize ? maxPageSize : pageSize;
 
             var maxNumberOfPages = (int)Math.Ceiling(total / (double)pageSize);
 

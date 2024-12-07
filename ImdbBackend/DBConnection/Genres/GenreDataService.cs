@@ -1,4 +1,5 @@
 using DataLayer.Genres;
+using Microsoft.EntityFrameworkCore;
 
 namespace DBConnection.Genres
 {
@@ -9,7 +10,18 @@ namespace DBConnection.Genres
         public Genre? GetGenreById(int genreId)
         {
             var db = new ImdbContext(_connectionString);
-            return db.Genres.Find(genreId);
+            var genre = db.Genres.SingleOrDefault(g => g.GenreId == genreId);
+
+            if(genre != null)
+            {
+                genre.Titles = db.Titles
+                    .Where(t => t.Genres.Any(g => g.GenreId == genreId))
+                    .Include(t => t.Rating)
+                    .AsSplitQuery()
+                    .ToList();
+            }
+
+            return genre;
         }
 
         public List<Genre> GetGenres(int pageSize, int pageNumber)
@@ -21,7 +33,7 @@ namespace DBConnection.Genres
         public int NumberOfGenres()
     {
         var db = new ImdbContext(_connectionString);
-        return db.Ratings.Count();
+        return db.Genres.Count();
     }
 
     }

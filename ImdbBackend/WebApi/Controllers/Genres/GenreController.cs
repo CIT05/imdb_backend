@@ -2,6 +2,10 @@ using Microsoft.AspNetCore.Mvc;
 using DataLayer.Genres;
 using WebApi.Models.Genres;
 using Mapster;
+using WebApi.Models.Titles;
+using WebApi.Controllers.Titles;
+using WebApi.Models.Ratings;
+using WebApi.Controllers.Ratings;
 
 
 namespace WebApi.Controllers.Genres;
@@ -54,6 +58,21 @@ public class GenreController(IGenreDataService dataService, LinkGenerator linkGe
 
         var genreModel = genre.Adapt<GenreModel>();
         genreModel.Url = GetUrl(nameof(GetGenreById), new {genreId = genre.GenreId});
+
+        genreModel.Titles = genre.Titles?.Select((genreTitle) => new TitleDTO
+        {
+            Url = GetUrl(nameof(TitlesController.GetTitleById), new { tconst = genreTitle.TConst }) ?? string.Empty,
+            PrimaryTitle = genreTitle.PrimaryTitle,
+            Poster = genreTitle.Poster,
+            Rating = genreTitle.Rating != null ? new RatingModel
+            {
+                Url = GetUrl(nameof(RatingsController.GetRatingById), new { tconst = genreTitle.TConst }) ?? string.Empty,
+                AverageRating = genreTitle.Rating.AverageRating,
+                NumberOfVotes = genreTitle.Rating.NumberOfVotes,
+            } : null
+        }
+            ).ToList();
+
         return genreModel;
 
     }
