@@ -8,9 +8,9 @@ public interface ISearchingDataService
 
     List<TitleStringSearchResult> SearchTitlesByMultipleValues(string? titleMovie, string? moviePlot, string? titleCharacters, string? personName, int userId);
 
-    List<ExactSearchResult> MovieExactSearch(string searchString);
+    ExactSearchResult ExactSearch(string searchString);
 
-    List<BestSearchResult> MovieBestSearch(string searchString);
+    BestSearchResult BestSearch(string searchString);
 
     List<ActorStringSearchResult> SearchActors(string searchString, int userId);
 

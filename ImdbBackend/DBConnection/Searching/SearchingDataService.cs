@@ -60,20 +60,34 @@ public class SearchingDataService : ISearchingDataService
         return results;
     }
 
-    public List<ExactSearchResult> MovieExactSearch(string searchString)
+    public ExactSearchResult ExactSearch(string searchString)
     {
         var db = new ImdbContext(_connectionString);
         var stringSearchArray = searchString.Split(" ").Select(s => s.ToLower()).ToArray();
-        var results = db.ExactSearchResults.FromSqlInterpolated($"SELECT * FROM exact_match_query({stringSearchArray})").Include(result => result.Title).ToList();
+        var movieResults = db.TitleExactSearchResult.FromSqlInterpolated($"SELECT * FROM exact_match_query({stringSearchArray})").Include(result => result.Title).ToList();
+        var personsResults = db.ArtistStringSearchResult.FromSqlInterpolated($"SELECT * FROM exact_search_names({searchString})").Include(result => result.Person).ToList();
+
+        var results = new ExactSearchResult
+        {
+            Titles = movieResults,
+            Persons = personsResults
+        };
 
         return results;
     }
 
-    public List<BestSearchResult> MovieBestSearch(string searchString)
+    public BestSearchResult BestSearch(string searchString)
     {
         var db = new ImdbContext(_connectionString);
         var stringSearchArray = searchString.Split(" ").Select(s => s.ToLower()).ToArray();
-        var results = db.BestSearchResults.FromSqlInterpolated($"SELECT * FROM exact_bestmatch_query({stringSearchArray})").Include(result => result.Title).ToList();
+        var movieResults = db.TitleBestSearchResult.FromSqlInterpolated($"SELECT * FROM exact_bestmatch_query({stringSearchArray})").Include(result => result.Title).ToList();
+        var personsResults = db.ArtistStringSearchResult.FromSqlInterpolated($"SELECT * FROM best_search_names({searchString})").Include(result => result.Person).ToList();
+
+        var results = new BestSearchResult
+        {
+            Titles = movieResults,
+            Persons = personsResults
+        };
 
         return results;
     }

@@ -59,31 +59,30 @@ public class SearchController(ISearchingDataService dataService, LinkGenerator l
     }
 
 
-    [HttpGet("title/exact/{stringSearch}", Name = nameof(ExactTitleSearch))]
-    public IActionResult ExactTitleSearch(string stringSearch)
+    [HttpGet("exact/{stringSearch}", Name = nameof(ExactSearch))]
+    public IActionResult ExactSearch(string stringSearch)
     {
-        var exactSearchResult = _dataService.MovieExactSearch(stringSearch);
-        if (exactSearchResult.Count == 0)
+        var exactSearchResult = _dataService.ExactSearch(stringSearch);
+        if (exactSearchResult.Titles.Count == 0 || exactSearchResult.Persons.Count == 0)
         {
             return NotFound();
         }
 
-        List<ExactSearchResultModel> exactSearchResultModel = exactSearchResult.Select(result => AdaptExactSearchResultToExactSearchResultModel(result, stringSearch)).ToList();
+        ExactSearchResultModel exactSearchResultModel = AdaptExactSearchResultToExactSearchResultModel(exactSearchResult, stringSearch);
 
         return Ok(exactSearchResultModel);
     }
 
-    [HttpGet("title/best/{stringSearch}", Name = nameof(BestMatchTitleSearch))]
-    public IActionResult BestMatchTitleSearch(string stringSearch)
+    [HttpGet("best/{stringSearch}", Name = nameof(BestMatchSearch))]
+    public IActionResult BestMatchSearch(string stringSearch)
     {
-        var bestSearchResult = _dataService.MovieBestSearch(stringSearch);
-        if (bestSearchResult.Count == 0)
+        var bestSearchResult = _dataService.BestSearch(stringSearch);
+        if (bestSearchResult.Titles.Count == 0 || bestSearchResult.Persons.Count == 0)
         {
             return NotFound();
         }
 
-        List<BestSearchResultModel> bestSearchResultModel = bestSearchResult.Select(result => AdaptBestSearchResultToBestSearchResultModel(result, stringSearch)).ToList();
-
+        BestSearchResultModel bestSearchResultModel = AdaptBestSearchResultToBestSearchResultModel(bestSearchResult, stringSearch);
         return Ok(bestSearchResultModel);
     }
 
@@ -169,23 +168,66 @@ public class SearchController(ISearchingDataService dataService, LinkGenerator l
     private ExactSearchResultModel AdaptExactSearchResultToExactSearchResultModel(ExactSearchResult exactSearchResult, string stringSearch)
     {
         var exactSearchResultModel = exactSearchResult.Adapt<ExactSearchResultModel>();
-        exactSearchResultModel.Url = GetUrl(nameof(ExactTitleSearch), new { stringSearch }) ?? string.Empty;
+        exactSearchResultModel.Url = GetUrl(nameof(ExactSearch), new { stringSearch }) ?? string.Empty;
 
-        if(exactSearchResult.Title != null)
+        if (exactSearchResult.Titles.Count != 0)
         {
-            exactSearchResultModel.Title.Url = GetUrl(nameof(TitlesController.GetTitleById), new { tconst = exactSearchResult.TConst }) ?? string.Empty;
+            exactSearchResultModel.Titles = exactSearchResultModel.Titles.Select((title, index) =>
+            {
+                var TConst = exactSearchResult.Titles.Select(t => t.TConst).FirstOrDefault();
+                if(title.Title != null)
+                {
+                    title.Title.Url = GetUrl(nameof(TitlesController.GetTitleById), new { tconst = TConst }) ?? string.Empty;
+                }
+                return title;
+            }).ToList();
         }
+
+        if(exactSearchResult.Persons.Count != 0)
+        {
+            exactSearchResultModel.Persons = exactSearchResultModel.Persons.Select((person, index) =>
+            {
+                var NConst = exactSearchResult.Persons.Select(p => p.Nconst).FirstOrDefault();
+                if(person.Person != null)
+                {
+                    person.Person.Url = GetUrl(nameof(PersonsController.GetPersonById), new { nconst = NConst }) ?? string.Empty;
+                }
+                return person;
+            }).ToList();
+        }
+
         return exactSearchResultModel;
     }
 
   private BestSearchResultModel AdaptBestSearchResultToBestSearchResultModel(BestSearchResult bestSearchResult, string stringSearch)
     {
         var bestSearchResultModel = bestSearchResult.Adapt<BestSearchResultModel>();
-        bestSearchResultModel.Url = GetUrl(nameof(BestMatchTitleSearch), new { stringSearch }) ?? string.Empty;
+        bestSearchResultModel.Url = GetUrl(nameof(BestMatchSearch), new { stringSearch }) ?? string.Empty;
 
-        if (bestSearchResultModel.Title != null)
+        if (bestSearchResult.Titles.Count != 0)
         {
-            bestSearchResultModel.Title.Url = GetUrl(nameof(TitlesController.GetTitleById), new { tconst = bestSearchResult.TConst }) ?? string.Empty;
+            bestSearchResultModel.Titles = bestSearchResultModel.Titles.Select((title, index) =>
+            {
+                var TConst = bestSearchResult.Titles.Select(t => t.TConst).FirstOrDefault();
+                if (title.Title != null)
+                {
+                    title.Title.Url = GetUrl(nameof(TitlesController.GetTitleById), new { tconst = TConst }) ?? string.Empty;
+                }
+                return title;
+            }).ToList();
+        }
+
+        if (bestSearchResult.Persons.Count != 0)
+        {
+            bestSearchResultModel.Persons = bestSearchResultModel.Persons.Select((person, index) =>
+            {
+                var NConst = bestSearchResult.Persons.Select(p => p.Nconst).FirstOrDefault();
+                if(person.Person != null)
+                {
+                    person.Person.Url = GetUrl(nameof(PersonsController.GetPersonById), new { nconst = NConst }) ?? string.Empty;
+                }
+                return person;
+            }).ToList();
         }
 
         return bestSearchResultModel;
