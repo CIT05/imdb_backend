@@ -78,7 +78,7 @@ namespace DBConnection.Titles
         public List<TitleAlternative> GetTitleAlternatives(string tconst)
         {
             var db = new ImdbContext(_connectionString);
-            return db.TitleAlternatives.Where(alt => alt.TitleId == tconst).ToList();
+            return db.TitleAlternatives.Where(alt => alt.TConst == tconst).ToList();
         }
 
         public List<TitlePrincipal> GetTitlePrincipals(string tconst)

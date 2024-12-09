@@ -74,6 +74,21 @@ namespace WebApi.Controllers.TitleAlternatives
             return Ok(result);
         }
 
+        [HttpGet("title/{tconst}", Name = nameof(GetTitleAlternativeForTitle))]
+        public IActionResult GetTitleAlternativeForTitle(string tconst)
+        {
+            var titleAlternatives = _dataService.GetTitleAlternativeForTitle(tconst);
+
+            var titleAlternativeModels = new List<TitleAlternativeModel>();
+            foreach (var titleAlternative in titleAlternatives)
+            {
+                titleAlternativeModels.Add(AdaptTitleAlternativeToTitleAlternativeModel(titleAlternative));
+            }
+
+
+            return Ok(titleAlternativeModels);
+        }
+
         private TitleAlternativeModel AdaptTitleAlternativeToTitleAlternativeModel(TitleAlternative titleAlternative)
         {
             var titleAlternativeModel = titleAlternative.Adapt<TitleAlternativeModel>();

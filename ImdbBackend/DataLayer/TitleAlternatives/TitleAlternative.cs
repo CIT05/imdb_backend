@@ -16,7 +16,7 @@ namespace DataLayer.TitleAlternatives
         public string? Attributes { get; set; }
         public bool? IsOriginalTitle { get; set; }
 
-        public string? TitleId { get; set; }
+        public string? TConst { get; set; }
         
 
         public List<TitleType> Types { get; set; } = new List<TitleType>();

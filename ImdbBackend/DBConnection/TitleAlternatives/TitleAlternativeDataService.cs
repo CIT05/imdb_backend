@@ -28,6 +28,21 @@ namespace DBConnection.TitleAlternatives
             return result;
         }
 
+        public List<TitleAlternative> GetTitleAlternativeForTitle(string tconst)
+        {
+            var db = new ImdbContext(_connectionString);
+            var result = db.TitleAlternatives.Include(akas => akas.Types).Where(ta => ta.TConst == tconst).ToList();
+
+            if (result.Count == 0)
+            {
+                throw new InvalidOperationException("TitleAlternative not found.");
+            }
+
+            return result;
+
+        }
+
+
 
         public List<TitleAlternative> GetTitleAlternativesByType(int typeid)
         {

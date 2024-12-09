@@ -159,7 +159,7 @@ namespace DBConnection
         {
             modelBuilder.Entity<TitleAlternative>().ToTable("title_akas_new");
             modelBuilder.Entity<TitleAlternative>().HasKey(e => new { e.AkasId });
-            modelBuilder.Entity<TitleAlternative>().Property(TitleAlternative => TitleAlternative.TitleId).HasColumnName("tconst");
+            modelBuilder.Entity<TitleAlternative>().Property(TitleAlternative => TitleAlternative.TConst).HasColumnName("tconst");
             modelBuilder.Entity<TitleAlternative>().Property(e => e.AkasId).HasColumnName("akasid");
             modelBuilder.Entity<TitleAlternative>().Property(e => e.Ordering).HasColumnName("ordering");
             modelBuilder.Entity<TitleAlternative>().Property(e => e.AltTitle).HasColumnName("title");
@@ -172,7 +172,7 @@ namespace DBConnection
             modelBuilder.Entity<TitleAlternative>()
              .HasOne(tA => tA.Title)
              .WithMany(title => title.TitleAlternatives)
-             .HasForeignKey(tp => tp.TitleId);
+             .HasForeignKey(tp => tp.TConst);
 
 
             modelBuilder.Entity<TitleAlternative>()
@@ -241,7 +241,7 @@ namespace DBConnection
             modelBuilder.Entity<Title>()
               .HasMany(title => title.TitleAlternatives)
                 .WithOne(alt => alt.Title)
-                .HasForeignKey(ta => ta.TitleId);
+                .HasForeignKey(ta => ta.TConst);
 
             modelBuilder.Entity<Title>()
            .HasMany(title => title.Genres)
