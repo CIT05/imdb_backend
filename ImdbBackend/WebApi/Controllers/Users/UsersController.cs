@@ -7,6 +7,13 @@ using System.Security.Claims;
 using WebApi.Models.Users;
 using WebApi.Services;
 using Microsoft.AspNetCore.Authorization;
+using WebApi.Models.History;
+using WebApi.Models.Titles;
+using WebApi.Controllers.Titles;
+using WebApi.Controllers.Persons;
+using WebApi.Models.Bookmarkings;
+using WebApi.Models.Persons;
+
 
 namespace WebApi.Controllers.Users;
 
@@ -95,7 +102,7 @@ public class UsersController(IUserDataService dataService,Hashing hashing, IConf
             signingCredentials: creds
             );
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-        return Ok(new {username = user.Username, token = jwt});
+        return Ok(new {username = user.Username, id= user.UserId, token = jwt});
 
     }
 
@@ -144,7 +151,51 @@ public class UsersController(IUserDataService dataService,Hashing hashing, IConf
 
         var userModel = user.Adapt<UserModel>();
         userModel.Url = GetUrl(nameof(GetUserById), new { userid = user.UserId });
-       
+
+        if (userModel.RatingHistory != null)
+        {
+            userModel.RatingHistory = user.RatingHistory.Select(rating => new RatingHistoryModel
+            {
+                TConst = rating.TConst,
+                Timestamp = rating.Timestamp,
+                Value = rating.Value,
+                Title = new TitleDTO
+                {
+                    Url = GetUrl(nameof(TitlesController.GetTitleById), new { tconst = rating.Title.TConst }),
+                    TitleName = rating.Title.OriginalTitle,
+                }
+            }).ToList();
+        }
+
+        if (userModel.TitleBookmarkings != null)
+        {
+            userModel.TitleBookmarkings = user.TitleBookmarkings.Select(titleBookmarking => new TitleBookmarkingModel
+            {
+                TConst = titleBookmarking.TConst,
+                Timestamp = titleBookmarking.Timestamp,
+                Title = new TitlePosterDTO
+                {
+                    Url = GetUrl(nameof(TitlesController.GetTitleById), new { tconst = titleBookmarking.Title.TConst }),
+                    TitleName = titleBookmarking.Title.OriginalTitle,
+                    Poster = titleBookmarking.Title.Poster
+                }
+            }).ToList();
+        }
+
+        if (userModel.PersonalityBookmarkings != null)
+        {
+            userModel.PersonalityBookmarkings = user.PersonalityBookmarkings.Select(personalityBookmarking => new PersonalityBookmarkingModel
+            {
+                NConst = personalityBookmarking.NConst,
+                Timestamp = personalityBookmarking.Timestamp,
+                Person = new PersonDTO
+                {
+                    Url = GetUrl(nameof(PersonsController.GetPersonById), new { nconst = personalityBookmarking.Person.NConst }),
+                    PrimaryName = personalityBookmarking.Person.PrimaryName,
+                }
+            }).ToList();
+        }
+
         return userModel;
 
     }

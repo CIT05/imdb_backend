@@ -20,9 +20,12 @@ public class UserDataService(string connectionString) : IUserDataService
     {
         var db = new ImdbContext(connectionString);
         return db.Users.Include(u => u.RatingHistory)
+                       .ThenInclude(rating => rating.Title)
                  .Include(u => u.SearchHistory)
                  .Include(u => u.PersonalityBookmarkings)
-                .Include(u => u.TitleBookmarkings)
+                       .ThenInclude(personalityBookmarking => personalityBookmarking.Person)
+                 .Include(u => u.TitleBookmarkings)
+                       .ThenInclude(titleBookmarking => titleBookmarking.Title)
                  .FirstOrDefault(u => u.Username == UserName);
     }
 

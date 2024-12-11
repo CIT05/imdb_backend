@@ -1,4 +1,6 @@
-﻿namespace WebApi.Models.Ratings
+﻿using WebApi.Models.Titles;
+
+namespace WebApi.Models.Ratings
 {
     public class RatingModel
     {

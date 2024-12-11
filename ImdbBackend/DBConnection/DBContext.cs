@@ -457,6 +457,12 @@ namespace DBConnection
             modelBuilder.Entity<RatingHistory>().Property(rh => rh.TConst).HasColumnName("tconst");
             modelBuilder.Entity<RatingHistory>().Property(rh => rh.Timestamp).HasColumnName("timestamp");
             modelBuilder.Entity<RatingHistory>().Property(rh => rh.Value).HasColumnName("value");
+
+            modelBuilder.Entity<RatingHistory>()
+         .HasOne(rh => rh.User) 
+         .WithMany(u => u.RatingHistory) 
+         .HasForeignKey(rh => rh.UserId)  
+         .HasPrincipalKey(u => u.UserId);  
         }
       
     }

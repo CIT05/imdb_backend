@@ -1,4 +1,6 @@
+using DataLayer.Persons;
 using DataLayer.Users;
+using DataLayer.Titles;
 
 namespace DataLayer.History
 {
@@ -14,5 +16,6 @@ namespace DataLayer.History
 
         public User User { get; set; }
 
+        public Title Title { get; set; }
     }
 }
