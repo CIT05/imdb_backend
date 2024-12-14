@@ -17,7 +17,7 @@ namespace DBConnection.TitleAlternatives
         public TitleAlternative GetTitleAlternative(int akasId)
         {
             var db = new ImdbContext(_connectionString);
-            var result = db.TitleAlternatives.FirstOrDefault(akas =>
+            var result = db.TitleAlternatives.Include(akas => akas.Types).FirstOrDefault(akas =>
             akas.AkasId == akasId);
             
             if (result == null)
@@ -28,13 +28,27 @@ namespace DBConnection.TitleAlternatives
             return result;
         }
 
+        public List<TitleAlternative> GetTitleAlternativeForTitle(string tconst)
+        {
+            var db = new ImdbContext(_connectionString);
+            var result = db.TitleAlternatives.Include(akas => akas.Types).Where(ta => ta.TConst == tconst).ToList();
 
-        public List<TitleAlternative> GetTitleAlternativesByType(string type)
+            if (result.Count == 0)
+            {
+                throw new InvalidOperationException("TitleAlternative not found.");
+            }
+
+            return result;
+
+        }
+
+
+
+        public List<TitleAlternative> GetTitleAlternativesByType(int typeid)
         {
             var db = new ImdbContext(_connectionString);
             return db.TitleAlternatives
-                 .Include(title => title.Types)
-                 .Where(title => title.Types.Any(t => t.TypeName == type))
+                 .Where(title => title.Types.Any(t => t.TypeId == typeid))
                  .ToList();
         }
 

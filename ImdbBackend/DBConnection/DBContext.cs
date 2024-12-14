@@ -52,6 +52,12 @@ namespace DBConnection
 
         public DbSet<ActorStringSearchResult> ActorStringSearchResults { get; set; }
 
+        public DbSet<TitleBestSearchResult> TitleBestSearchResult { get; set; }
+
+        public DbSet<TitleExactSearchResult> TitleExactSearchResult { get; set; }
+
+        public DbSet<ArtistStringSearchResult> ArtistStringSearchResult { get; set; }
+
         public DbSet<RatingForUserResult> RatingForUserResults { get; set; }
 
         public DbSet<AddRatingResult> AddRatingResults { get; set; }
@@ -59,10 +65,6 @@ namespace DBConnection
         public DbSet<PersonsByMovieResult> PersonsByMovieResult { get; set; }
 
         public DbSet<PersonRatingResult> PersonRatingResults { get; set; }
-
-        public DbSet<ExactSearchResult> ExactSearchResults { get; set; }
-
-        public DbSet<BestSearchResult> BestSearchResults { get; set; }
 
         public DbSet<TitleBookmarking> TitleBookmarkings { get; set; }
         public DbSet<PersonalityBookmarking> PersonalityBookmarkings { get; set; }
@@ -157,7 +159,7 @@ namespace DBConnection
         {
             modelBuilder.Entity<TitleAlternative>().ToTable("title_akas_new");
             modelBuilder.Entity<TitleAlternative>().HasKey(e => new { e.AkasId });
-            modelBuilder.Entity<TitleAlternative>().Property(TitleAlternative => TitleAlternative.TitleId).HasColumnName("tconst");
+            modelBuilder.Entity<TitleAlternative>().Property(TitleAlternative => TitleAlternative.TConst).HasColumnName("tconst");
             modelBuilder.Entity<TitleAlternative>().Property(e => e.AkasId).HasColumnName("akasid");
             modelBuilder.Entity<TitleAlternative>().Property(e => e.Ordering).HasColumnName("ordering");
             modelBuilder.Entity<TitleAlternative>().Property(e => e.AltTitle).HasColumnName("title");
@@ -170,7 +172,7 @@ namespace DBConnection
             modelBuilder.Entity<TitleAlternative>()
              .HasOne(tA => tA.Title)
              .WithMany(title => title.TitleAlternatives)
-             .HasForeignKey(tp => tp.TitleId);
+             .HasForeignKey(tp => tp.TConst);
 
 
             modelBuilder.Entity<TitleAlternative>()
@@ -239,7 +241,7 @@ namespace DBConnection
             modelBuilder.Entity<Title>()
               .HasMany(title => title.TitleAlternatives)
                 .WithOne(alt => alt.Title)
-                .HasForeignKey(ta => ta.TitleId);
+                .HasForeignKey(ta => ta.TConst);
 
             modelBuilder.Entity<Title>()
            .HasMany(title => title.Genres)
@@ -339,14 +341,20 @@ namespace DBConnection
             modelBuilder.Entity<ActorStringSearchResult>().Property(stringSearch => stringSearch.ActorId).HasColumnName("actorId");
             modelBuilder.Entity<ActorStringSearchResult>().Property(stringSearch => stringSearch.ActorName).HasColumnName("actorName");
 
-            modelBuilder.Entity<ExactSearchResult>().HasKey(result => result.TConst);
-            modelBuilder.Entity<ExactSearchResult>().Property(result => result.TConst).HasColumnName("tconst");
-            modelBuilder.Entity<ExactSearchResult>().HasOne(b => b.Title).WithMany().HasForeignKey(b => b.TConst);
+            modelBuilder.Entity<TitleExactSearchResult>().HasKey(result => result.TConst);
+            modelBuilder.Entity<TitleExactSearchResult>().Property(result => result.TConst).HasColumnName("tconst");
+            modelBuilder.Entity<TitleExactSearchResult>().HasOne(b => b.Title).WithMany().HasForeignKey(b => b.TConst);
 
-            modelBuilder.Entity<BestSearchResult>().HasKey(result => result.TConst);
-            modelBuilder.Entity<BestSearchResult>().Property(result => result.TConst).HasColumnName("tconst");
-            modelBuilder.Entity<BestSearchResult>().Property(result => result.MatchCount).HasColumnName("match_count");
-            modelBuilder.Entity<BestSearchResult>().HasOne(b => b.Title).WithMany().HasForeignKey(b => b.TConst);
+            modelBuilder.Entity<TitleBestSearchResult>().HasKey(result => result.TConst);
+            modelBuilder.Entity<TitleBestSearchResult>().Property(result => result.TConst).HasColumnName("tconst");
+            modelBuilder.Entity<TitleBestSearchResult>().Property(result => result.MatchCount).HasColumnName("match_count");
+            modelBuilder.Entity<TitleBestSearchResult>().HasOne(b => b.Title).WithMany().HasForeignKey(b => b.TConst);
+
+            modelBuilder.Entity<ArtistStringSearchResult>().HasKey(result => result.Nconst);
+            modelBuilder.Entity<ArtistStringSearchResult>().Property(result => result.Nconst).HasColumnName("nconst");
+            modelBuilder.Entity<ArtistStringSearchResult>().Property(result => result.Likelihood).HasColumnName("likelihood");
+            modelBuilder.Entity<ArtistStringSearchResult>().HasOne(b => b.Person).WithMany().HasForeignKey(b => b.Nconst);
+
 
 
 

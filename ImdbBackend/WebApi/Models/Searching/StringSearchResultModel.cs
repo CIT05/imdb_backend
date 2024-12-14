@@ -1,4 +1,5 @@
-﻿using WebApi.Models.Titles;
+﻿using WebApi.Models.Persons;
+using WebApi.Models.Titles;
 
 namespace WebApi.Models.Searching
 {
@@ -16,19 +17,43 @@ namespace WebApi.Models.Searching
         public string ActorName { get; set; } = string.Empty;
     }
 
-    public class ExactSearchResultModel
-    {
-        public string Url { get; set; } = string.Empty;
 
+    public class ArtistStringSearchResultModel
+    {
+        public PersonDTO? Person { get; set; }
+
+        public decimal? Likelihood { get; set; }
+    }
+
+
+    public class TitleExactSearchResultModel
+    {
         public TitleModel? Title { get; set; }
     }
 
-    public class BestSearchResultModel
+    public class TitleBestSearchResultModel
     {
-        public string Url { get; set; } = string.Empty;
 
         public int MatchCount { get; set; }
 
         public TitleModel? Title { get; set; }
+    }
+
+    public class ExactSearchResultModel
+    {
+
+        public string Url { get; set; } = string.Empty;
+        public List<ArtistStringSearchResultModel> Persons { get; set; } = new List<ArtistStringSearchResultModel>();
+
+        public List<TitleExactSearchResultModel> Titles { get; set; } = new List<TitleExactSearchResultModel>();
+    }
+
+    public class BestSearchResultModel
+    {
+
+        public string Url { get; set; } = string.Empty;
+        public List<ArtistStringSearchResultModel> Persons { get; set; } = new List<ArtistStringSearchResultModel>();
+
+        public List<TitleBestSearchResultModel> Titles { get; set; } = new List<TitleBestSearchResultModel>();
     }
 }

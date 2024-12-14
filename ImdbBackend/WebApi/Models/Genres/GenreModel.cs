@@ -1,3 +1,5 @@
+using WebApi.Models.Titles;
+
 namespace WebApi.Models.Genres
 {
     public class GenreModel
@@ -7,6 +9,7 @@ namespace WebApi.Models.Genres
         public string? GenreName { get; set; }
 
         public string? Url { get; set; }
+        public List<TitleDTO>? Titles { get; set; }
 
     }
 }

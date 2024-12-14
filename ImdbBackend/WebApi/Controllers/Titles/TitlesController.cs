@@ -63,6 +63,7 @@ public class TitlesController : BaseController
         return Ok(titleModel);
     }
 
+
     private TitleModel AdaptTitleToTitleModel(Title title)
     {
         var titleModel = title.Adapt<TitleModel>();
@@ -90,33 +91,28 @@ public class TitlesController : BaseController
 
         if (title.ProductionPersons != null && title.ProductionPersons.Count > 0)
         {
-            titleModel.ProductionPersons = title.ProductionPersons
-                .Where(pe => pe != null && pe.Person != null)  // Ensure pe and pe.Person are not null
-                .Select(pe => new ProductionModel
-                {
-                    Url = GetUrl(nameof(PersonsController.GetPersonById), new { nconst = pe.NConst }) ?? string.Empty,
-                    RoleId = pe.RoleId,
-                    PrimaryName = pe.Person.PrimaryName // Assuming pe.Person is now not null
-                })
-                .ToList();
+            titleModel.ProductionPersons = title.ProductionPersons.Select(pe => new ProductionModel
+            {
+                Url = GetUrl(nameof(PersonsController.GetPersonById), new { nconst = pe.NConst }) ?? string.Empty,
+                RoleId = pe.RoleId,
+                PrimaryName = pe.Person?.PrimaryName ??  string.Empty
+            }).ToList();
         }
 
         if (title.Principals != null && title.Principals.Count > 0)
         {
-            titleModel.Principals = title.Principals
-                .Where(titlePrincipals => titlePrincipals != null && titlePrincipals.Person != null)  // Ensure titlePrincipals and titlePrincipals.Person are not null
-                .Select(titlePrincipals => new TitlePrincipalDTO
+
+            titleModel.Principals = title.Principals.Select(titlePrincipals => new TitlePrincipalDTO
+            {
+                Url = GetUrl(nameof(TitlePrincipalController.GetTitlePrincipalsForATitle), new { tconst = title.TConst, nconst = titlePrincipals.NConst, ordering = titlePrincipals.Ordering, roleId = titlePrincipals.RoleId }),
+                Job = titlePrincipals.Job,
+                Characters = titlePrincipals.Characters,
+                Person = new PersonDTO
                 {
-                    Url = GetUrl(nameof(TitlePrincipalController.GetTitlePrincipalsForATitle), new { tconst = title.TConst, nconst = titlePrincipals.NConst, ordering = titlePrincipals.Ordering, roleId = titlePrincipals.RoleId }),
-                    Job = titlePrincipals.Job,
-                    Characters = titlePrincipals.Characters,
-                    Person = new PersonDTO
-                    {
-                        Url = GetUrl(nameof(PersonsController.GetPersonById), new { nconst = titlePrincipals.NConst }),
-                        PrimaryName = titlePrincipals.Person.PrimaryName // Assuming titlePrincipals.Person is now not null
-                    }
-                })
-                .ToList();
+                    Url = GetUrl(nameof(PersonsController.GetPersonById), new { nconst = titlePrincipals.NConst }),
+                    PrimaryName = titlePrincipals.Person?.PrimaryName ?? string.Empty
+                }
+            }).ToList();
         }
 
         return titleModel;

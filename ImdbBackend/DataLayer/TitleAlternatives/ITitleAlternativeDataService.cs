@@ -5,8 +5,8 @@
         List<TitleAlternative> GetTitleAlternatives(int pageSize, int pageNumber);
         TitleAlternative? GetTitleAlternative(int akasId);
 
-
-        List<TitleAlternative> GetTitleAlternativesByType(string type);
+        List<TitleAlternative> GetTitleAlternativeForTitle(string tconst);
+        List<TitleAlternative> GetTitleAlternativesByType(int typeid);
 
         int NumberOfTitleAlternatives();
 

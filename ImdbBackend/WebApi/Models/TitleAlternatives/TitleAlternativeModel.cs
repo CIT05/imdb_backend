@@ -12,7 +12,7 @@ namespace WebApi.Models.TitleALternatives
         public string? Language { get; set; }
         public string? Attributes { get; set; }
         public string? IsOriginalTitle { get; set; }
-        public string? TitleId { get; set; }
+        public string? TConst { get; set; }
 
         public List<TypeModel> Types { get; set; }
     }}

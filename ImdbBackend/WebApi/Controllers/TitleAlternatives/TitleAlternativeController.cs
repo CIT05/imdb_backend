@@ -2,6 +2,7 @@ using DataLayer.TitleAlternatives;
 using WebApi.Models.TitleALternatives;
 using Microsoft.AspNetCore.Mvc;
 using Mapster;
+using WebApi.Controllers.Types;
 
 
 namespace WebApi.Controllers.TitleAlternatives
@@ -56,7 +57,7 @@ namespace WebApi.Controllers.TitleAlternatives
 
 
         [HttpGet("type/{type}", Name = nameof(GetTitleAlternativesByType))]
-        public IActionResult GetTitleAlternativesByType(string type)
+        public IActionResult GetTitleAlternativesByType(int type)
         {
             var titleAlternatives = _dataService.GetTitleAlternativesByType(type);
             var numberOfItems = titleAlternatives.Count;
@@ -73,10 +74,36 @@ namespace WebApi.Controllers.TitleAlternatives
             return Ok(result);
         }
 
+        [HttpGet("title/{tconst}", Name = nameof(GetTitleAlternativeForTitle))]
+        public IActionResult GetTitleAlternativeForTitle(string tconst)
+        {
+            var titleAlternatives = _dataService.GetTitleAlternativeForTitle(tconst);
+
+            var titleAlternativeModels = new List<TitleAlternativeModel>();
+            foreach (var titleAlternative in titleAlternatives)
+            {
+                titleAlternativeModels.Add(AdaptTitleAlternativeToTitleAlternativeModel(titleAlternative));
+            }
+
+
+            return Ok(titleAlternativeModels);
+        }
+
         private TitleAlternativeModel AdaptTitleAlternativeToTitleAlternativeModel(TitleAlternative titleAlternative)
         {
             var titleAlternativeModel = titleAlternative.Adapt<TitleAlternativeModel>();
-            titleAlternativeModel.Url = GetUrl(titleAlternative.AkasId.ToString(), new {akasid = titleAlternative.AkasId});
+            titleAlternativeModel.Url = GetUrl(nameof(GetTitleAlternative), new {akasid = titleAlternative.AkasId});
+
+            if(titleAlternativeModel.Types.Count > 0)
+            {
+                titleAlternativeModel.Types = titleAlternativeModel.Types.Select(type =>
+                {
+                    type.Url = GetUrl(nameof(TypesController.GetTypeById), new { typeid = type.TypeId });
+                    return type;
+                }
+                ).ToList();
+
+            }
 
             return titleAlternativeModel;
     }
