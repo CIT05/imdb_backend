@@ -13,6 +13,7 @@ using WebApi.Controllers.Titles;
 using WebApi.Controllers.Persons;
 using WebApi.Models.Bookmarkings;
 using WebApi.Models.Persons;
+using DataLayer.TitlePrincipals;
 
 
 namespace WebApi.Controllers.Users;
@@ -155,7 +156,7 @@ public class UsersController(IUserDataService dataService,Hashing hashing, IConf
         var userModel = user.Adapt<UserModel>();
         userModel.Url = GetUrl(nameof(GetUserById), new { userid = user.UserId });
 
-        if (userModel.RatingHistory != null)
+        if (userModel.RatingHistory != null && userModel.RatingHistory.Count > 0)
         {
             userModel.RatingHistory = user.RatingHistory.Select(rating => new RatingHistoryModel
             {
@@ -170,7 +171,7 @@ public class UsersController(IUserDataService dataService,Hashing hashing, IConf
             }).ToList();
         }
 
-        if (userModel.TitleBookmarkings != null)
+        if (userModel.TitleBookmarkings != null && userModel.TitleBookmarkings.Count > 0)
         {
             userModel.TitleBookmarkings = user.TitleBookmarkings.Select(titleBookmarking => new TitleBookmarkingModel
             {
@@ -185,16 +186,17 @@ public class UsersController(IUserDataService dataService,Hashing hashing, IConf
             }).ToList();
         }
 
-        if (userModel.PersonalityBookmarkings != null)
+        if (userModel.PersonalityBookmarkings != null && userModel.PersonalityBookmarkings.Count > 0)
         {
             userModel.PersonalityBookmarkings = user.PersonalityBookmarkings.Select(personalityBookmarking => new PersonalityBookmarkingModel
             {
                 NConst = personalityBookmarking.NConst,
                 Timestamp = personalityBookmarking.Timestamp,
+                UserId = personalityBookmarking.UserId,
                 Person = new PersonDTO
                 {
-                    Url = GetUrl(nameof(PersonsController.GetPersonById), new { nconst = personalityBookmarking.Person.NConst }),
-                    PrimaryName = personalityBookmarking.Person.PrimaryName,
+                    Url = GetUrl(nameof(PersonsController.GetPersonById), new { nconst = personalityBookmarking.NConst }),
+                    PrimaryName = personalityBookmarking.Person?.PrimaryName ?? string.Empty
                 }
             }).ToList();
         }

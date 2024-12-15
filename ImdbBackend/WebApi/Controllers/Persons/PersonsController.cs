@@ -12,6 +12,7 @@ using WebApi.Controllers.Titles;
 using DBConnection.KnownFors;
 using WebApi.Models.KnownFors;
 using WebApi.Models.Roles;
+using WebApi.Controllers.Roles;
 
 namespace WebApi.Controllers.Persons;
 
@@ -91,6 +92,7 @@ public class PersonsController : BaseController
                 {
                     personRoleModel.Role = new RoleModel
                     {
+                        Url = GetUrl(nameof(RolesController.GetRoleById), new { roleId = personRole.Role.RoleId }),
                         RoleName = personRole.Role.RoleName
                     };
                 }

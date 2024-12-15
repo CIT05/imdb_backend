@@ -1,7 +1,7 @@
 @WebApi_HostAddress = https://localhost:5002
  
 
-@token = null
+@token = eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoicGFibG9QYWJsaXRvMTIzNDU2IiwiZXhwIjoxNzM0NzA1ODE4fQ.BE24L5A7I-ZQp-KBVtC0wyqqKIEXFKe46d5UzJnoU8GkzYeTRNaFz1QyFYxLM5HOfhvCid3imsjxia9AZN2o6g
 
 ### bookmarking
 POST {{WebApi_HostAddress}}/api/bookmarking/personality
@@ -9,7 +9,7 @@ Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{token}}
 {
-    "userid": "1",
+    "userid": "10",
     "timestamp": "2024-11-06T17:38:37.084Z",
     "nconst": "nm0000001"
 }
@@ -144,11 +144,15 @@ Accept: application/json
 Authorization: Bearer {{token}}
 
 ###
-GET {{WebApi_HostAddress}}/api/search/title/exact/harry%20potter
+GET {{WebApi_HostAddress}}/api/search/title/Lala
 Accept: application/json
 
 ###
-GET {{WebApi_HostAddress}}/api/search/title/best/pride%20and%20prejudice
+GET {{WebApi_HostAddress}}/api/search/exact/harry
+Accept: application/json
+
+###
+GET {{WebApi_HostAddress}}/api/search/best/leonardo
 Accept: application/json
 
 ###
@@ -163,6 +167,10 @@ Content-Type: application/json
 GET {{WebApi_HostAddress}}/api/search/actor/1/DiCaprio
 Accept: application/json
 Authorization: Bearer {{token}}
+
+###
+GET {{WebApi_HostAddress}}/api/search/actor/DiCaprio
+Accept: application/json
 
 ###
 POST {{WebApi_HostAddress}}/api/search/actor
@@ -222,11 +230,11 @@ GET {{WebApi_HostAddress}}/api/type/1
 Accept: application/json
 
 ### Users
-GET {{WebApi_HostAddress}}/api/user/id/1
+GET {{WebApi_HostAddress}}/api/user/id/7
 Accept: application/json
 
 ###
-DELETE {{WebApi_HostAddress}}/api/user/3
+DELETE {{WebApi_HostAddress}}/api/user/10
 Accept: application/json
 Authorization: Bearer {{token}}
 
@@ -260,8 +268,8 @@ POST {{WebApi_HostAddress}}/api/user/login
 Accept: application/json
 Content-Type: application/json
 {
-    "username": "test",
-    "password": "test"
+    "username": "pabloPablito123456",
+    "password": "pabloPablito123456"
 }
 
 

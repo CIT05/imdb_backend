@@ -1,7 +1,10 @@
 ﻿using DataLayer.PersonRoles;
 using WebApi.Models.PersonRoles;
+using WebApi.Models.Roles;
 using Microsoft.AspNetCore.Mvc;
 using Mapster;
+using WebApi.Controllers.Roles;
+using DataLayer.Roles;
 
 namespace WebApi.Controllers.PersonRoles;
 
@@ -59,6 +62,15 @@ public class PersonRoleController(IPersonRoleDataService dataService, LinkGenera
         return personRoles.Select(role => {
             var roleModel = role.Adapt<PersonRoleModel>();
             roleModel.Url = GetUrl(role.NConst);
+
+            if (roleModel.RoleId > 0)
+            {
+                roleModel.Role = new RoleModel
+                {
+                    Url = GetUrl(nameof(RolesController.GetRoleById), new { roleId = roleModel.RoleId }),
+                };
+            }
+
             return roleModel;
         }).ToList();
     }
@@ -67,6 +79,16 @@ public class PersonRoleController(IPersonRoleDataService dataService, LinkGenera
     {
         var roleModel = personRole.Adapt<PersonRoleModel>();
         roleModel.Url = GetUrl(personRole.NConst);
+
+
+        if (roleModel.RoleId > 0)
+        {
+            roleModel.Role = new RoleModel
+            {
+                Url = GetUrl(nameof(RolesController.GetRoleById), new { roleId = roleModel.RoleId }),
+            };
+        }
+
         return roleModel;
     }
 
