@@ -80,6 +80,18 @@ public class TitlesController : BaseController
             titleModel.TitleAlternatives.ForEach(alt => alt.Url = GetUrl(nameof(TitleAlternativeController.GetTitleAlternative), new { akasId = alt.AkasId, ordering = alt.Ordering }));
         }
 
+        if (title.Episodes != null && title.Episodes.Count > 0)
+        {
+            titleModel.Episodes.ForEach(episode =>
+            {
+                if (!string.IsNullOrEmpty(episode.Tconst))
+                {
+                    episode.Url = GetUrl(nameof(GetTitleById), new { tconst = episode.Tconst });
+                }
+            });
+
+        }
+
         if (title.KnownFors != null)
         {
             Console.WriteLine("KnownsFor not null");
