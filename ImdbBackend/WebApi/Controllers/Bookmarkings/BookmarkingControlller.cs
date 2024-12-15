@@ -1,11 +1,20 @@
 ﻿using DataLayer.Bookmarkings;
 namespace WebApi.Controllers.Bookmarkings;
 
+using DataLayer.Genres;
+using DataLayer.Searching;
 using DataLayer.Users;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using WebApi.Controllers.Persons;
+using WebApi.Controllers.Titles;
 using WebApi.Models.Bookmarkings;
+using WebApi.Models.Genres;
+using WebApi.Models.Persons;
+using WebApi.Models.Searching;
+using WebApi.Models.Titles;
 using WebApi.Models.Users;
 
 
@@ -96,7 +105,8 @@ public class BookmarkingController(IBookmarkingDataService dataService, LinkGene
         try
         {
             var results = _dataService.GetPersonalitiesBookmarkedByUser(userId);
-            return Ok(results);
+            var personalityBookmarkingModel = results.Select((result) => AdaptBookmarkingToPersonalityBookmarkingModule(result)).ToList();
+            return Ok(personalityBookmarkingModel);
         }
         catch(Exception ex)
         {
@@ -110,18 +120,51 @@ public class BookmarkingController(IBookmarkingDataService dataService, LinkGene
     public IActionResult GetTitlesBookmarkedByUsers(int userId)
     {
 
-        try 
+        try
         {
-        var results = _dataService.GetTitlesBookmarkedByUsers(userId);
-        return Ok(results);
+            var results = _dataService.GetTitlesBookmarkedByUsers(userId);
+            var bookmarkingModels = results.Select((result) => AdaptBookmarkingToTitleBookmarkingModule(result)).ToList();
+            return Ok(bookmarkingModels);
         }
-
-        catch 
+        catch (Exception ex)
         {
             return Unauthorized();
         }
     }
 
+
+    private TitleBookmarkingModel AdaptBookmarkingToTitleBookmarkingModule(TitleBookmarking titleBookmarking)
+    {
+        var titleBookmarkingModel = titleBookmarking.Adapt<TitleBookmarkingModel>();
+
+        if (titleBookmarkingModel.TConst != string.Empty)
+        {
+            titleBookmarkingModel.Title = new TitlePosterDTO
+            {
+                Url = GetUrl(nameof(TitlesController.GetTitleById), new { tconst = titleBookmarkingModel.TConst }),
+     
+                TitleName = titleBookmarking.Title?.PrimaryTitle ?? string.Empty,
+            };
+        }
+
+        return titleBookmarkingModel;
+    }
+
+    private PersonalityBookmarkingModel AdaptBookmarkingToPersonalityBookmarkingModule(PersonalityBookmarking personalityBookmarking)
+    {
+        var personalityBookmarkingModel = personalityBookmarking.Adapt<PersonalityBookmarkingModel>();
+
+        if(personalityBookmarkingModel.NConst != string.Empty)
+        {
+            personalityBookmarkingModel.Person = new PersonDTO 
+            { 
+                Url = GetUrl(nameof(PersonsController.GetPersonById), new { nconst = personalityBookmarkingModel.NConst }), 
+                PrimaryName = personalityBookmarking.Person?.PrimaryName ?? string.Empty 
+            };
+        }
+
+        return personalityBookmarkingModel;
+    }
 
 }
 

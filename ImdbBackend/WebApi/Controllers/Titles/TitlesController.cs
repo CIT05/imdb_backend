@@ -82,6 +82,7 @@ public class TitlesController : BaseController
 
         if (title.KnownFors != null)
         {
+            Console.WriteLine("KnownsFor not null");
             titleModel.KnownFors = title.KnownFors.Select(kf => new KnownForModel
             {
                 Url = GetUrl(nameof(PersonsController.GetPersonById), new { nconst = kf.NConst }) ?? string.Empty,
