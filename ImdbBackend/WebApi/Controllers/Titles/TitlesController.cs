@@ -94,12 +94,12 @@ public class TitlesController : BaseController
 
         if (title.KnownFors != null)
         {
-            Console.WriteLine("KnownsFor not null");
             titleModel.KnownFors = title.KnownFors.Select(kf => new KnownForModel
             {
                 Url = GetUrl(nameof(PersonsController.GetPersonById), new { nconst = kf.NConst }) ?? string.Empty,
                 PrimaryName = _personDataService.GetPersonById(kf.NConst)?.PrimaryName ?? string.Empty
             }).ToList();
+
         }
 
         if (title.ProductionPersons != null && title.ProductionPersons.Count > 0)

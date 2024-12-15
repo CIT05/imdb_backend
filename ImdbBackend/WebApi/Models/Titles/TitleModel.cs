@@ -41,7 +41,6 @@ namespace WebApi.Models.Titles
         public List<GenreModel> Genres { get; set; }
         public List<TitlePrincipalDTO> Principals { get; set; }
 
-        [JsonIgnore]
         public List<KnownForModel> KnownFors { get; set; }
 
         public List<ProductionModel> ProductionPersons { get; set; }

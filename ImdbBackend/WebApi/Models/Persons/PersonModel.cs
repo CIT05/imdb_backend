@@ -18,7 +18,7 @@ namespace WebApi.Models.Persons
 
         public List<PersonRoleModel> PersonRoles { get; set; }
 
-        public List<KnownForModel> KnownFors { get; set; }
+        public List<KnownForTitlesModel> KnownFors { get; set; }
 
     }
 }

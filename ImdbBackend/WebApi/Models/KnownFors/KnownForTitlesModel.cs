@@ -3,10 +3,10 @@ using WebApi.Models.Titles;
 
 namespace WebApi.Models.KnownFors
 {
-    public class KnownForModel
+    public class KnownForTitlesModel
     {
         public string Url { get; set; }
-        public string PrimaryName { get; set; } = string.Empty;
+        public TitlePosterDTO Title { get; set; }
 
 
     }

@@ -107,12 +107,13 @@ public class PersonsController : BaseController
             {
                 var title = knownFor.Title;
 
-                return new KnownForModel
+                return new KnownForTitlesModel
                 {
                     Url = GetUrl(nameof(TitlesController.GetTitleById), new { tconst = knownFor.TConst }),
                     Title = title != null
                         ? new TitlePosterDTO
                         {
+                            Url = GetUrl(nameof(TitlesController.GetTitleById), new { tconst = knownFor.TConst }),
                             TitleName = title.OriginalTitle ?? "Unknown Title",
                             Poster = title.Poster ?? "No Poster Available"
                         }
