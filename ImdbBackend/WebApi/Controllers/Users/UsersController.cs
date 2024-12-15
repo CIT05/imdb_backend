@@ -165,8 +165,8 @@ public class UsersController(IUserDataService dataService,Hashing hashing, IConf
                 Value = rating.Value,
                 Title = new TitleDTO
                 {
-                    Url = GetUrl(nameof(TitlesController.GetTitleById), new { tconst = rating.Title.TConst }),
-                    TitleName = rating.Title.OriginalTitle,
+                    Url = GetUrl(nameof(TitlesController.GetTitleById), new { tconst = rating.TConst }),
+                    PrimaryTitle = rating.Title?.OriginalTitle ?? string.Empty,
                 }
             }).ToList();
         }
@@ -179,9 +179,9 @@ public class UsersController(IUserDataService dataService,Hashing hashing, IConf
                 Timestamp = titleBookmarking.Timestamp,
                 Title = new TitlePosterDTO
                 {
-                    Url = GetUrl(nameof(TitlesController.GetTitleById), new { tconst = titleBookmarking.Title.TConst }),
-                    TitleName = titleBookmarking.Title.OriginalTitle,
-                    Poster = titleBookmarking.Title.Poster
+                    Url = GetUrl(nameof(TitlesController.GetTitleById), new { tconst = titleBookmarking.TConst }),
+                    TitleName = titleBookmarking.Title?.OriginalTitle ?? string.Empty,
+                    Poster = titleBookmarking.Title?.Poster ?? string.Empty
                 }
             }).ToList();
         }

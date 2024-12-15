@@ -15,7 +15,5 @@ namespace WebApi.Models.Titles
         public string? Poster { get; set; }
 
         public RatingModel? Rating { get; set; }
-
-        public string TitleName { get; set; } = string.Empty;
     }
 }
