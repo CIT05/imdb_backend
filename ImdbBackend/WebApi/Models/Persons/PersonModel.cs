@@ -17,6 +17,7 @@ namespace WebApi.Models.Persons
         public string? DeathYear { get; set; }
 
         public List<PersonRoleModel> PersonRoles { get; set; }
+
         public List<KnownForModel> KnownFors { get; set; }
 
     }

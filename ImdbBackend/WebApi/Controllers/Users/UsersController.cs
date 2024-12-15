@@ -131,20 +131,23 @@ public class UsersController(IUserDataService dataService,Hashing hashing, IConf
     [Authorize]
     public IActionResult UpdateUser(int userid, CreateUserModel createUserModel)
     {
-        try {
-        var updatedUser = _dataService.UpdateUser(userid, createUserModel.Username, createUserModel.Password, createUserModel.Language);
-        if (updatedUser == null)
+        try
         {
-            return NotFound();
-        }
-        UserModel updatedUserModel = AdaptUserToUserModel(updatedUser);
-        return Ok(updatedUserModel);
+ 
+            var updatedUser = _dataService.UpdateUser(userid, createUserModel.Username, createUserModel.Language);
+            if (updatedUser == null)
+            {
+                return NotFound();
+            }
+            UserModel updatedUserModel = AdaptUserToUserModel(updatedUser);
+            return Ok(updatedUserModel);
         }
         catch
         {
             return Unauthorized();
         }
     }
+
 
     private UserModel AdaptUserToUserModel(User user)
     {

@@ -11,6 +11,7 @@ using DataLayer.KnownFors;
 using WebApi.Controllers.Titles;
 using DBConnection.KnownFors;
 using WebApi.Models.KnownFors;
+using WebApi.Models.Roles;
 
 namespace WebApi.Controllers.Persons;
 
@@ -74,10 +75,10 @@ public class PersonsController : BaseController
 
     private PersonModel AdaptPersonToPersonModel(Person person)
     {
-
         var personModel = person.Adapt<PersonModel>();
         personModel.Url = GetUrl(nameof(GetPersonById), new { nconst = person.NConst });
 
+        // Map PersonRoles
         if (personModel.PersonRoles != null && personModel.PersonRoles.Count > 0)
         {
             personModel.PersonRoles = personModel.PersonRoles.Select((personRoleModel, index) =>
@@ -86,42 +87,41 @@ public class PersonsController : BaseController
 
                 personRoleModel.Url = GetUrl(nameof(PersonRoleController.GetRoleDetailsByPersonId), new { nconst = personRole.NConst });
 
+                if (personRole.Role != null)
+                {
+                    personRoleModel.Role = new RoleModel
+                    {
+                        RoleName = personRole.Role.RoleName
+                    };
+                }
+
                 return personRoleModel;
             }).ToList();
         }
+
         if (person.KnownFors != null && person.KnownFors.Count > 0)
         {
-            personModel.KnownFors = person.KnownFors.SelectMany(knownFor =>
+            personModel.KnownFors = person.KnownFors.Select(knownFor =>
             {
-                string nameId = knownFor.NConst;
-                var knownForEntities = _knownForDataService.GetKnownForByNameId(nameId);
+                var title = knownFor.Title;
 
-                var knownForModels = new List<KnownForModel>();
-
-                if (knownForEntities != null)
+                return new KnownForModel
                 {
-                    foreach (var knownForEntity in knownForEntities)
-                    {
-                        var generatedUrl = GetUrl(
-                            nameof(TitlesController.GetTitleById),
-                            new { tconst = knownForEntity.TConst }
-                        );
-                        knownForModels.Add(new KnownForModel { Url = generatedUrl });
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"No KnownFor found for name ID: {nameId}");
-                    knownForModels.Add(new KnownForModel { Url = null });
-                }
-
-                return knownForModels;
+                    Url = GetUrl(nameof(TitlesController.GetTitleById), new { tconst = knownFor.TConst }),
+                    Title = title != null
+                        ? new TitlePosterDTO
+                        {
+                            TitleName = title.OriginalTitle ?? "Unknown Title",
+                            Poster = title.Poster ?? "No Poster Available"
+                        }
+                        : null
+                };
             }).ToList();
         }
 
         return personModel;
-
     }
+
 
     private PersonsByMovieResultModel AdaptPersonsByMovieResultToPersonsByMovieResultModel(PersonsByMovieResult personsByMovieResult, string tconst)
     {

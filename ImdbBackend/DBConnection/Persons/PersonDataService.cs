@@ -40,7 +40,10 @@ namespace DBConnection.Persons
                 using var db = new ImdbContext(_connectionString);
                 var person = db.Persons
                     .Include(p => p.PersonRoles)
+                    .ThenInclude(r => r.Role)
                     .Include(kf => kf.KnownFors.OrderBy(kf => kf.Ordering))
+                    .ThenInclude(t=> t.Title)
+                    .AsSplitQuery()
                     .SingleOrDefault(p => p.NConst == nconst);
 
                 return person;

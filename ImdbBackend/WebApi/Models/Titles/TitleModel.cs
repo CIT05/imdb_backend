@@ -9,6 +9,7 @@ using DataLayer.TitleAlternatives;
 using WebApi.Models.TitlePrincipals;
 using WebApi.Models.KnownFors;
 using WebApi.Models.Production;
+using System.Text.Json.Serialization;
 
 
 namespace WebApi.Models.Titles
@@ -39,6 +40,8 @@ namespace WebApi.Models.Titles
 
         public List<GenreModel> Genres { get; set; }
         public List<TitlePrincipalDTO> Principals { get; set; }
+
+        [JsonIgnore]
         public List<KnownForModel> KnownFors { get; set; }
 
         public List<ProductionModel> ProductionPersons { get; set; }

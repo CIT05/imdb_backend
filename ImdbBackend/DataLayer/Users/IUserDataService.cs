@@ -9,6 +9,6 @@ public interface IUserDataService
 
     bool DeleteUser(int UserId);
 
-    User? UpdateUser(int UserId, string username, string password, string language);
+    User? UpdateUser(int userId, string username, string language);
 
 }

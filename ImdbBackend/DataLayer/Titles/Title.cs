@@ -6,6 +6,7 @@ using DataLayer.TitleEpisodes;
 using DataLayer.Genres;
 using DataLayer.KnownFors;
 using DataLayer.Productions;
+using System.Text.Json.Serialization;
 
 namespace DataLayer.Titles;
 
@@ -34,6 +35,8 @@ public class Title
     public List<TitleAlternative> TitleAlternatives { get; set; } = new List<TitleAlternative>();
     public Rating Rating { get; set; }
     public List<TitlePrincipal> Principals { get; set; } = new List<TitlePrincipal>();
+
+    [JsonIgnore]
     public List<KnownFor> KnownFors { get; set; }
     public List<Production> ProductionPersons { get; set; }
 
