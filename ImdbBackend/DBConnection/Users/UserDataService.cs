@@ -12,7 +12,9 @@ public class UserDataService(string connectionString) : IUserDataService
         return db.Users.Include(u => u.RatingHistory)
                  .Include(u => u.SearchHistory)
                  .Include(u => u.PersonalityBookmarkings)
+                    .ThenInclude(personalityBookmarking => personalityBookmarking.Person)
                 .Include(u => u.TitleBookmarkings)
+                    .ThenInclude(titleBookmarking => titleBookmarking.Title)
                  .FirstOrDefault(u => u.UserId == UserId);
     }
 

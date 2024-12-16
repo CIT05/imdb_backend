@@ -28,7 +28,7 @@ public class BookmarkingController(IBookmarkingDataService dataService, LinkGene
 
     [HttpPost("personality")]
     [Authorize]
-    public IActionResult AddPersonalityBookmarking([FromBody] PersonalityBookmarkingModel model)
+    public IActionResult AddPersonalityBookmarking([FromBody] CreatePersonalityBookmarkingModel model)
     {
         if (model == null)
             return BadRequest("Invalid data.");
@@ -46,7 +46,7 @@ public class BookmarkingController(IBookmarkingDataService dataService, LinkGene
 
     [HttpPost("title")]
     [Authorize]
-    public IActionResult AddTitleBookmarking([FromBody] TitleBookmarkingModel model)
+    public IActionResult AddTitleBookmarking([FromBody] CreateTitleBookmarkingModel model)
     {
         if (model == null)
             return BadRequest("Invalid data.");
