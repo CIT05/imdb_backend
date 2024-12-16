@@ -2,6 +2,7 @@ using DataLayer.TitleEpisodes;
 using WebApi.Models.TitleEpisodes;
 using Microsoft.AspNetCore.Mvc;
 using Mapster;
+using WebApi.Controllers.Titles;
 
 
 namespace WebApi.Controllers.TitleEpisodes
@@ -61,6 +62,8 @@ namespace WebApi.Controllers.TitleEpisodes
             if (titleEpisode.Tconst != null && titleEpisode.ParentTConst != null)
             {
                 titleEpisodeModel.Url = GetUrl(titleEpisode.Tconst, titleEpisode.ParentTConst);
+                titleEpisodeModel.ParentTitleUrl = GetUrl(nameof(TitlesController.GetTitleById), new {tconst = titleEpisodeModel.Tconst});
+                titleEpisodeModel.TitleUrl = GetUrl(nameof(TitlesController.GetTitleById), new { tconst = titleEpisodeModel.ParentTConst });
             }
 
             return titleEpisodeModel;

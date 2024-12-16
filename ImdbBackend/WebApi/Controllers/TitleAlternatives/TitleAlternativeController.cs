@@ -55,25 +55,6 @@ namespace WebApi.Controllers.TitleAlternatives
         }
 
 
-
-        [HttpGet("type/{type}", Name = nameof(GetTitleAlternativesByType))]
-        public IActionResult GetTitleAlternativesByType(int type)
-        {
-            var titleAlternatives = _dataService.GetTitleAlternativesByType(type);
-            var numberOfItems = titleAlternatives.Count;
-
-            var titleAlternativeModels = new List<TitleAlternativeModel>();
-            foreach (var titleAlternative in titleAlternatives)
-            {
-                titleAlternativeModels.Add(AdaptTitleAlternativeToTitleAlternativeModel(titleAlternative));
-            }
-
-            string linkName = nameof(GetTitleAlternativesByType);
-            object result = CreatePaging(0, numberOfItems, numberOfItems, linkName, titleAlternativeModels);
-
-            return Ok(result);
-        }
-
         [HttpGet("title/{tconst}", Name = nameof(GetTitleAlternativeForTitle))]
         public IActionResult GetTitleAlternativeForTitle(string tconst)
         {

@@ -6,8 +6,6 @@
         TitleAlternative? GetTitleAlternative(int akasId);
 
         List<TitleAlternative> GetTitleAlternativeForTitle(string tconst);
-        List<TitleAlternative> GetTitleAlternativesByType(int typeid);
-
         int NumberOfTitleAlternatives();
 
     }

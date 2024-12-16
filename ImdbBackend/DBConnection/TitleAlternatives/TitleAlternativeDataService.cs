@@ -44,15 +44,6 @@ namespace DBConnection.TitleAlternatives
 
 
 
-        public List<TitleAlternative> GetTitleAlternativesByType(int typeid)
-        {
-            var db = new ImdbContext(_connectionString);
-            return db.TitleAlternatives
-                 .Where(title => title.Types.Any(t => t.TypeId == typeid))
-                 .ToList();
-        }
-
-
         public int NumberOfTitleAlternatives()
         {
             var db = new ImdbContext(_connectionString);
