@@ -130,12 +130,12 @@ public class UsersController(IUserDataService dataService,Hashing hashing, IConf
 
     [HttpPut("{userid}")]
     [Authorize]
-    public IActionResult UpdateUser(int userid, CreateUserModel createUserModel)
+    public IActionResult UpdateUser(int userid, EditUserModel editUserModel)
     {
         try
         {
  
-            var updatedUser = _dataService.UpdateUser(userid, createUserModel.Username, createUserModel.Language);
+            var updatedUser = _dataService.UpdateUser(userid, editUserModel.Username, editUserModel.Language);
             if (updatedUser == null)
             {
                 return NotFound();
