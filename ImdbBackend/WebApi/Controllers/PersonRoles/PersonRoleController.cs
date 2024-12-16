@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Mapster;
 using WebApi.Controllers.Roles;
 using DataLayer.Roles;
+using WebApi.Controllers.Persons;
 
 namespace WebApi.Controllers.PersonRoles;
 
@@ -23,11 +24,13 @@ public class PersonRoleController(IPersonRoleDataService dataService, LinkGenera
     {
         var persons = _dataService.GetPersonRoles(pageSize, pageNumber);
 
+        var personsModels = AdaptPersonRolesToPersonRoleModels(persons);
+
         var numberOfItmes = _dataService.NumberOfPersonRoles();
 
         string linkName = nameof(GetPersonRoles);
 
-        object result = CreatePaging(pageNumber, pageSize, numberOfItmes, linkName, persons);
+        object result = CreatePaging(pageNumber, pageSize, numberOfItmes, linkName, personsModels);
 
         return Ok(result);
     }
@@ -69,6 +72,8 @@ public class PersonRoleController(IPersonRoleDataService dataService, LinkGenera
                 {
                     Url = GetUrl(nameof(RolesController.GetRoleById), new { roleId = roleModel.RoleId }),
                 };
+
+                roleModel.personUrl = GetUrl(nameof(PersonsController.GetPersonById), new { nconst = role.NConst }) ?? string.Empty;
             }
 
             return roleModel;
@@ -88,6 +93,8 @@ public class PersonRoleController(IPersonRoleDataService dataService, LinkGenera
                 Url = GetUrl(nameof(RolesController.GetRoleById), new { roleId = roleModel.RoleId }),
             };
         }
+
+        roleModel.personUrl = GetUrl(nameof(PersonsController.GetPersonById), new { nconst = personRole.NConst }) ?? string.Empty;
 
         return roleModel;
     }

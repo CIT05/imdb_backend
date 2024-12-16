@@ -3,6 +3,8 @@ using WebApi.Models.History;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using WebApi.Controllers.Titles;
+using WebApi.Models.Titles;
 
 
 namespace WebApi.Controllers.History
@@ -47,6 +49,8 @@ namespace WebApi.Controllers.History
 
             List<SearchHistoryModel> searchHistoryModels = searchHistory.Select(search => search.Adapt<SearchHistoryModel>()).ToList();
 
+
+
             return Ok(searchHistoryModels);
             }
             catch
@@ -64,7 +68,15 @@ namespace WebApi.Controllers.History
 
             List<RatingHistoryModel> ratingHistoryModels = ratingHistory.Select(rating => rating.Adapt<RatingHistoryModel>()).ToList();
 
-            return Ok(ratingHistoryModels);
+            ratingHistoryModels.ForEach(ratingHistoryModel =>
+             {
+                ratingHistoryModel.Title = new TitleDTO
+                {
+                    Url = GetUrl(nameof(TitlesController.GetTitleById), new { tconst = ratingHistoryModel.TConst }) ?? string.Empty
+                };
+            });
+
+                return Ok(ratingHistoryModels);
             }
             catch
             {
@@ -82,7 +94,19 @@ namespace WebApi.Controllers.History
 
             List<RatingHistoryModel> ratingHistoryModels = ratingHistory.Select(rating => rating.Adapt<RatingHistoryModel>()).ToList();
 
-            return Ok(ratingHistoryModels);
+            ratingHistoryModels.Select(ratingHistoryModel => ratingHistoryModel.Title.Url = GetUrl(nameof(TitlesController.GetTitleById), new { tconst = ratingHistoryModel.TConst }) ?? string.Empty );
+
+
+            ratingHistoryModels.ForEach(ratingHistoryModel =>
+              {
+                 ratingHistoryModel.Title = new TitleDTO
+                 {
+                     Url = GetUrl(nameof(TitlesController.GetTitleById), new { tconst = ratingHistoryModel.TConst }) ?? string.Empty
+                 };
+            });
+
+
+                return Ok(ratingHistoryModels);
             }
             catch
             {

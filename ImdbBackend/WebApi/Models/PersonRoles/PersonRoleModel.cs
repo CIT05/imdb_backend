@@ -12,6 +12,8 @@ namespace WebApi.Models.PersonRoles
         
         public int RoleId { get; set; }
 
+        public string personUrl { get; set; } = string.Empty;
+
         public RoleModel? Role { get; set; }
 
     }
